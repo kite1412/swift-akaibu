@@ -11,7 +11,11 @@ import SwiftUI
 struct AkaibuApp: App {
     var body: some Scene {
         WindowGroup {
-            MainView()
+            #if os(iOS)
+            iOSMainView()
+            #elseif os(macOS)
+            macOSMainView()
+            #endif
         }
     }
 }
