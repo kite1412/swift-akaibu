@@ -21,7 +21,7 @@ struct TopBar: View {
     
     var body: some View {
         HStack {
-            Image("appIcon")
+            Image(Images.appIcon)
                 .resizable()
                 .scaledToFit()
                 .frame(height: iconSize)
@@ -29,6 +29,7 @@ struct TopBar: View {
                 .font(.title)
                 .fontWeight(.bold)
         }
+        .background(.ultraThinMaterial)
     }
 }
 
