@@ -29,7 +29,8 @@ struct TopBar: View {
                 .font(.title)
                 .fontWeight(.bold)
         }
-        .background(.ultraThinMaterial)
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 

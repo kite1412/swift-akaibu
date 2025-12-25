@@ -14,37 +14,41 @@ struct macOSMainView: View {
     
     var body: some View {
         NavigationSplitView {
-            List(
-                Destination.allCases,
-                id: \.self
-            ) { des in
-                let foregroundStyle = currentDestination == des ? Color.white : Color.primary
-                
-                Button {
-                    currentDestination = des
-                } label: {
-                    Label {
-                        Text(des.title)
-                    } icon: {
-                        Image(systemName: des.systemImage)
-                            .foregroundStyle(foregroundStyle)
-                    }
-                    .foregroundStyle(foregroundStyle)
-                    .animation(animation, value: currentDestination)
-                }
-                .buttonStyle(PlainButtonStyle())
-                .padding(.horizontal, 8)
-                .padding(.vertical, 8)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(currentDestination == des ? Colors.accent : .clear)
+            VStack {
+                TopBar()
+                List(
+                    Destination.allCases,
+                    id: \.self
+                ) { des in
+                    let foregroundStyle = currentDestination == des ? Color.white : Color.primary
+                    
+                    Button {
+                        currentDestination = des
+                    } label: {
+                        Label {
+                            Text(des.title)
+                        } icon: {
+                            Image(systemName: des.systemImage)
+                                .foregroundStyle(foregroundStyle)
+                        }
+                        .foregroundStyle(foregroundStyle)
                         .animation(animation, value: currentDestination)
-                )
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(currentDestination == des ? Colors.accent : .clear)
+                            .animation(animation, value: currentDestination)
+                    )
+                }
             }
         } detail: {
-            
+            Text("Content goes here.")
         }
+        .navigationTitle(currentDestination.title)
     }
 }
 
