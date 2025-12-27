@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		EE0B6CA02EFC2B430084532A /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = EE0B6C9F2EFC2B430084532A /* .gitignore */; };
 		EE0B6CB42EFC422C0084532A /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = EE0B6CB32EFC422C0084532A /* README.md */; };
+		EE6E02A12F007A2C005B97DF /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EE6E02A02F007A2C005B97DF /* Secrets.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,11 +35,25 @@
 		EE0B6C8C2EFC2A490084532A /* AkaibuUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AkaibuUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE0B6C9F2EFC2B430084532A /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		EE0B6CB32EFC422C0084532A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		EE6E02A02F007A2C005B97DF /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		EE6E02A22F007B2E005B97DF /* Exceptions for "Akaibu" folder in "Akaibu" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = EE0B6C742EFC2A490084532A /* Akaibu */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		EE0B6C772EFC2A490084532A /* Akaibu */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				EE6E02A22F007B2E005B97DF /* Exceptions for "Akaibu" folder in "Akaibu" target */,
+			);
 			path = Akaibu;
 			sourceTree = "<group>";
 		};
@@ -82,6 +97,7 @@
 		EE0B6C6C2EFC2A490084532A = {
 			isa = PBXGroup;
 			children = (
+				EE6E02A02F007A2C005B97DF /* Secrets.xcconfig */,
 				EE0B6CB32EFC422C0084532A /* README.md */,
 				EE0B6C9F2EFC2B430084532A /* .gitignore */,
 				EE0B6C772EFC2A490084532A /* Akaibu */,
@@ -221,6 +237,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE6E02A12F007A2C005B97DF /* Secrets.xcconfig in Resources */,
 				EE0B6CB42EFC422C0084532A /* README.md in Resources */,
 				EE0B6CA02EFC2B430084532A /* .gitignore in Resources */,
 			);
@@ -282,6 +299,7 @@
 /* Begin XCBuildConfiguration section */
 		EE0B6C942EFC2A490084532A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EE6E02A02F007A2C005B97DF /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -343,6 +361,7 @@
 		};
 		EE0B6C952EFC2A490084532A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EE6E02A02F007A2C005B97DF /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
