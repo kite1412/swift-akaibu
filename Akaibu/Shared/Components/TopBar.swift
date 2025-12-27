@@ -25,9 +25,14 @@ struct TopBar: View {
                 .resizable()
                 .scaledToFit()
                 .frame(height: iconSize)
-            Text("Akaibu")
-                .font(.title)
-                .fontWeight(.bold)
+            VStack(alignment: .leading) {
+                Text("Akaibu")
+                    .font(.title)
+                    .fontWeight(.bold)
+                Text("アーカイブ")
+                    .font(.caption)
+                    .foregroundStyle(.gray)
+            }
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)

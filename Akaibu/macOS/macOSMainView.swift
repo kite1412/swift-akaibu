@@ -46,7 +46,10 @@ struct macOSMainView: View {
                 }
             }
         } detail: {
-            Text("Content goes here.")
+            switch currentDestination {
+            case .home: HomeView()
+            default: Text("The content goes here.")
+            }
         }
         .navigationTitle(currentDestination.title)
     }

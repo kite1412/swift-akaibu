@@ -9,13 +9,24 @@ import SwiftUI
 
 struct MainView: View {
     @State private var currentDestination: Destination = .home
+    @StateObject private var session = SessionManager()
     
     var body: some View {
-        #if os(iOS)
-        iOSMainView()
-        #elseif os(macOS)
-        macOSMainView(currentDestination: $currentDestination)
-        #endif
+        Group {
+            if session.isLoggedIn {
+                #if os(iOS)
+                iOSMainView()
+                #elseif os(macOS)
+                macOSMainView(currentDestination: $currentDestination)
+                #endif
+            } else {
+                LoginView()
+            }
+        }
+        .animation(.easeInOut, value: session.isLoggedIn)
+        .onAppear {
+            _ = session.checkLoginStatus()
+        }
     }
 }
 

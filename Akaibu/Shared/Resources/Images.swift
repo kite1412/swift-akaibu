@@ -7,6 +7,7 @@
 
 struct Images {
     static let appIcon = "appIcon"
+    static let malLogo = "malLogo"
     
     private init() {}
 }
