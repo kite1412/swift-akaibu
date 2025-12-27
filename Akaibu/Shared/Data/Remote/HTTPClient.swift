@@ -8,11 +8,15 @@
 import Foundation
 
 class HTTPClient {
-    let baseUrl: URL
+    let baseURL: URL
     private let session: URLSession
     
-    init(baseUrl: URL, session: URLSession = .shared) {
-        self.baseUrl = baseUrl
+    init(baseURL: URL, session: URLSession = .shared) {
+        var url = baseURL
+        if !url.absoluteString.hasSuffix("/") {
+            url = url.appendingPathComponent("/")
+        }
+        self.baseURL = url
         self.session = session
     }
     
@@ -62,6 +66,29 @@ class HTTPClient {
         )
     }
     
+    func perform<T: Decodable>(_ request: URLRequest) async throws -> T {
+        let (data, response) = try await session.data(for: request)
+        guard let httpResp = response as? HTTPURLResponse, (200...299).contains(httpResp.statusCode) else {
+            throw URLError(.badServerResponse)
+        }
+        return try JSONDecoder().decode(T.self, from: data)
+    }
+    
+    func createRequest(
+        path: String,
+        httpMethod: String,
+        headers: [String: String]? = nil
+    ) -> URLRequest {
+        var req = URLRequest(url: baseURL.appendingPathComponent(path))
+        
+        req.httpMethod = httpMethod
+        headers?.forEach { key, value in
+            req.setValue(value, forHTTPHeaderField: key)
+        }
+        
+        return req
+    }
+    
     private func sendWithBody<T: Decodable, Body: Encodable>(
         path: String,
         httpMethod: String,
@@ -77,29 +104,5 @@ class HTTPClient {
         req.httpBody = try JSONEncoder().encode(body)
         
         return try await perform(req)
-    }
-    
-    private func perform<T: Decodable>(_ request: URLRequest) async throws -> T {
-        let (data, response) = try await session.data(for: request)
-        guard let httpResp = response as? HTTPURLResponse,
-              (200...299).contains(httpResp.statusCode) else {
-            throw URLError(.badServerResponse)
-        }
-        return try JSONDecoder().decode(T.self, from: data)
-    }
-    
-    private func createRequest(
-        path: String,
-        httpMethod: String,
-        headers: [String: String]? = nil
-    ) -> URLRequest {
-        var req = URLRequest(url: baseUrl.appendingPathComponent(path))
-        
-        req.httpMethod = httpMethod
-        headers?.forEach { key, value in
-            req.setValue(value, forHTTPHeaderField: key)
-        }
-        
-        return req
     }
 }
