@@ -6,8 +6,21 @@
 //
 
 import SwiftUI
+import AuthenticationServices
+import OSLog
 
 struct LoginView: View {
+    private let auth = DIContainer.shared.authRemoteDataSource
+    private var authPresentationContext: ASWebAuthenticationPresentationContextProviding {
+        #if os(iOS)
+        iOSAuthenticationPresentationContext()
+        #else
+        macOSAuthenticationPresentationContext()
+        #endif
+    }
+    
+    @State private var loginInfo: String = "No action"
+    
     var body: some View {
         VStack(spacing: 24) {
             HStack(spacing: 8) {
@@ -43,13 +56,21 @@ struct LoginView: View {
                     }
                 }
             }
+            Text("Login status: \(loginInfo)")
             VStack(alignment: .leading) {
                 Text("Login with:")
                     .font(.caption2)
                     .fontWeight(.bold)
                     .foregroundStyle(.gray)
                 Button {
-                    
+                    auth.requestCode(
+                        authPresentationContext,
+                        callback: { code in
+                            Task {
+                                await login(authCode: code)
+                            }
+                        }
+                    )
                 } label: {
                     Label {
                         Text("MyAnimeList account")
@@ -73,6 +94,19 @@ struct LoginView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    @MainActor
+    private func login(authCode: String) async {
+        do {
+            let token = try await auth.exchangeCode(authCode)
+            debugOnly {
+                AppLogger.auth.debug("token: \(token.accessToken)")
+            }
+            self.loginInfo = "Logged in"
+        } catch {
+            self.loginInfo = "Fail to login"
+        }
     }
 }
 

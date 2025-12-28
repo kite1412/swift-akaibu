@@ -71,7 +71,7 @@ class HTTPClient {
         guard let httpResp = response as? HTTPURLResponse, (200...299).contains(httpResp.statusCode) else {
             throw URLError(.badServerResponse)
         }
-        return try JSONDecoder().decode(T.self, from: data)
+        return try API.decode(T.self, from: data)
     }
     
     func createRequest(
@@ -101,7 +101,7 @@ class HTTPClient {
             headers: headers
         )
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        req.httpBody = try JSONEncoder().encode(body)
+        req.httpBody = try API.encode(body)
         
         return try await perform(req)
     }

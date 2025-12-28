@@ -16,7 +16,7 @@ class MALAuthDataSource: AuthRemoteDataSource {
         _ context: ASWebAuthenticationPresentationContextProviding,
         callback: @escaping (_ code: String) -> Void
     ) {
-        var components = URLComponents(string: client.baseURL.absoluteString)
+        var components = URLComponents(string: "\(client.baseURL.absoluteString)authorize")
         components?.queryItems = [
             URLQueryItem(name: "client_id", value: Secrets.malClientId),
             URLQueryItem(name: "response_type", value: "code"),
@@ -26,9 +26,13 @@ class MALAuthDataSource: AuthRemoteDataSource {
         
         let url = components!.url!
         
+        debugOnly {
+            AppLogger.auth.debug("request code url: \(url.absoluteString)")
+        }
+        
         let session = ASWebAuthenticationSession(
             url: url,
-            callback: ASWebAuthenticationSession.Callback.customScheme("akaibu://auth-callback")
+            callback: ASWebAuthenticationSession.Callback.customScheme("akaibu")
         ) { callbackURL, error in
             guard let callbackURL else {
                 AppLogger.auth.debug("callbackURL is nil")
@@ -40,6 +44,9 @@ class MALAuthDataSource: AuthRemoteDataSource {
                 .first(where: { $0.name == "code" })?.value
             
             if let code {
+                debugOnly {
+                    AppLogger.auth.debug("auth code: \(code)")
+                }
                 callback(code)
             } else {
                 AppLogger.auth.debug("authorization code is nil")
@@ -85,6 +92,11 @@ class MALAuthDataSource: AuthRemoteDataSource {
         
         req.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         req.httpBody = postData
+        
+        debugOnly {
+            AppLogger.auth.debug("token request url: \(req.url?.absoluteString ?? "<unknown>")")
+            AppLogger.auth.debug("token request body: \(String(decoding: postData, as: UTF8.self))")
+        }
         
         return try await client.perform(req)
     }
