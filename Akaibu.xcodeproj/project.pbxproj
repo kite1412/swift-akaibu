@@ -39,7 +39,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		EE6E02A22F007B2E005B97DF /* Exceptions for "Akaibu" folder in "Akaibu" target */ = {
+		EE363B922F013CBF00A0BFC8 /* Exceptions for "Akaibu" folder in "Akaibu" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -52,7 +52,7 @@
 		EE0B6C772EFC2A490084532A /* Akaibu */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				EE6E02A22F007B2E005B97DF /* Exceptions for "Akaibu" folder in "Akaibu" target */,
+				EE363B922F013CBF00A0BFC8 /* Exceptions for "Akaibu" folder in "Akaibu" target */,
 			);
 			path = Akaibu;
 			sourceTree = "<group>";
@@ -424,6 +424,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Akaibu/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -468,6 +469,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Akaibu/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
