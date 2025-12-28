@@ -18,7 +18,7 @@ struct MainView: View {
                     #if os(iOS)
                     iOSMainView()
                     #elseif os(macOS)
-                    macOSMainView(currentDestination: $currentDestination)
+                    macOSMainView(currentDestination: $currentDestination, session: session)
                     #endif
                 } else {
                     LoginView(session: session)
