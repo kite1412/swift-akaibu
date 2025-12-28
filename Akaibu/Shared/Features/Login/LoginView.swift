@@ -95,6 +95,8 @@ struct LoginView: View {
                 ProgressView {
                     Text("Logging in...")
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.black.opacity(0.5))
                 .progressViewStyle(.circular)
                 .transition(.opacity)
             }
