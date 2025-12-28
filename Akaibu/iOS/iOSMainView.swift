@@ -8,8 +8,15 @@
 import SwiftUI
 
 struct iOSMainView: View {
+    // Tweak one or more tabs to access unlisted tabs here.
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        TabView {
+            ForEach(Destination.allCases.prefix(4), id: \.self) { des in
+                Tab(des.title, systemImage: des.systemImage) {
+                    des.content
+                }
+            }
+        }
     }
 }
 

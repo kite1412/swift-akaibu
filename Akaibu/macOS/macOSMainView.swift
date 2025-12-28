@@ -57,10 +57,7 @@ struct macOSMainView: View {
                 .foregroundStyle(.red)
             }
         } detail: {
-            switch currentDestination {
-            case .home: HomeView()
-            default: Text("The content goes here.")
-            }
+            currentDestination.content
         }
         .navigationTitle(currentDestination.title)
         .alert("Are you sure you want to logout?", isPresented: $showLogoutConfirmation) {

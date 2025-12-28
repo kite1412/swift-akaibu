@@ -5,6 +5,8 @@
 //  Created by kite1412 on 25/12/25.
 //
 
+import SwiftUI
+
 enum Destination: CaseIterable {
     case home
     case myAnime
@@ -29,6 +31,17 @@ enum Destination: CaseIterable {
         case .myManga: return "My Manga"
         case .categories: return "Categories"
         case .seasonalAnime: return "Seasonal Anime"
+        }
+    }
+    
+    @ViewBuilder
+    var content: some View {
+        switch self {
+        case .home: Text("Home")
+        case .myAnime: Text("My Anime")
+        case .myManga: Text("My Manga")
+        case .categories: Text("Categories")
+        case .seasonalAnime: Text("Seasonal Anime")
         }
     }
 }
