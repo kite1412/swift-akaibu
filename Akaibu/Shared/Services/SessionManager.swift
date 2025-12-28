@@ -8,7 +8,7 @@
 import Combine
 
 class SessionManager: ObservableObject {
-    @Published var isLoggedIn: Bool = false
+    @Published var isLoggedIn: Bool? = nil
     
     init() {
         _ = checkLoginStatus()
@@ -22,5 +22,17 @@ class SessionManager: ObservableObject {
             isLoggedIn = false
             return false
         }
+    }
+    
+    func login(token: String, refreshToken: String) {
+        KeychainManager.shared.saveToken(token: token)
+        KeychainManager.shared.saveRefreshToken(token: refreshToken)
+        isLoggedIn = true
+    }
+    
+    func logout() {
+        _ = KeychainManager.shared.deleteToken()
+        _ = KeychainManager.shared.deleteRefreshToken()
+        isLoggedIn = false
     }
 }

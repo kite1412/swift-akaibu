@@ -19,7 +19,10 @@ struct LoginView: View {
         #endif
     }
     
+    @ObservedObject var session: SessionManager
     @State private var loginInfo: String = "No action"
+    @State private var loggingIn: Bool = false
+    @State private var showError: Bool = false
     
     var body: some View {
         VStack(spacing: 24) {
@@ -63,14 +66,7 @@ struct LoginView: View {
                     .fontWeight(.bold)
                     .foregroundStyle(.gray)
                 Button {
-                    auth.requestCode(
-                        authPresentationContext,
-                        callback: { code in
-                            Task {
-                                await login(authCode: code)
-                            }
-                        }
-                    )
+                    initiateLogin()
                 } label: {
                     Label {
                         Text("MyAnimeList account")
@@ -94,22 +90,56 @@ struct LoginView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay {
+            if loggingIn {
+                ProgressView {
+                    Text("Logging in...")
+                }
+                .progressViewStyle(.circular)
+                .transition(.opacity)
+            }
+        }
+        .animation(.easeInOut, value: loggingIn)
+        .alert("Login Failed", isPresented: $showError) {
+            Button("Try Again", role: .confirm) {
+                initiateLogin()
+            }
+        } message: {
+            Text("Login failed. Please try again.")
+        }
     }
     
     @MainActor
     private func login(authCode: String) async {
+        loggingIn = true
         do {
+            defer { loggingIn = false }
+            loggingIn = true
             let token = try await auth.exchangeCode(authCode)
+            
             debugOnly {
                 AppLogger.auth.debug("token: \(token.accessToken)")
             }
-            self.loginInfo = "Logged in"
+            
+            session.login(token: token.accessToken, refreshToken: token.refreshToken)
         } catch {
             self.loginInfo = "Fail to login"
         }
     }
+    
+    private func initiateLogin() {
+        showError = false
+        auth.requestCode(
+            authPresentationContext,
+            callback: { code in
+                Task {
+                    await login(authCode: code)
+                }
+            }
+        )
+    }
 }
 
 #Preview {
-    LoginView()
+    LoginView(session: SessionManager())
 }

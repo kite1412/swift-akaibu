@@ -11,11 +11,36 @@ import Security
 struct KeychainManager {
     static let shared = KeychainManager()
     
-    private let entry = "userToken"
+    private let tokenEntry = "userToken"
+    private let refreshTokenEntry = "userRefreshToken"
     
     private init() {}
     
     func saveToken(token: String) {
+        store(for: tokenEntry, value: token)
+    }
+
+    func getToken() -> String? {
+        get(for: tokenEntry)
+    }
+
+    func deleteToken() -> Bool {
+        delete(for: tokenEntry)
+    }
+    
+    func saveRefreshToken(token: String) {
+        store(for: refreshTokenEntry, value: token)
+    }
+    
+    func getRefreshToken() -> String? {
+        get(for: refreshTokenEntry)
+    }
+    
+    func deleteRefreshToken() -> Bool {
+        delete(for: refreshTokenEntry)
+    }
+    
+    private func store(for entry: String, value token: String) {
         let data = token.data(using: .utf8)!
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
@@ -25,8 +50,8 @@ struct KeychainManager {
         SecItemDelete(query as CFDictionary)
         SecItemAdd(query as CFDictionary, nil)
     }
-
-    func getToken() -> String? {
+    
+    private func get(for entry: String) -> String? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: entry,
@@ -40,12 +65,14 @@ struct KeychainManager {
         }
         return nil
     }
-
-    func deleteToken() {
+    
+    private func delete(for entry: String) -> Bool {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: entry
         ]
-        SecItemDelete(query as CFDictionary)
+        let status = SecItemDelete(query as CFDictionary)
+        
+        return status == errSecSuccess
     }
 }

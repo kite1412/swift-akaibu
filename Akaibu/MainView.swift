@@ -13,20 +13,24 @@ struct MainView: View {
     
     var body: some View {
         Group {
-            if session.isLoggedIn {
-                #if os(iOS)
-                iOSMainView()
-                #elseif os(macOS)
-                macOSMainView(currentDestination: $currentDestination)
-                #endif
+            if let loggedIn = session.isLoggedIn {
+                if loggedIn {
+                    #if os(iOS)
+                    iOSMainView()
+                    #elseif os(macOS)
+                    macOSMainView(currentDestination: $currentDestination)
+                    #endif
+                } else {
+                    LoginView(session: session)
+                }
             } else {
-                LoginView()
+                ProgressView {
+                    Text("Loading user info...")
+                }
+                .progressViewStyle(.circular)
             }
         }
         .animation(.easeInOut, value: session.isLoggedIn)
-        .onAppear {
-            _ = session.checkLoginStatus()
-        }
     }
 }
 
