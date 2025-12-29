@@ -1,5 +1,5 @@
 //
-//  AnimeSmall.swift
+//  MediaCardData.swift
 //  Akaibu
 //
 //  Created by kite1412 on 29/12/25.
@@ -7,15 +7,15 @@
 
 import Foundation
 
-/// The very base model of an Anime data
-struct AnimeBase: Identifiable {
-    let id: String
+struct MediaCardData: Identifiable {
+    let id: Int
     let title: String
     let description: String?
-    let type: String
     let coverImageURL: URL?
-    let rating: Rating
-    let airingStatus: AiringStatus
+    let isAdult: Bool
     let genres: [String]
     let score: Double?
+    let type: String
+    let status: String
+    let scoringUsers: Int?
 }
