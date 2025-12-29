@@ -6,5 +6,9 @@
 //
 
 enum MALMyAnimeStatus: String, Codable {
-    case watching, completed, planToWatch, dropped, onHold
+    case watching
+    case completed
+    case planToWatch = "plan_to_watch"
+    case dropped
+    case onHold = "on_hold"
 }

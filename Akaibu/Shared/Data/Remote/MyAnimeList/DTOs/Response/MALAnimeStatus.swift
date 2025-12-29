@@ -6,5 +6,7 @@
 //
 
 enum MALAnimeStatus: String, Codable {
-    case finishedAiring, currentlyAiring, notYetAired
+    case finishedAiring = "finished_airing"
+    case currentlyAiring = "currently_airing"
+    case notYetAired = "not_yet_aired"
 }
