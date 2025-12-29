@@ -81,9 +81,9 @@ class MALAuthDataSource: AuthRemoteDataSource {
         )
     }
     
-    private func performTokenRequest<T: Decodable>(
+    private func performTokenRequest(
         bodyParams: [String: String]
-    ) async throws -> T {
+    ) async throws -> Token {
         var req = client.createRequest(path: "token", httpMethod: "POST")
         let paramArray = bodyParams.map { key, value in
             "\(key)=\(value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
@@ -98,6 +98,8 @@ class MALAuthDataSource: AuthRemoteDataSource {
             AppLogger.auth.debug("token request body: \(String(decoding: postData, as: UTF8.self))")
         }
         
-        return try await client.perform(req)
+        let token: MALToken = try await client.perform(req)
+        
+        return token.toDomain()
     }
 }
