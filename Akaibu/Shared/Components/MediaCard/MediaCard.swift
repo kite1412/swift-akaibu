@@ -9,34 +9,15 @@ import SwiftUI
 import Kingfisher
 
 struct MediaCard: View {
-    let data: MediaCardData
+    let media: MediaCardData
     
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
             ZStack {
-                KFImage.url(data.coverImageURL)
-                    .placeholder {
-                        ProgressView()
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .progressViewStyle(.circular)
-                            .background(.gray.opacity(0.2))
-                    }
-                    .onFailureView {
-                        Image(systemName: "rectangle.slash")
-                            .font(.title)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .background(.thinMaterial)
-                    }
-                    .resizable()
+                BrowseImage(media.coverImageURL)
                 
-                if data.isAdult {
-                    otherInformationLabel(
-                        for: "Adult",
-                        color: .white,
-                        backgroundColor: .red
-                    )
-                    .opacity(0.9)
-                    .fontWeight(.medium)
+                if media.isAdult {
+                    MediaLabel("Adult", kind: .adult)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                     .padding(4)
                     .font(.caption2)
@@ -44,10 +25,10 @@ struct MediaCard: View {
             }
             .aspectRatio(2/3, contentMode: .fit)
             .frame(maxHeight: 160)
-            .cornerRadius(8)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
             
             VStack(alignment: .leading, spacing: 8) {
-                Text(data.title)
+                Text(media.title)
                     .lineLimit(1)
                     .truncationMode(.tail)
                     .font(.title3)
@@ -63,7 +44,7 @@ struct MediaCard: View {
                         genres
                     }
                     
-                    if let desc = data.description {
+                    if let desc = media.description {
                         Text(desc)
                             .font(.caption)
                             .lineLimit(2)
@@ -89,14 +70,14 @@ struct MediaCard: View {
         HStack(spacing: 4) {
             Image(systemName: "star.fill")
                 .foregroundStyle(.yellow)
-            Text(data.score.map { String(format: "%.2f", $0) } ?? "N/A")
+            Text(media.score.map { String(format: "%.2f", $0) } ?? "N/A")
         }
         .font(.caption)
     }
     
     private var genres: some View {
         HStack(spacing: 8) {
-            ForEach(Array(data.genres.prefix(3)), id: \.self) { genre in
+            ForEach(Array(media.genres.prefix(3)), id: \.self) { genre in
                 Text(genre)
             }
         }
@@ -106,23 +87,15 @@ struct MediaCard: View {
     
     private var others: some View {
         HStack {
-            otherInformationLabel(
-                for: data.type,
-                color: .blue,
-                backgroundColor: .blue.opacity(0.3)
-            )
-            otherInformationLabel(
-                for: data.status,
-                color: .green,
-                backgroundColor: .green.opacity(0.3)
-            )
+            MediaLabel(media.type, kind: .type)
+            MediaLabel(media.status, kind: .status)
         }
         .font(.caption2)
     }
     
     @ViewBuilder
     private var scoringUsers: some View {
-        if let total = data.scoringUsers {
+        if let total = media.scoringUsers {
             HStack(spacing: 2) {
                 Image(systemName: "person.2.fill")
                     .foregroundStyle(.gray)
@@ -180,7 +153,7 @@ private var minimum = MediaCardData(
 #Preview {
     VStack {
         ForEach([mock, minimum]) { data in
-            MediaCard(data: data)
+            MediaCard(media: data)
         }
     }
     .padding()

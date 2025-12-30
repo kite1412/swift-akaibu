@@ -37,7 +37,7 @@ enum Destination: CaseIterable {
     @ViewBuilder
     var content: some View {
         switch self {
-        case .home: Text("Home")
+        case .home: HomeView()
         case .myAnime: Text("My Anime")
         case .myManga: Text("My Manga")
         case .categories: Text("Categories")
