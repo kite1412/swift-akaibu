@@ -9,32 +9,26 @@ import SwiftUI
 import OSLog
 
 struct HomeView: View {
-    // TODO delete later, use AnimeRepository instead
-    private let animeDataSource = DIContainer.shared.animeRemoteDataSource
-    @State private var searchTitle: String = ""
-    @State private var animeRanks: [MediaRank] = []
+    @ObservedObject private var viewModel = HomeViewModel()
     
     var body: some View {
-        ScrollView {
-            ForEach(animeRanks) { media in
-                MediaRankCard(mediaRank: media)
+        NavigationStack {
+            switch viewModel.animeRanks {
+            case .loading:
+                ProgressView()
+                    .progressViewStyle(.circular)
+            case .success(let animeRanks):
+                ScrollView {
+                    ForEach(animeRanks) { media in
+                        MediaRankCard(mediaRank: media)
+                    }
+                }
+                .searchable(text: $viewModel.searchTitle, placement: .toolbar, prompt: "Search anime or manga")
+            case .failure:
+                Text("Failed to get anime ranks")
             }
         }
-        .task {
-            await getAnimeRanks()
-        }
         .padding()
-        .searchable(text: $searchTitle, prompt: "Search anime or manga")
-    }
-    
-    private func getAnimeRanks() async {
-        do {
-            let res = try await animeDataSource.fetchAnimeRanks()
-            animeRanks += res
-        } catch {
-            // TODO implement error handling
-            AppLogger.network.error("\(error)")
-        }
     }
 }
 

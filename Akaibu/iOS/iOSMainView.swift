@@ -12,8 +12,12 @@ struct iOSMainView: View {
     var body: some View {
         TabView {
             ForEach(Destination.allCases.prefix(4), id: \.self) { des in
-                Tab(des.title, systemImage: des.systemImage) {
+                NavigationStack {
                     des.content
+                        .navigationTitle(des.title)
+                }
+                .tabItem {
+                    Label(des.title, systemImage: des.systemImage)
                 }
             }
         }
