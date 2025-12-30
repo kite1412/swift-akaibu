@@ -46,7 +46,7 @@ struct KeychainManager {
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: entry,
             kSecValueData as String: data,
-            kSecAttrAccessGroup as String: kSecAttrAccessibleAfterFirstUnlock
+            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock
         ]
         SecItemDelete(query as CFDictionary)
         SecItemAdd(query as CFDictionary, nil)
@@ -57,8 +57,7 @@ struct KeychainManager {
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: entry,
             kSecReturnData as String: true,
-            kSecMatchLimit as String: kSecMatchLimitOne,
-            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock
+            kSecMatchLimit as String: kSecMatchLimitOne
         ]
         var dataTypeRef: AnyObject? = nil
         let status = SecItemCopyMatching(query as CFDictionary, &dataTypeRef)
