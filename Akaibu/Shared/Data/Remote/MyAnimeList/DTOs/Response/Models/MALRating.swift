@@ -12,4 +12,8 @@ enum MALRating: String, Codable {
     case r
     case rPlus = "r+"
     case rx
+
+    var isAdult: Bool {
+        self == .rx
+    }
 }

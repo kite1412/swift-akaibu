@@ -9,6 +9,7 @@ struct DIContainer {
     static let shared = DIContainer()
     
     let authRemoteDataSource: AuthRemoteDataSource = MALAuthDataSource()
+    let animeRemoteDataSource: AnimeRemoteDataSource = MALAnimeDataSource()
     
     private init() {}
 }

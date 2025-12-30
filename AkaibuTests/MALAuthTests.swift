@@ -19,7 +19,7 @@ final class MALAuthTests: XCTestCase {
     }
 
     func testExchangeCode() async {
-        let client = DIContainer.shared.authRemoteDataSource
+        let client = await MALAuthDataSource()
         
         do {
             _ = try await client.exchangeCode("no code")

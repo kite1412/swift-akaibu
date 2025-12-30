@@ -20,6 +20,10 @@ class HTTPClient {
         self.session = session
     }
     
+    func get<T: Decodable>(_ request: URLRequest) async throws -> T {
+        try await perform(request)
+    }
+    
     func get<T: Decodable>(_ path: String, headers: [String: String]? = nil) async throws -> T {
         try await perform(
             createRequest(
@@ -77,10 +81,18 @@ class HTTPClient {
     func createRequest(
         path: String,
         httpMethod: String,
-        headers: [String: String]? = nil
+        headers: [String: String]? = nil,
+        params: [String: String]? = nil
     ) -> URLRequest {
-        var req = URLRequest(url: baseURL.appendingPathComponent(path))
+        var components = URLComponents(string: baseURL.absoluteString + path)
+        if let params = params {
+            components?.queryItems = params.map { q in
+                URLQueryItem(name: q.key, value: q.value)
+            }
+        }
         
+        var url = components?.url ?? baseURL.appending(path: path)
+        var req = URLRequest(url: url)
         req.httpMethod = httpMethod
         headers?.forEach { key, value in
             req.setValue(value, forHTTPHeaderField: key)
