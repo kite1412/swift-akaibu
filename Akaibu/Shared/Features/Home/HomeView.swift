@@ -13,17 +13,13 @@ struct HomeView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
+            ScrollView {
                 switch viewModel.animeRanks {
                 case .loading:
                     ProgressView()
                         .progressViewStyle(.circular)
                 case .success(let animeRanks):
-                    ScrollView {
-                        ForEach(animeRanks) { media in
-                            MediaRankCard(mediaRank: media)
-                        }
-                    }
+                    ranking(for: "Anime", mediaRanks: animeRanks)
                 case .failure:
                     Text("Failed to get anime ranks")
                 }
@@ -35,6 +31,35 @@ struct HomeView: View {
             )
         }
         .padding()
+    }
+    
+    private func ranking(
+        for mediaType: String,
+        mediaRanks: [MediaRank],
+        trophyImage: String = "trophy.fill"
+    ) -> some View {
+        VStack {
+            HStack {
+                HStack {
+                    Image(systemName: trophyImage)
+                        .font(.title2)
+                        .foregroundStyle(.yellow)
+                    Text("\(mediaType) Ranking")
+                        .italic()
+                        .font(.title2)
+                        .fontWeight(.bold)
+                }
+                Spacer()
+                Button {
+                    // navigate to ranking page
+                } label: {
+                    Image(systemName: "arrow.right")
+                }
+            }
+            ForEach(mediaRanks) { media in
+                MediaRankCard(mediaRank: media)
+            }
+        }
     }
 }
 
