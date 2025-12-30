@@ -6,5 +6,6 @@
 //
 
 protocol AnimeRemoteDataSource {
+    func fetchAnimeBases(title: String) async throws -> [AnimeBase]
     func fetchAnimeRanks() async throws -> [MediaRank]
 }

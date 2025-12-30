@@ -8,8 +8,7 @@
 import Combine
 
 class HomeViewModel: ObservableObject {
-    // TODO delete later, use AnimeRepository instead
-    private let animeDataSource = DIContainer.shared.animeRemoteDataSource
+    private let animeRepository = DIContainer.shared.animeRepository
     
     @Published var animeRanks: FetchResult<[MediaRank]> = .loading
     @Published var searchTitle: String = ""
@@ -21,6 +20,6 @@ class HomeViewModel: ObservableObject {
     }
     
     private func fetchAnimeRanks() async {
-        animeRanks = await FetchHelpers.tryFetch(animeDataSource.fetchAnimeRanks)
+        animeRanks = await FetchHelpers.tryFetch(animeRepository.getAnimeRanks)
     }
 }

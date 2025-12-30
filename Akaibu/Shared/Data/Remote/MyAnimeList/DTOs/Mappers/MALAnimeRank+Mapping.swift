@@ -14,9 +14,9 @@ extension MALAnimeRank {
             title: node.title,
             description: node.synopsis,
             rank: ranking.rank,
-            type: node.mediaType?.displayName ?? MALAnimeType.unknown.displayName,
-            status: node.status?.displayName ?? "Unknown",
-            coverImageURL: node.mainPicture != nil ? URL.init(string: node.mainPicture!.medium) : nil,
+            type: node.mediaType.dislpayName(),
+            status: node.status.toDomain().rawValue,
+            coverImageURL: node.mainPicture.mediumURL(),
             isAdult: node.rating.map(\.isAdult) ?? false,
             score: node.mean.map(Double.init) ?? 0
         )

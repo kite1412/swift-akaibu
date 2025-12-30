@@ -11,6 +11,6 @@ class MALHttpClient: HTTPClient {
     static let shared = MALHttpClient()
     
     private init() {
-        super.init(baseURL: URL.init(string: "https://api.myanimelist.net/v2/")!)
+        super.init(baseURL: URL.init(string: MALPaths.baseURLString)!)
     }
 }

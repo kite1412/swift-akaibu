@@ -8,14 +8,31 @@
 class MALAnimeDataSource: AnimeRemoteDataSource {
     private let client: MALHttpClient = .shared
     
+    func fetchAnimeBases(title: String) async throws -> [AnimeBase] {
+        var req = client.createRequest(
+            path: MALPaths.anime,
+            httpMethod: "GET",
+            headers: nil,
+            params: [
+                "q": title,
+                "fields": MALAnimeFields.base
+            ]
+        )
+        req.attachBearerToken()
+        
+        let res: MALAnimeList = try await client.get(req)
+        
+        return res.toAnimeBases()
+    }
+    
     func fetchAnimeRanks() async throws -> [MediaRank] {
         var req = client.createRequest(
-            path: "anime/ranking",
+            path: MALPaths.animeRanking,
             httpMethod: "GET",
             headers: nil,
             params: [
                 "ranking_type": "all",
-                "fields": "[mean,synopsis,media_type,status,rating]"
+                "fields": MALAnimeFields.rank
             ]
         )
         req.attachBearerToken()

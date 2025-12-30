@@ -9,7 +9,7 @@ import Foundation
 
 /// The very base model of an Anime data
 struct AnimeBase: Identifiable {
-    let id: String
+    let id: Int
     let title: String
     let description: String?
     let type: String
@@ -18,4 +18,5 @@ struct AnimeBase: Identifiable {
     let airingStatus: AiringStatus
     let genres: [String]
     let score: Double?
+    let scoringUsers: Int?
 }
