@@ -15,6 +15,11 @@ struct iOSMainView: View {
                 NavigationStack {
                     des.content
                         .navigationTitle(des.title)
+                        .toolbar {
+                            ToolbarItem(placement: .principal) {
+                                TopBar()
+                            }
+                        }
                 }
                 .tabItem {
                     Label(des.title, systemImage: des.systemImage)
