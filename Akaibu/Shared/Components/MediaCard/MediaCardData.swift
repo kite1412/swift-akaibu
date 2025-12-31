@@ -10,7 +10,7 @@ import Foundation
 struct MediaCardData: Identifiable {
     let id: Int
     let title: String
-    let description: String?
+    let synopsis: String?
     let coverImageURL: URL?
     let isAdult: Bool
     let genres: [String]

@@ -24,7 +24,7 @@ struct MediaRankCard: View {
                     Text(mediaRank.title)
                         .font(.headline)
                     
-                    if let description = mediaRank.description {
+                    if let description = mediaRank.synopsis {
                         Text(description)
                             .font(.subheadline)
                             .foregroundColor(.secondary)
@@ -68,7 +68,7 @@ struct MediaRankCard: View {
 private let mediaRank = MediaRank(
     id: 1,
     title: "Media Title",
-    description: "Media with a very long long long long long long long long long long Description",
+    synopsis: "Media with a very long long long long long long long long long long Synopsis",
     rank: 1,
     type: "Type",
     status: "Completed",
@@ -80,7 +80,7 @@ private let mediaRank = MediaRank(
 private var minimum = MediaRank(
     id: 2,
     title: "Media Title",
-    description: nil,
+    synopsis: nil,
     rank: 2,
     type: "Type",
     status: "Airing",

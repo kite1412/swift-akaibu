@@ -12,7 +12,7 @@ extension MALAnimeRank {
         MediaRank(
             id: node.id,
             title: node.title,
-            description: node.synopsis,
+            synopsis: node.synopsis,
             rank: ranking.rank,
             type: node.mediaType.dislpayName(),
             status: node.status.toDomain().rawValue,

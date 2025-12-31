@@ -44,7 +44,7 @@ struct MediaCard: View {
                         genres
                     }
                     
-                    if let desc = media.description {
+                    if let desc = media.synopsis {
                         Text(desc)
                             .font(.caption)
                             .lineLimit(2)
@@ -127,7 +127,7 @@ struct MediaCard: View {
 private var mock = MediaCardData(
     id: 1,
     title: "A very long long long Title",
-    description: "A very long long long long long long long long long long long description of A Title",
+    synopsis: "A very long long long long long long long long long long long synopsis of A Title",
     coverImageURL: URL.init(string: "https://picsum.photos/300/200"),
     isAdult: true,
     genres: ["Fantasy", "Slice Of Life", "Action"],
@@ -140,7 +140,7 @@ private var mock = MediaCardData(
 private var minimum = MediaCardData(
     id: 2,
     title: "A Title",
-    description: "A Description of A Title",
+    synopsis: "A Synopsis of A Title",
     coverImageURL: nil,
     isAdult: false,
     genres: [],

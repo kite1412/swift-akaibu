@@ -10,7 +10,7 @@ import Foundation
 struct MediaRank: Identifiable {
     let id: Int
     let title: String
-    let description: String?
+    let synopsis: String?
     let rank: Int
     let type: String
     let status: String
