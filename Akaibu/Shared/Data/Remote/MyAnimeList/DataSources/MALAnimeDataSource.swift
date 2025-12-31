@@ -9,7 +9,7 @@ class MALAnimeDataSource: AnimeRemoteDataSource {
     private let client: MALHttpClient = .shared
     
     func fetchAnimeBases(title: String) async throws -> [AnimeBase] {
-        var req = client.createRequest(
+        let req = client.createAuthenticatedRequest(
             path: MALPaths.anime,
             httpMethod: "GET",
             headers: nil,
@@ -18,15 +18,13 @@ class MALAnimeDataSource: AnimeRemoteDataSource {
                 "fields": MALAnimeFields.base
             ]
         )
-        req.attachBearerToken()
-        
-        let res: MALAnimeList = try await client.get(req)
+        let res: MALAnimeList = try await client.perform(req)
         
         return res.toAnimeBases()
     }
     
     func fetchAnimeRanks() async throws -> [MediaRank] {
-        var req = client.createRequest(
+        let req = client.createAuthenticatedRequest(
             path: MALPaths.animeRanking,
             httpMethod: "GET",
             headers: nil,
@@ -35,9 +33,7 @@ class MALAnimeDataSource: AnimeRemoteDataSource {
                 "fields": MALAnimeFields.rank
             ]
         )
-        req.attachBearerToken()
-        
-        let res: MALAnimeRanking = try await client.get(req)
+        let res: MALAnimeRanking = try await client.perform(req)
         
         return res.toMediaRanks()
     }

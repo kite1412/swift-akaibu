@@ -48,3 +48,15 @@ extension Optional where Wrapped == Array<MALGenre> {
         self?.map(\.name) ?? []
     }
 }
+
+extension Optional where Wrapped == MALMangaType {
+    func dislpayName() -> String {
+        self?.displayName ?? MALMangaType.unknown.displayName
+    }
+}
+
+extension Optional where Wrapped == MALMangaStatus {
+    func toDomain() -> PublishingStatus {
+        self?.toDomain() ?? .notYetPublished
+    }
+}

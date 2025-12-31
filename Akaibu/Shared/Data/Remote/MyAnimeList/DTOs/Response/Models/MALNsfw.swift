@@ -7,4 +7,8 @@
 
 enum MALNsfw: String, Codable {
     case white, gray, black
+    
+    var isDangerous: Bool {
+        self == .black
+    }
 }

@@ -20,10 +20,6 @@ class HTTPClient {
         self.session = session
     }
     
-    func get<T: Decodable>(_ request: URLRequest) async throws -> T {
-        try await perform(request)
-    }
-    
     func get<T: Decodable>(_ path: String, headers: [String: String]? = nil) async throws -> T {
         try await perform(
             createRequest(
@@ -91,12 +87,29 @@ class HTTPClient {
             }
         }
         
-        var url = components?.url ?? baseURL.appending(path: path)
+        let url = components?.url ?? baseURL.appending(path: path)
         var req = URLRequest(url: url)
         req.httpMethod = httpMethod
         headers?.forEach { key, value in
             req.setValue(value, forHTTPHeaderField: key)
         }
+        
+        return req
+    }
+    
+    func createAuthenticatedRequest(
+        path: String,
+        httpMethod: String,
+        headers: [String: String]? = nil,
+        params: [String: String]? = nil
+    ) -> URLRequest {
+        var req = createRequest(
+            path: path,
+            httpMethod: httpMethod,
+            headers: headers,
+            params: params
+        )
+        req.attachBearerToken()
         
         return req
     }
