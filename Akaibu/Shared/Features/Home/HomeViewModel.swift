@@ -9,17 +9,24 @@ import Combine
 
 class HomeViewModel: ObservableObject {
     private let animeRepository = DIContainer.shared.animeRepository
+    private let mangaRepository = DIContainer.shared.mangaRepository
     
     @Published var animeRanks: FetchResult<[MediaRank]> = .loading
+    @Published var mangaRanks: FetchResult<[MediaRank]> = .loading
     @Published var searchTitle: String = ""
     
     init() {
         Task {
             await fetchAnimeRanks()
+            await fetchMangaRanks()
         }
     }
     
     private func fetchAnimeRanks() async {
         animeRanks = await FetchHelpers.tryFetch(animeRepository.getAnimeRanks)
+    }
+    
+    private func fetchMangaRanks() async {
+        mangaRanks = await FetchHelpers.tryFetch(mangaRepository.getMangaRanks)
     }
 }

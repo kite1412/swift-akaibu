@@ -23,6 +23,16 @@ struct HomeView: View {
                 case .failure:
                     Text("Failed to get anime ranks")
                 }
+                
+                switch viewModel.mangaRanks {
+                case .loading:
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                case .success(let mangaRanks):
+                    ranking(for: "Manga", mediaRanks: mangaRanks)
+                case .failure:
+                    Text("Failed to get manga ranks")
+                }
             }
             .searchable(
                 text: $viewModel.searchTitle,
