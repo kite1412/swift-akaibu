@@ -14,24 +14,19 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                switch viewModel.animeRanks {
-                case .loading:
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                case .success(let animeRanks):
+                FetchStateView(
+                    fetchResult: viewModel.animeRanks,
+                    loadingText: "Loading anime ranks...",
+                    errorText: "Failed to get anime ranks"
+                ) { animeRanks in
                     ranking(for: "Anime", mediaRanks: animeRanks)
-                case .failure:
-                    Text("Failed to get anime ranks")
                 }
-                
-                switch viewModel.mangaRanks {
-                case .loading:
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                case .success(let mangaRanks):
-                    ranking(for: "Manga", mediaRanks: mangaRanks)
-                case .failure:
-                    Text("Failed to get manga ranks")
+                FetchStateView(
+                    fetchResult: viewModel.mangaRanks,
+                    loadingText: "Loading manga ranks...",
+                    errorText: "Failed to get manga ranks"
+                ) { mangaRanks in
+                    ranking(for: "Anime", mediaRanks: mangaRanks)
                 }
             }
             .searchable(
