@@ -18,7 +18,7 @@ struct MockAnime {
         coverImageURL: URL.init(string: "https://picsum.photos/300/200"),
         rating: .safe,
         airingStatus: .airing,
-        genres: ["Fantasy", "Slice Of Life", "Action"],
+        genres: ["Fantasy", "Slice Of Life", "Action", "Comedy", "Drama"],
         score: 9.8,
         scoringUsers: 10000
     )
