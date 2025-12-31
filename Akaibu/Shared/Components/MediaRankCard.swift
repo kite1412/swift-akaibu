@@ -65,33 +65,9 @@ struct MediaRankCard: View {
     }
 }
 
-private let mediaRank = MediaRank(
-    id: 1,
-    title: "Media Title",
-    synopsis: "Media with a very long long long long long long long long long long Synopsis",
-    rank: 1,
-    type: "Type",
-    status: "Completed",
-    coverImageURL: URL.init(string: "https://picsum.photos/300/200"),
-    isAdult: true,
-    score: 9.62
-)
-
-private var minimum = MediaRank(
-    id: 2,
-    title: "Media Title",
-    synopsis: nil,
-    rank: 2,
-    type: "Type",
-    status: "Airing",
-    coverImageURL: nil,
-    isAdult: false,
-    score: 9.210
-)
-
 #Preview {
     VStack {
-        ForEach([mediaRank, minimum]) { mediaRank in
+        ForEach([MockMedia.mediaRank, MockMedia.mediaRankMinimum]) { mediaRank in
             MediaRankCard(mediaRank: mediaRank)
         }
     }

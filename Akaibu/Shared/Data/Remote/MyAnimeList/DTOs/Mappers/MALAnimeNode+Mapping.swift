@@ -14,7 +14,7 @@ extension MALAnimeNode {
         return AnimeBase(
             id: anime.id,
             title: anime.title,
-            description: anime.synopsis,
+            synopsis: anime.synopsis,
             type: anime.mediaType.dislpayName(),
             coverImageURL: anime.mainPicture.mediumURL(),
             rating: anime.rating.toDomain(),

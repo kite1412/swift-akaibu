@@ -124,30 +124,33 @@ struct MediaCard: View {
     }
 }
 
-private var mock = MediaCardData(
-    id: 1,
-    title: "A very long long long Title",
-    synopsis: "A very long long long long long long long long long long long synopsis of A Title",
-    coverImageURL: URL.init(string: "https://picsum.photos/300/200"),
+private let animeBase = MockAnime.animeBase
+private let animeBaseMinimum = MockAnime.animeBaseMinimum
+
+private let mock = MediaCardData(
+    id: animeBase.id,
+    title: animeBase.title,
+    synopsis: animeBase.synopsis,
+    coverImageURL: animeBase.coverImageURL,
     isAdult: true,
-    genres: ["Fantasy", "Slice Of Life", "Action"],
-    score: 9.8,
-    type: "A type",
-    status: "Not Yet Aired",
-    scoringUsers: 10000
+    genres: animeBase.genres,
+    score: animeBase.score,
+    type: animeBase.type,
+    status: animeBase.airingStatus.rawValue,
+    scoringUsers: animeBase.scoringUsers
 )
 
-private var minimum = MediaCardData(
-    id: 2,
-    title: "A Title",
-    synopsis: "A Synopsis of A Title",
-    coverImageURL: nil,
+private let minimum = MediaCardData(
+    id: animeBaseMinimum.id,
+    title: animeBaseMinimum.title,
+    synopsis: animeBaseMinimum.synopsis,
+    coverImageURL: animeBaseMinimum.coverImageURL,
     isAdult: false,
-    genres: [],
-    score: nil,
-    type: "A type",
-    status: "A status",
-    scoringUsers: nil
+    genres: animeBaseMinimum.genres,
+    score: animeBaseMinimum.score,
+    type: animeBaseMinimum.type,
+    status: animeBaseMinimum.airingStatus.rawValue,
+    scoringUsers: animeBaseMinimum.scoringUsers
 )
 
 #Preview {

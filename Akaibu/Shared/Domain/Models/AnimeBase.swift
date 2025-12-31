@@ -11,7 +11,7 @@ import Foundation
 struct AnimeBase: Identifiable {
     let id: Int
     let title: String
-    let description: String?
+    let synopsis: String?
     let type: String
     let coverImageURL: URL?
     let rating: Rating
