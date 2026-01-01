@@ -12,15 +12,15 @@ class AnimeRepositoryImpl: AnimeRepository {
         self.remoteDataSource = remoteDataSource
     }
     
-    func getAnimeBases(title: String) async throws -> [AnimeBase] {
+    func getAnimeBases(title: String) async throws -> PaginatedResult<[AnimeBase]> {
         try await remoteDataSource.fetchAnimeBases(title: title)
     }
     
-    func getAnimeRanks() async throws -> [MediaRank] {
+    func getAnimeRanks() async throws -> PaginatedResult<[MediaRank]> {
         try await remoteDataSource.fetchAnimeRanks()
     }
     
-    func getAnimeSuggestions() async throws -> [AnimeBase] {
+    func getAnimeSuggestions() async throws -> PaginatedResult<[AnimeBase]> {
         try await remoteDataSource.fetchAnimeSuggestions()
     }
 }

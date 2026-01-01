@@ -25,7 +25,16 @@ class HomeViewModel: ObservableObject {
     }
     
     private func fetchAnimeRanks() async {
-        animeRanks = await FetchHelpers.tryFetch(animeRepository.getAnimeRanks)
+        let res = await FetchHelpers.tryFetch(animeRepository.getAnimeRanks)
+        
+        switch res {
+        case .success(let data):
+            animeRanks = .success(data: data.data)
+        case .failure(let error):
+            animeRanks = .failure(error)
+        case .loading:
+            animeRanks = .loading
+        }
     }
     
     private func fetchMangaRanks() async {
@@ -33,14 +42,14 @@ class HomeViewModel: ObservableObject {
     }
     
     private func fetchAnimeSuggestions() async {
-        let res: FetchResult<[AnimeBase]> = await FetchHelpers.tryFetch(animeRepository.getAnimeSuggestions)
+        let res = await FetchHelpers.tryFetch(animeRepository.getAnimeSuggestions)
         
         switch res {
         case .loading: animeSuggestions = .loading
         case .failure(let error): animeSuggestions = .failure(error)
         case .success(let data):
             animeSuggestions = .success(
-                data: data.map { anime in
+                data: data.data.map { anime in
                     anime.toMediaSliderData()
                 }
             )

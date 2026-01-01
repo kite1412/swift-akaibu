@@ -7,48 +7,43 @@
 
 class MALAnimeDataSource: AnimeRemoteDataSource {
     private let client: MALHttpClient = .shared
+    private let paginator: MALPaginator = .shared
     
-    func fetchAnimeBases(title: String) async throws -> [AnimeBase] {
-        let req = client.createAuthenticatedRequest(
+    func fetchAnimeBases(title: String) async throws -> PaginatedResult<[AnimeBase]> {
+        let res: PaginatedResult<MALAnimeList> = try await paginator.getPaginated(
             path: MALPaths.anime,
-            httpMethod: "GET",
             headers: nil,
             params: [
                 "q": title,
                 "fields": MALAnimeFields.base
             ]
         )
-        let res: MALAnimeList = try await client.perform(req)
         
-        return res.toAnimeBases()
+        return res.toDomain()
     }
     
-    func fetchAnimeRanks() async throws -> [MediaRank] {
-        let req = client.createAuthenticatedRequest(
+    func fetchAnimeRanks() async throws -> PaginatedResult<[MediaRank]> {
+        let res: PaginatedResult<MALAnimeRanking> = try await paginator.getPaginated(
             path: MALPaths.animeRanking,
-            httpMethod: "GET",
             headers: nil,
             params: [
                 "ranking_type": "all",
                 "fields": MALAnimeFields.rank
             ]
         )
-        let res: MALAnimeRanking = try await client.perform(req)
         
-        return res.toMediaRanks()
+        return res.toDomain()
     }
     
-    func fetchAnimeSuggestions() async throws -> [AnimeBase] {
-        let req = client.createAuthenticatedRequest(
+    func fetchAnimeSuggestions() async throws -> PaginatedResult<[AnimeBase]> {
+        let res: PaginatedResult<MALAnimeList> = try await paginator.getPaginated(
             path: MALPaths.animeSuggestions,
-            httpMethod: "GET",
             headers: nil,
             params: [
                 "fields": MALAnimeFields.base
             ]
         )
-        let res: MALAnimeList = try await client.perform(req)
         
-        return res.toAnimeBases()
+        return res.toDomain()
     }
 }
