@@ -9,12 +9,13 @@ class MALMangaDataSource: MangaRemoteDataSource {
     private let client: MALHttpClient = .shared
     private let paginator: MALPaginator = .shared
     
-    func fetchMangaRanks() async throws -> PaginatedResult<[MediaRank]> {
+    func fetchMangaRanks(limit: Int) async throws -> PaginatedResult<[MediaRank]> {
         let res: PaginatedResult<MALMangaRanking> = try await paginator.getPaginated(
             path: MALPaths.mangaRanking,
             headers: nil,
             params: [
-                "fields": MALMangaFields.rank
+                "fields": MALMangaFields.rank,
+                "limit": String(limit)
             ]
         )
         

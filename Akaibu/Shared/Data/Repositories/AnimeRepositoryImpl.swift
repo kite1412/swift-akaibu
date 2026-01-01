@@ -16,8 +16,8 @@ class AnimeRepositoryImpl: AnimeRepository {
         try await remoteDataSource.fetchAnimeBases(title: title)
     }
     
-    func getAnimeRanks() async throws -> PaginatedResult<[MediaRank]> {
-        try await remoteDataSource.fetchAnimeRanks()
+    func getAnimeRanks(limit: Int) async throws -> PaginatedResult<[MediaRank]> {
+        try await remoteDataSource.fetchAnimeRanks(limit: limit)
     }
     
     func getAnimeSuggestions() async throws -> PaginatedResult<[AnimeBase]> {

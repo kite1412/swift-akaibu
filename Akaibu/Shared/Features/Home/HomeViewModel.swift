@@ -10,6 +10,7 @@ import Combine
 class HomeViewModel: ObservableObject {
     private let animeRepository = DIContainer.shared.animeRepository
     private let mangaRepository = DIContainer.shared.mangaRepository
+    private let mediaRanksLimit = 5
     
     @Published var animeRanks: FetchResult<[MediaRank]> = .loading
     @Published var mangaRanks: FetchResult<[MediaRank]> = .loading
@@ -27,14 +28,18 @@ class HomeViewModel: ObservableObject {
     private func fetchAnimeRanks() async {
         updateMediaRanks(
             for: &animeRanks,
-            with: await FetchHelpers.tryFetch(animeRepository.getAnimeRanks)
+            with: await FetchHelpers.tryFetch {
+                try await animeRepository.getAnimeRanks(limit: mediaRanksLimit)
+            }
         )
     }
     
     private func fetchMangaRanks() async {
         updateMediaRanks(
             for: &mangaRanks,
-            with: await FetchHelpers.tryFetch(mangaRepository.getMangaRanks)
+            with: await FetchHelpers.tryFetch {
+                try await mangaRepository.getMangaRanks(limit: mediaRanksLimit)
+            }
         )
     }
     

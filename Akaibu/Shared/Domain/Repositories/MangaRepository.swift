@@ -6,5 +6,5 @@
 //
 
 protocol MangaRepository {
-    func getMangaRanks() async throws -> PaginatedResult<[MediaRank]>
+    func getMangaRanks(limit: Int) async throws -> PaginatedResult<[MediaRank]>
 }

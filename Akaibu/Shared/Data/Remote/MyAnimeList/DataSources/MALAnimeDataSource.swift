@@ -22,13 +22,14 @@ class MALAnimeDataSource: AnimeRemoteDataSource {
         return res.toDomain()
     }
     
-    func fetchAnimeRanks() async throws -> PaginatedResult<[MediaRank]> {
+    func fetchAnimeRanks(limit: Int) async throws -> PaginatedResult<[MediaRank]> {
         let res: PaginatedResult<MALAnimeRanking> = try await paginator.getPaginated(
             path: MALPaths.animeRanking,
             headers: nil,
             params: [
                 "ranking_type": "all",
-                "fields": MALAnimeFields.rank
+                "fields": MALAnimeFields.rank,
+                "limit": String(limit)
             ]
         )
         
