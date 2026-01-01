@@ -8,4 +8,5 @@
 protocol AnimeRepository {
     func getAnimeBases(title: String) async throws -> [AnimeBase]
     func getAnimeRanks() async throws -> [MediaRank]
+    func getAnimeSuggestions() async throws -> [AnimeBase]
 }

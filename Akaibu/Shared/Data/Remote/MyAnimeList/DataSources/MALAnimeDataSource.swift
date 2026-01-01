@@ -37,4 +37,18 @@ class MALAnimeDataSource: AnimeRemoteDataSource {
         
         return res.toMediaRanks()
     }
+    
+    func fetchAnimeSuggestions() async throws -> [AnimeBase] {
+        let req = client.createAuthenticatedRequest(
+            path: MALPaths.animeSuggestions,
+            httpMethod: "GET",
+            headers: nil,
+            params: [
+                "fields": MALAnimeFields.base
+            ]
+        )
+        let res: MALAnimeList = try await client.perform(req)
+        
+        return res.toAnimeBases()
+    }
 }

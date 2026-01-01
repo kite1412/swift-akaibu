@@ -19,4 +19,8 @@ class AnimeRepositoryImpl: AnimeRepository {
     func getAnimeRanks() async throws -> [MediaRank] {
         try await remoteDataSource.fetchAnimeRanks()
     }
+    
+    func getAnimeSuggestions() async throws -> [AnimeBase] {
+        try await remoteDataSource.fetchAnimeSuggestions()
+    }
 }

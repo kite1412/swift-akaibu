@@ -11,4 +11,8 @@ enum Rating: String {
     case teen = "17+"
     case mature = "Mild Adult Content"
     case adult = "Adult Content"
+    
+    var isAdult: Bool {
+        self == .adult
+    }
 }
