@@ -12,95 +12,98 @@ struct MediaSlider: View {
     private var isCompact: Bool {
         horizontalSizeClass == UserInterfaceSizeClass.compact
     }
+    private var height: CGFloat {
+        isCompact ? 150 : 250
+    }
     
     let data: [MediaSliderData]
     
     var body: some View {
         GeometryReader { geo in
-            ScrollView(.horizontal) {
-                HStack(spacing: 0) {
-                    ForEach(data) { media in
-                        HStack(alignment: .top) {
-                            BrowseImage(media.coverImageUrl)
-                                .aspectRatio(2/3, contentMode: .fit)
-                                .frame(maxWidth: min(geo.size.width / 4, 200))
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                            
-                            VStack(alignment: .leading, spacing: isCompact ? 8 : 16) {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text(media.title)
-                                        .font(isCompact ? Font.title3 : Font.title)
-                                        .fontWeight(.bold)
-                                        .lineLimit(1)
-                                        .truncationMode(.tail)
-                                    
-                                    if let synopsis = media.synopsis {
-                                        Text(synopsis)
+            VStack(alignment: .leading) {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 0) {
+                        ForEach(data) { media in
+                            HStack {
+                                BrowseImage(media.coverImageUrl)
+                                    .aspectRatio(2/3, contentMode: .fit)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                
+                                VStack(alignment: .leading, spacing: isCompact ? 8 : 16) {
+                                    VStack(alignment: .leading, spacing: 8) {
+                                        Text(media.title)
+                                            .font(isCompact ? Font.title3 : Font.title)
+                                            .fontWeight(.bold)
+                                            .lineLimit(1)
+                                            .truncationMode(.tail)
+                                        
+                                        if let synopsis = media.synopsis {
+                                            Text(synopsis)
+                                                .font(isCompact ? Font.caption : Font.default)
+                                                .lineLimit(isCompact ? 2 : 4)
+                                        }
+                                        
+                                        if !media.genres.isEmpty {
+                                            HStack(spacing: 8) {
+                                                ForEach(media.genres.prefix(isCompact ? 3 : 5), id: \.self) { genre in
+                                                    Text(genre)
+                                                }
+                                            }
+                                            .foregroundStyle(.secondary)
                                             .font(isCompact ? Font.caption : Font.default)
-                                            .lineLimit(isCompact ? 2 : 4)
+                                        }
                                     }
                                     
-                                    if !media.genres.isEmpty {
-                                        HStack(spacing: 8) {
-                                            ForEach(media.genres.prefix(isCompact ? 3 : 5), id: \.self) { genre in
-                                                Text(genre)
+                                    HStack {
+                                        MediaLabel(media.status, kind: .status)
+                                        
+                                        if media.isAdult {
+                                            MediaLabel("Adult", kind: .adult)
+                                        }
+                                        
+                                        if isCompact, let score = media.score {
+                                            Circle()
+                                                .frame(width: 4)
+                                                .foregroundStyle(.secondary)
+                                            
+                                            scoreView(score)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                    }
+                                    .font(isCompact ? Font.caption : Font.default)
+                                    
+                                    if !isCompact, let score = media.score {
+                                        HStack {
+                                            scoreView(score)
+                                            if let scoringUsers = media.scoringUsers {
+                                                Circle()
+                                                    .frame(width: 4)
+                                                
+                                                Text("\(scoringUsers) votes")
+                                                    .italic()
                                             }
                                         }
                                         .foregroundStyle(.secondary)
-                                        .font(isCompact ? Font.caption : Font.default)
                                     }
                                 }
-                                
-                                HStack {
-                                    MediaLabel(media.status, kind: .status)
-                                    
-                                    if media.isAdult {
-                                        MediaLabel("Adult", kind: .adult)
-                                    }
-                                    
-                                    if isCompact, let score = media.score {
-                                        Circle()
-                                            .frame(width: 4)
-                                            .foregroundStyle(.secondary)
-                                        
-                                        scoreView(score)
-                                            .foregroundStyle(.secondary)
-                                    }
-                                }
-                                .font(isCompact ? Font.caption : Font.default)
-                                
-                                if !isCompact, let score = media.score {
-                                    HStack {
-                                        scoreView(score)
-                                        if let scoringUsers = media.scoringUsers {
-                                            Circle()
-                                                .frame(width: 4)
-                                            
-                                            Text("\(scoringUsers) votes")
-                                                .italic()
-                                        }
-                                    }
-                                    .foregroundStyle(.secondary)
-                                }
+                                .padding(.horizontal, 8)
+                                .padding(.trailing, isCompact ? 0 : 16)
                             }
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 16)
-                            .padding(.trailing, isCompact ? 0 : 16)
-                        }
-                        .padding(32)
-                        .frame(width: geo.size.width, alignment: .leading)
-                        .background {
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(.ultraThickMaterial)
-                                .stroke(.white.opacity(0.4))
-                                .padding()
+                            .padding(isCompact ? 16 : 32) // frame to content
+                            .frame(width: geo.size.width, height: geo.size.height, alignment: .leading)
+                            .background {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(.ultraThickMaterial)
+                                    .stroke(.white.opacity(0.4))
+                                    .padding(8) // frame to outer
+                            }
                         }
                     }
                 }
+                .scrollTargetBehavior(.paging)
             }
-            .scrollTargetBehavior(.paging)
-            .scrollIndicators(.hidden)
         }
+        .frame(height: height, alignment: .leading)
     }
     
     private func scoreView(_ score: Double) -> some View {

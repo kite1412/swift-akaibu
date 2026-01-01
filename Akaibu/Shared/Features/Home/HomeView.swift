@@ -15,6 +15,25 @@ struct HomeView: View {
         NavigationStack {
             ScrollView {
                 FetchStateView(
+                    fetchResult: viewModel.animeSuggestions,
+                    loadingText: "Loading anime suggestions...",
+                    errorText: "Failure to get anime suggestions"
+                ) { suggestions in
+                    VStack(alignment: .leading, spacing: 0) {
+                        HStack {
+                            Image(systemName: "sparkles.2")
+                                .foregroundStyle(.blue)
+                            Text("Anime Suggestions")
+                        }
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .italic()
+                        .padding(.leading, 8) // from MediaSlider frame to outer padding
+                        
+                        MediaSlider(data: suggestions)
+                    }
+                }
+                FetchStateView(
                     fetchResult: viewModel.animeRanks,
                     loadingText: "Loading anime ranks...",
                     errorText: "Failed to get anime ranks"
@@ -26,7 +45,7 @@ struct HomeView: View {
                     loadingText: "Loading manga ranks...",
                     errorText: "Failed to get manga ranks"
                 ) { mangaRanks in
-                    ranking(for: "Anime", mediaRanks: mangaRanks)
+                    ranking(for: "Anime", mediaRanks: mangaRanks, trophyImage: "trophy")
                 }
             }
             .searchable(
