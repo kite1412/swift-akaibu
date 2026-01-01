@@ -12,7 +12,7 @@ class MangaRepositoryImpl: MangaRepository {
         self.remoteDataSource = remoteDataSource
     }
     
-    func getMangaRanks() async throws -> [MediaRank] {
+    func getMangaRanks() async throws -> PaginatedResult<[MediaRank]> {
         try await remoteDataSource.fetchMangaRanks()
     }
 }

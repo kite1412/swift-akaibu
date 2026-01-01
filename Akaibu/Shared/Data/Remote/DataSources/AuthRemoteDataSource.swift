@@ -7,7 +7,7 @@
 
 import AuthenticationServices
 
-/// A remote authentication service that implements the OAuth 2.0 Authorization Code Grand Flow..
+/// A remote authentication service that implements the OAuth 2.0 Authorization Code Grant Flow.
 protocol AuthRemoteDataSource {
     func requestCode(_ context: ASWebAuthenticationPresentationContextProviding, callback: @escaping (_ code: String) -> Void)
     

@@ -30,3 +30,16 @@ extension PaginatedResult where Item == MALAnimeRanking {
         )
     }
 }
+
+extension PaginatedResult where Item == MALMangaRanking {
+    func toDomain() -> PaginatedResult<[MediaRank]> {
+        let mediaRanks = self.data.toMediaRanks()
+        return PaginatedResult<[MediaRank]>(
+            data: mediaRanks,
+            next: {
+                let res = try await self.next?()
+                return res?.toDomain()
+            }
+        )
+    }
+}

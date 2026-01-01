@@ -7,18 +7,17 @@
 
 class MALMangaDataSource: MangaRemoteDataSource {
     private let client: MALHttpClient = .shared
+    private let paginator: MALPaginator = .shared
     
-    func fetchMangaRanks() async throws -> [MediaRank] {
-        let req = client.createAuthenticatedRequest(
+    func fetchMangaRanks() async throws -> PaginatedResult<[MediaRank]> {
+        let res: PaginatedResult<MALMangaRanking> = try await paginator.getPaginated(
             path: MALPaths.mangaRanking,
-            httpMethod: "GET",
             headers: nil,
             params: [
                 "fields": MALMangaFields.rank
             ]
         )
-        let res: MALMangaRanking = try await client.perform(req)
         
-        return res.toMediaRanks()
+        return res.toDomain()
     }
 }

@@ -25,20 +25,17 @@ class HomeViewModel: ObservableObject {
     }
     
     private func fetchAnimeRanks() async {
-        let res = await FetchHelpers.tryFetch(animeRepository.getAnimeRanks)
-        
-        switch res {
-        case .success(let data):
-            animeRanks = .success(data: data.data)
-        case .failure(let error):
-            animeRanks = .failure(error)
-        case .loading:
-            animeRanks = .loading
-        }
+        updateMediaRanks(
+            for: &animeRanks,
+            with: await FetchHelpers.tryFetch(animeRepository.getAnimeRanks)
+        )
     }
     
     private func fetchMangaRanks() async {
-        mangaRanks = await FetchHelpers.tryFetch(mangaRepository.getMangaRanks)
+        updateMediaRanks(
+            for: &mangaRanks,
+            with: await FetchHelpers.tryFetch(mangaRepository.getMangaRanks)
+        )
     }
     
     private func fetchAnimeSuggestions() async {
@@ -53,6 +50,19 @@ class HomeViewModel: ObservableObject {
                     anime.toMediaSliderData()
                 }
             )
+        }
+    }
+    
+    private func updateMediaRanks(
+        for target: inout FetchResult<[MediaRank]>,
+        with result: FetchResult<PaginatedResult<[MediaRank]>>
+    ) {
+        switch result {
+        case .success(let data): target = .success(data: data.data)
+        case .failure(let error):
+            target = .failure(error)
+        case .loading:
+            target = .loading
         }
     }
 }
