@@ -9,6 +9,7 @@ import SwiftUI
 import OSLog
 
 struct HomeView: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @ObservedObject private var viewModel = HomeViewModel()
     
     var body: some View {
@@ -33,19 +34,12 @@ struct HomeView: View {
                         MediaSlider(data: suggestions)
                     }
                 }
-                FetchStateView(
-                    fetchResult: viewModel.animeRanks,
-                    loadingText: "Loading anime ranks...",
-                    errorText: "Failed to get anime ranks"
-                ) { animeRanks in
-                    ranking(for: "Anime", mediaRanks: animeRanks)
-                }
-                FetchStateView(
-                    fetchResult: viewModel.mangaRanks,
-                    loadingText: "Loading manga ranks...",
-                    errorText: "Failed to get manga ranks"
-                ) { mangaRanks in
-                    ranking(for: "Anime", mediaRanks: mangaRanks, trophyImage: "trophy")
+                if horizontalSizeClass == .compact {
+                    mediaRanking
+                } else {
+                    HStack(spacing: 16) {
+                        mediaRanking
+                    }
                 }
             }
             .searchable(
@@ -55,6 +49,24 @@ struct HomeView: View {
             )
         }
         .padding()
+    }
+    
+    @ViewBuilder
+    private var mediaRanking: some View {
+        FetchStateView(
+            fetchResult: viewModel.animeRanks,
+            loadingText: "Loading anime ranks...",
+            errorText: "Failed to get anime ranks"
+        ) { animeRanks in
+            ranking(for: "Anime", mediaRanks: animeRanks)
+        }
+        FetchStateView(
+            fetchResult: viewModel.mangaRanks,
+            loadingText: "Loading manga ranks...",
+            errorText: "Failed to get manga ranks"
+        ) { mangaRanks in
+            ranking(for: "Manga", mediaRanks: mangaRanks, trophyImage: "trophy")
+        }
     }
     
     private func ranking(
