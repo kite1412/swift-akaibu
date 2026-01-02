@@ -42,11 +42,61 @@ struct HomeView: View {
                     }
                 }
             }
+            .alert("Clear all history?", isPresented: $viewModel.showClearHistoryConfirmation) {
+                Button("Cancel", role: .cancel) {
+                    viewModel.showClearHistoryConfirmation.toggle()
+                }
+                Button("Clear", role: .destructive) {
+                    viewModel.clearHistories()
+                    viewModel.showClearHistoryConfirmation.toggle()
+                }
+            }
             .searchable(
                 text: $viewModel.searchTitle,
                 placement: .toolbar,
                 prompt: "Search anime or manga"
             )
+            .searchSuggestions {
+                if viewModel.searchTitle.isEmpty {
+                    if !viewModel.searchHistories.isEmpty {
+                        VStack(alignment: .leading, spacing: 16) {
+                            HStack {
+                                Spacer()
+                                Label("Clear History", systemImage: "xmark.circle")
+                            }
+                            .foregroundStyle(.red)
+                            .onTapGesture {
+                                viewModel.showClearHistoryConfirmation.toggle()
+                            }
+                            
+                            VStack(alignment: .leading) {
+                                ForEach(viewModel.searchHistories, id: \.self) { history in
+                                    VStack(alignment: .leading) {
+                                        Text(history)
+                                            .lineLimit(1)
+                                            .truncationMode(.tail)
+                                        
+                                        Divider()
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .onTapGesture {
+                                        viewModel.searchTitle = history
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        Text("No Search History")
+                    }
+                } else {
+                    Text("Suggestions here")
+                }
+            }
+            .onSubmit(of: .search) {
+                if !viewModel.showClearHistoryConfirmation {
+                    viewModel.addHistory()
+                }
+            }
         }
         .padding()
     }

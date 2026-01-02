@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Foundation
 
 class HomeViewModel: ObservableObject {
     private let animeRepository = DIContainer.shared.animeRepository
@@ -15,14 +16,30 @@ class HomeViewModel: ObservableObject {
     @Published var animeRanks: FetchResult<[MediaRank]> = .loading
     @Published var mangaRanks: FetchResult<[MediaRank]> = .loading
     @Published var animeSuggestions: FetchResult<[MediaSliderData]> = .loading
+    @Published var searchHistories: [String] = []
     @Published var searchTitle: String = ""
+    @Published var showClearHistoryConfirmation: Bool = false
     
     init() {
         Task {
             await fetchAnimeSuggestions()
             await fetchAnimeRanks()
             await fetchMangaRanks()
+            searchHistories = SearchHistory.get
         }
+    }
+    
+    func addHistory() {
+        let trimmed = searchTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        
+        SearchHistory.add(trimmed)
+        searchHistories = SearchHistory.get
+    }
+    
+    func clearHistories() {
+        SearchHistory.clearAll()
+        searchHistories = []
     }
     
     private func fetchAnimeRanks() async {
