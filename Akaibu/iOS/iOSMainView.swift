@@ -8,21 +8,22 @@
 import SwiftUI
 
 struct iOSMainView: View {
-    // Tweak one or more tabs to access unlisted tabs here.
+    @EnvironmentObject private var router: AppRouter
+    
+    // Tweak one or more tabs to access unlisted root destinations here.
     var body: some View {
         TabView {
-            ForEach(Destination.allCases.prefix(4), id: \.self) { des in
-                NavigationStack {
-                    des.content
-                        .navigationTitle(des.title)
-                        .toolbar {
-                            ToolbarItem(placement: .principal) {
-                                TopBar()
+            ForEach(RootDestination.allCases.prefix(4), id: \.self) { des in
+                Tab(des.title, systemImage: des.systemImage) {
+                    NavigationStack(path: $router.path) {
+                        des.content
+                            .navigationTitle(des.title)
+                            .toolbar {
+                                ToolbarItem(placement: .principal) {
+                                    TopBar()
+                                }
                             }
-                        }
-                }
-                .tabItem {
-                    Label(des.title, systemImage: des.systemImage)
+                    }
                 }
             }
         }

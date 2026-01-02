@@ -61,7 +61,7 @@ struct MediaCard: View {
         .padding(.trailing, 16)
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.primary, lineWidth: 2)
+                .stroke(.primary.opacity(0.5), lineWidth: 2)
                 .fill(.ultraThinMaterial)
         )
     }
@@ -154,10 +154,10 @@ private let minimum = MediaCardData(
 )
 
 #Preview {
-    VStack {
+    ScrollView {
         ForEach([mock, minimum]) { data in
             MediaCard(media: data)
         }
+        .padding()
     }
-    .padding()
 }

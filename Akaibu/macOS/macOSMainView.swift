@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct macOSMainView: View {
+    @EnvironmentObject private var router: AppRouter
     private let animation: Animation = .easeInOut(duration: 0.3)
     
-    @Binding var currentDestination: Destination
+    @Binding var currentDestination: RootDestination
     @ObservedObject var session: SessionManager
     @State private var showLogoutConfirmation: Bool = false
     
@@ -19,7 +20,7 @@ struct macOSMainView: View {
             VStack {
                 TopBar()
                 List(
-                    Destination.allCases,
+                    RootDestination.allCases,
                     id: \.self
                 ) { des in
                     let foregroundStyle = currentDestination == des ? Color.white : Color.primary
@@ -57,7 +58,9 @@ struct macOSMainView: View {
                 .foregroundStyle(.red)
             }
         } detail: {
-            currentDestination.content
+            NavigationStack(path: $router.path) {
+                currentDestination.content
+            }
         }
         .navigationTitle(currentDestination.title)
         .alert("Are you sure you want to logout?", isPresented: $showLogoutConfirmation) {
@@ -75,7 +78,7 @@ struct macOSMainView: View {
 }
 
 #Preview {
-    @Previewable @State var des: Destination = .home
+    @Previewable @State var des: RootDestination = .home
     
     macOSMainView(currentDestination: $des, session: SessionManager())
 }

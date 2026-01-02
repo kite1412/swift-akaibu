@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct AkaibuApp: App {
+    @StateObject private var appRouter = AppRouter()
+    
     var body: some Scene {
         WindowGroup {
             MainView()
+                .environmentObject(appRouter)
         }
     }
 }

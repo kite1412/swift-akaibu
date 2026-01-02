@@ -13,6 +13,7 @@ enum MALAnimeType: String, Codable {
     case special
     case ona
     case music
+    case tvSpecial = "tv_special"
     
     var displayName: String {
         switch self {
@@ -23,6 +24,7 @@ enum MALAnimeType: String, Codable {
         case .special: return "Special"
         case .ona: return "ONA"
         case .music: return "Music"
+        case .tvSpecial: return "TV Special"
         }
     }
 }

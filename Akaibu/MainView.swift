@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainView: View {
-    @State private var currentDestination: Destination = .home
+    @State private var currentDestination: RootDestination = .home
     @StateObject private var session = SessionManager()
     
     var body: some View {
