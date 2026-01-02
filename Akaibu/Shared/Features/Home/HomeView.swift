@@ -99,11 +99,6 @@ struct HomeView: View {
                 appRouter.goToMediaSearchResults(withTitle: viewModel.searchTitle)
             }
         }
-        .navigationDestination(for: StackDestination.self) { destination in
-            if case .mediaSearchResults(let searchTitle) = destination {
-                MediaSearchResultsView(searchTitle: searchTitle)
-            }
-        }
     }
     
     @ViewBuilder

@@ -60,6 +60,12 @@ struct macOSMainView: View {
         } detail: {
             NavigationStack(path: $router.path) {
                 currentDestination.content
+                    .navigationDestination(for: StackDestination.self) { destination in
+                        switch destination {
+                        case .mediaSearchResults(let searchTitle):
+                            MediaSearchResultsView(searchTitle: searchTitle)
+                        }
+                    }
             }
         }
         .navigationTitle(currentDestination.title)

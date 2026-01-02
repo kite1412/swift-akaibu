@@ -23,6 +23,12 @@ struct iOSMainView: View {
                                     TopBar()
                                 }
                             }
+                            .navigationDestination(for: StackDestination.self) { destination in
+                                switch destination {
+                                case .mediaSearchResults(let searchTitle):
+                                    MediaSearchResultsView(searchTitle: searchTitle)
+                                }
+                            }
                     }
                 }
             }
