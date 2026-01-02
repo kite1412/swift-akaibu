@@ -95,6 +95,7 @@ struct HomeView: View {
         .padding()
         .onSubmit(of: .search) {
             if !viewModel.showClearHistoryConfirmation && viewModel.searchTitle.count > 2 {
+                viewModel.addToHistory()
                 appRouter.goToMediaSearchResults(withTitle: viewModel.searchTitle)
             }
         }

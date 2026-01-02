@@ -21,7 +21,6 @@ class MediaSearchResultsViewModel: ObservableObject {
     
     func searchByTitle(title: String) {
         Task {
-            addHistory(title)
             if showAnimeSearchResults {
                 updateSearchResults(
                     for: &animeSearchResults,
@@ -40,13 +39,6 @@ class MediaSearchResultsViewModel: ObservableObject {
                 )
             }
         }
-    }
-    
-    private func addHistory(_ searchTitle: String) {
-        let trimmed = searchTitle.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        
-        SearchHistory.add(trimmed)
     }
     
     private func updateSearchResults<T>(

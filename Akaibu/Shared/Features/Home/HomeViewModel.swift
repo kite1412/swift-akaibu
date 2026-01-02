@@ -36,6 +36,14 @@ class HomeViewModel: ObservableObject {
         }
     }
     
+    func addToHistory() {
+        let trimmed = searchTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        
+        SearchHistory.add(trimmed)
+        searchHistories = SearchHistory.get
+    }
+    
     func clearHistories() {
         SearchHistory.clearAll()
         searchHistories = []
