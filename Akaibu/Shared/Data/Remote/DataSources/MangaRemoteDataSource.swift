@@ -6,5 +6,6 @@
 //
 
 protocol MangaRemoteDataSource {
+    func fetchMangaBases(title: String) async throws -> PaginatedResult<[MangaBase]>
     func fetchMangaRanks(limit: Int) async throws -> PaginatedResult<[MediaRank]>
 }

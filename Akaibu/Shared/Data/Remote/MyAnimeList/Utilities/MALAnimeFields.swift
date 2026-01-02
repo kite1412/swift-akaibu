@@ -9,6 +9,6 @@
 struct MALAnimeFields {
     private init() {}
     
-    static let base = "[synopsis,type,rating,status,genres,mean,num_scoring_users]"
+    static let base = "[synopsis,media_type,rating,status,genres,mean,num_scoring_users]"
     static let rank = "[mean,synopsis,media_type,status,rating]"
 }

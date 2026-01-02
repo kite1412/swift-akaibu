@@ -18,6 +18,7 @@ struct MediaSlider: View {
     
     let data: [MediaSliderData]
     
+    // TODO use TabView
     var body: some View {
         GeometryReader { geo in
             VStack(alignment: .leading) {
