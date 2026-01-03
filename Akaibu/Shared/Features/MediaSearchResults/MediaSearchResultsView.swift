@@ -13,50 +13,68 @@ struct MediaSearchResultsView: View {
     let searchTitle: String
     
     var body: some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 0) {
-                Text("Results for ")
-                Text("\"\(searchTitle)\"")
-                    .italic()
-            }
-            .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .fontWeight(.bold)
-            
-            ScrollView {
-                if viewModel.showAnimeSearchResults {
-                    FetchStateView(
-                        fetchResult: viewModel.animeSearchResults,
-                        errorText: "Failed to fetch anime with title: \(searchTitle)"
-                    ) { searchResults in
-                        mediaCards(for: searchResults.map { $0.toMediaCardData() })
-                    }
-                } else {
-                    FetchStateView(
-                        fetchResult: viewModel.mangaSearchResults,
-                        errorText: "Failed to fetch manga with title: \(searchTitle)"
-                    ) { searchResults in
-                        mediaCards(for: searchResults.map { $0.toMediaCardData() })
+        ScrollViewReader { proxy in
+            VStack(spacing: 0) {
+                HStack(spacing: 0) {
+                    Text("Results for ")
+                    Text("\"\(searchTitle)\"")
+                        .italic()
+                }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .fontWeight(.bold)
+                
+                ScrollView {
+                    if viewModel.showAnimeSearchResults {
+                        FetchStateView(
+                            fetchResult: viewModel.animeSearchResults,
+                            errorText: "Failed to fetch anime with title: \(searchTitle)"
+                        ) { searchResults in
+                            mediaCards(for: searchResults.map { $0.toMediaCardData() })
+                        }
+                    } else {
+                        FetchStateView(
+                            fetchResult: viewModel.mangaSearchResults,
+                            errorText: "Failed to fetch manga with title: \(searchTitle)"
+                        ) { searchResults in
+                            mediaCards(for: searchResults.map { $0.toMediaCardData() })
+                        }
                     }
                 }
             }
-        }
-        .navigationTitle("Search Results")
-        .onAppear {
-            if !searchTitle.isEmpty {
+            .navigationTitle("Search Results")
+            .toolbar {
+                ToolbarItem {
+                    Picker("", selection: $viewModel.showAnimeSearchResults) {
+                        Text("Anime").tag(true)
+                        Text("Manga").tag(false)
+                    }
+                    .pickerStyle(.segmented)
+                }
+            }
+            .onAppear {
+                if !searchTitle.isEmpty {
+                    viewModel.searchByTitle(title: searchTitle)
+                }
+            }
+            .onChange(of: viewModel.showAnimeSearchResults) {
                 viewModel.searchByTitle(title: searchTitle)
+                withAnimation {
+                    proxy.scrollTo(0, anchor: .top)
+                }
             }
         }
     }
     
     private func mediaCards(for mediaCardDataList: [MediaCardData]) -> some View {
-        VStack {
-            ForEach(mediaCardDataList) { media in
+        VStack(spacing: 0) {
+            ForEach(Array(mediaCardDataList.enumerated()), id: \.element.id) { index, media in
                 MediaCard(media: media)
+                    .id(index)
+                    .padding(.horizontal)
+                    .padding(.vertical, 4)
             }
         }
-        .padding(.horizontal)
-        .padding(.vertical, 8)
     }
 }
 

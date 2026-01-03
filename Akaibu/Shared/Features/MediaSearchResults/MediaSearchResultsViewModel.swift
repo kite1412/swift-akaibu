@@ -22,21 +22,29 @@ class MediaSearchResultsViewModel: ObservableObject {
     func searchByTitle(title: String) {
         Task {
             if showAnimeSearchResults {
-                updateSearchResults(
-                    for: &animeSearchResults,
-                    nextResult: &nextAnimeSearchResults,
-                    with: await FetchHelpers.tryFetch {
-                        try await animeRepository.getAnimeBases(title: title)
-                    }
-                )
+                switch animeSearchResults {
+                case .success: break
+                default:
+                    updateSearchResults(
+                        for: &animeSearchResults,
+                        nextResult: &nextAnimeSearchResults,
+                        with: await FetchHelpers.tryFetch {
+                            try await animeRepository.getAnimeBases(title: title)
+                        }
+                    )
+                }
             } else {
-                updateSearchResults(
-                    for: &mangaSearchResults,
-                    nextResult: &nextMangaSearchResults,
-                    with: await FetchHelpers.tryFetch {
-                        try await mangaRepository.getMangaBases(title: title)
-                    }
-                )
+                switch mangaSearchResults {
+                case .success: break
+                default:
+                    updateSearchResults(
+                        for: &mangaSearchResults,
+                        nextResult: &nextMangaSearchResults,
+                        with: await FetchHelpers.tryFetch {
+                            try await mangaRepository.getMangaBases(title: title)
+                        }
+                    )
+                }
             }
         }
     }

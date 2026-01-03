@@ -6,7 +6,7 @@
 //
 
 enum MALMangaType: String, Codable {
-    case unknown, manga, oneShot = "one_shot", novel, doujinshi, manhwa, manhua, oel
+    case unknown, manga, oneShot = "one_shot", novel, doujinshi, manhwa, manhua, oel, lightNovel = "light_novel"
     
     var displayName: String {
         switch self {
@@ -18,6 +18,7 @@ enum MALMangaType: String, Codable {
         case .manhwa: return "Manhwa"
         case .manhua: return "Manhua"
         case .oel: return "OEL"
+        case .lightNovel: return "Light Novel"
         }
     }
 }
