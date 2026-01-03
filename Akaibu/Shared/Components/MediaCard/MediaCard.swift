@@ -10,6 +10,16 @@ import Kingfisher
 
 struct MediaCard: View {
     let media: MediaCardData
+    var content: (() -> AnyView)? = nil
+    
+    init(media: MediaCardData) {
+        self.media = media
+    }
+    
+    init(media: MediaCardData, @ViewBuilder content: @escaping () -> some View) {
+        self.media = media
+        self.content = { AnyView(content()) }
+    }
     
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
@@ -53,6 +63,7 @@ struct MediaCard: View {
                 }
                 
                 others
+                content?()
             }
             .padding(.top, 8)
         }
