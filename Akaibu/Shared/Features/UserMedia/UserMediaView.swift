@@ -11,16 +11,7 @@ struct UserMediaView: View {
     let statuses: [String]
     let completedStatus: String
     
-    @StateObject private var viewModel = UserMediaViewModel()
-    
-    init(statuses: [String], completedStatus: String) {
-        self.statuses = ["All"] + statuses
-        if statuses.contains(where: { completedStatus == $0 }) {
-            self.completedStatus = completedStatus
-        } else {
-            fatalError(".completedStatus is not present in .statuses")
-        }
-    }
+    @StateObject private var viewModel: UserMediaViewModel
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -91,10 +82,22 @@ struct UserMediaView: View {
             }
         }
     }
+    
+    init(statuses: [String], completedStatus: String, service: UserMediaService) {
+        _viewModel = StateObject(wrappedValue: UserMediaViewModel(service: service))
+        self.statuses = ["All"] + statuses
+        if statuses.contains(where: { completedStatus == $0 }) {
+            self.completedStatus = completedStatus
+        } else {
+            fatalError(".completedStatus is not present in .statuses")
+        }
+    }
 }
 
 #Preview {
     UserMediaView(
-        statuses: ["Watching", "On Hold", "Completed", "Another", "Another Another"], completedStatus: "Completed"
+        statuses: ["Watching", "On Hold", "Completed", "Another", "Another Another"], 
+        completedStatus: "Completed",
+        service: MockUserMediaService()
     )
 }

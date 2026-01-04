@@ -157,7 +157,8 @@ let userMediaData = UserMediaData(
     userStatus: "Watching",
     userScore: 10,
     consumedUnits: 8,
-    totalUnits: 12
+    totalUnits: 12,
+    updatedAt: Date()
 )
 
 let userMediaDataMinimum = UserMediaData(
@@ -174,7 +175,8 @@ let userMediaDataMinimum = UserMediaData(
     userStatus: "Watching",
     userScore: 0,
     consumedUnits: 8,
-    totalUnits: 12
+    totalUnits: 12,
+    updatedAt: Date()
 )
 
 #Preview {
@@ -198,7 +200,8 @@ let userMediaDataMinimum = UserMediaData(
                     userStatus: media.userStatus,
                     userScore: media.userScore,
                     consumedUnits: newProgress,
-                    totalUnits: media.totalUnits
+                    totalUnits: media.totalUnits,
+                    updatedAt: media.updatedAt
                 )
             },
             onScoreUpdate: { newScore in
@@ -216,7 +219,8 @@ let userMediaDataMinimum = UserMediaData(
                     userStatus: media.userStatus,
                     userScore: newScore,
                     consumedUnits: media.consumedUnits,
-                    totalUnits: media.totalUnits
+                    totalUnits: media.totalUnits,
+                    updatedAt: media.updatedAt
                 )
             }
         )
