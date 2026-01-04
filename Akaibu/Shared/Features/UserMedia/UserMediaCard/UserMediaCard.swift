@@ -127,8 +127,10 @@ struct UserMediaCard: View {
                 .foregroundStyle(.secondary)
             HStack(spacing: 0) {
                 TextField("", text: value)
+                    #if os(iOS)
                     .keyboardType(.numberPad)
                     .textFieldStyle(.roundedBorder)
+                    #endif
                     .onSubmit {
                         onConfirm(value.wrappedValue)
                     }
@@ -140,7 +142,8 @@ struct UserMediaCard: View {
     }
 }
 
-private let data = UserMediaData(
+// TODO delete later
+let userMediaData = UserMediaData(
     id: 1,
     title: "A title",
     synopsis: "Synopsis",
@@ -157,7 +160,7 @@ private let data = UserMediaData(
     totalUnits: 12
 )
 
-private let dataMinimum = UserMediaData(
+let userMediaDataMinimum = UserMediaData(
     id: 2,
     title: "A title",
     synopsis: nil,
@@ -175,7 +178,7 @@ private let dataMinimum = UserMediaData(
 )
 
 #Preview {
-    @Previewable @State var mediaCardDataList = [data, dataMinimum]
+    @Previewable @State var mediaCardDataList = [userMediaData, userMediaDataMinimum]
     
     List(Array(mediaCardDataList.enumerated()), id: \.element.id) { index, media in
         UserMediaCard(
