@@ -24,7 +24,7 @@ struct MALManga: Codable {
     let updatedAt: String?
     let mediaType: MALMangaType?
     let status: MALMangaStatus?
-    let myListStatus: MALMyMangaListStatus?
+    let myListStatus: MALUserMangaListStatus?
     let numVolumes: Int?
     let numChapters: Int?
 }

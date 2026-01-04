@@ -26,7 +26,7 @@ struct MALAnime: Codable {
     let updatedAt: String?
     let mediaType: MALAnimeType?
     let status: MALAnimeStatus?
-    let myListStatus: MALMyAnimeListStatus?
+    let myListStatus: MALUserAnimeListStatus?
     let numEpisodes: Int?
     let startSeason: MALStartSeason?
     let broadcast: MALBroadcast?

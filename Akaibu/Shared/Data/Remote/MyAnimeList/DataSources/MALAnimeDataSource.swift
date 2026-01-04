@@ -47,4 +47,17 @@ class MALAnimeDataSource: AnimeRemoteDataSource {
         
         return res.toDomain()
     }
+    
+    func fetchUserAnimeList(status: UserAnimeStatus?) async throws -> PaginatedResult<[UserAnime]> {
+        let res: PaginatedResult<MALUserAnimeList> = try await paginator.getPaginated(
+            path: MALPaths.userAnimeList,
+            headers: nil,
+            params: [
+                "fields": MALAnimeFields.userAnime,
+                "status": status?.toMALUserAnimeStatus().rawValue ?? ""
+            ]
+        )
+        
+        return res.toDomain()
+    }
 }

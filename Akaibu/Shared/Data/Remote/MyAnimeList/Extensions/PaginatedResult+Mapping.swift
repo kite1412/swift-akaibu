@@ -56,3 +56,16 @@ extension PaginatedResult where Item == MALMangaList {
         )
     }
 }
+
+extension PaginatedResult where Item == MALUserAnimeList {
+    func toDomain() -> PaginatedResult<[UserAnime]> {
+        let userAnimeList = self.data.toUserAnimeList()
+        return PaginatedResult<[UserAnime]>(
+            data: userAnimeList,
+            next: {
+                let res = try await self.next?()
+                return res?.toDomain()
+            }
+        )
+    }
+}

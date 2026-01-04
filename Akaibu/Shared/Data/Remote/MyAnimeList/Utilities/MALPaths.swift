@@ -9,9 +9,12 @@ struct MALPaths {
     private init() {}
     
     static let baseURLString = "https://api.myanimelist.net/v2/"
+    
     static let anime = "anime"
     static let animeRanking = "anime/ranking"
     static let animeSuggestions = "anime/suggestions"
+    static let userAnimeList = "users/@me/animelist"
+    
     static let manga = "manga"
     static let mangaRanking = "manga/ranking"
 }

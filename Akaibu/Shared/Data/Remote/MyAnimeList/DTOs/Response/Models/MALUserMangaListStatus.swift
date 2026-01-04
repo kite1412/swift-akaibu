@@ -1,12 +1,12 @@
 //
-//  MALMyMangaListStatus.swift
+//  MALUserMangaListStatus.swift
 //  Akaibu
 //
 //  Created by kite1412 on 31/12/25.
 //
 
-struct MALMyMangaListStatus: Codable {
-    let status: MALMyMangaStatus?
+struct MALUserMangaListStatus: Codable {
+    let status: MALUserMangaStatus?
     let score: Int
     let numVolumesRead: Int
     let numChaptersRead: Int
