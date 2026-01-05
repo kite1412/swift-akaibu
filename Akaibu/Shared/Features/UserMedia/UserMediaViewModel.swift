@@ -36,9 +36,7 @@ class UserMediaViewModel: ObservableObject {
     
     func changeSelectedStatus(_ status: String) {
         selectedStatus = status
-        filteredUserMediaList = status == "All" ? allList() : allList().filter { media in
-            media.userStatus == status
-        }
+        filteredUserMediaList = getCurrentStatusList()
     }
     
     func updateMediaScore(for media: UserMediaData, score: Int) {
@@ -50,22 +48,18 @@ class UserMediaViewModel: ObservableObject {
             if case .success(let data) = updated {
                 if let index = userMediaList[data.userStatus]?.firstIndex(where: { $0.id == data.id }) {
                     userMediaList[data.userStatus]?[index] = data
-                    filteredUserMediaList = selectedStatus == "All" ? allList() : userMediaList[selectedStatus] ?? []
+                    filteredUserMediaList = getCurrentStatusList()
                 }
             }
         }
     }
     
-    private func allList(sorted: Bool = true) -> [UserMediaData] {
-        let all = userMediaList.flatMap(\.value)
-        
-        if sorted {
-            return all.sorted {
-                $0.updatedAt > $1.updatedAt
-            }
-        } else {
-            return all
-        }
+    private func getCurrentStatusList() -> [UserMediaData] {
+        selectedStatus == "All" ? allList() : userMediaList[selectedStatus] ?? []
+    }
+    
+    private func allList() -> [UserMediaData] {
+        userMediaList.flatMap(\.value)
     }
     
     private func addToAllList(_ list: [UserMediaData]) {

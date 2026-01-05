@@ -48,6 +48,7 @@ class AnimeUserMediaService: UserMediaService {
             data.userStatus = status ?? data.userStatus
             data.consumedUnits = totalEpisodesWatched ?? data.consumedUnits
             data.userScore = score ?? data.userScore
+            data.updatedAt = res.updatedAt
         }
     }
     

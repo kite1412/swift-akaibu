@@ -22,5 +22,5 @@ struct UserMediaData: Identifiable, Hashable {
     var userStatus: String
     var userScore: Int
     var consumedUnits: Int
-    let updatedAt: Date
+    var updatedAt: Date
 }
