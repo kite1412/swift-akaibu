@@ -164,14 +164,15 @@ struct UserMediaCard: View {
                 TextField("", text: value)
                     #if os(iOS)
                     .keyboardType(.numberPad)
-                    .textFieldStyle(.roundedBorder)
                     #endif
+                    .textFieldStyle(.roundedBorder)
                     .onSubmit {
                         onConfirm(value.wrappedValue)
                     }
                 Text(" \(trailing)")
                     .foregroundStyle(.secondary)
             }
+            .frame(minWidth: 60)
         }
         .font(.subheadline)
     }
