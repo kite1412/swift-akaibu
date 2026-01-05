@@ -15,9 +15,7 @@ class UserMediaViewModel: ObservableObject {
     @Published var selectedStatus: String = "All"
     @Published var uiState: UIState = .loading
     
-    private var userMediaList: [String: [UserMediaData]] = [
-        "All": [userMediaData, userMediaDataMinimum]
-    ]
+    private var userMediaList: [String: [UserMediaData]] = [:]
     private var nextResults: [String: NextResultClosure<[UserMediaData]>] = [:]
     
     init(service: UserMediaService) {

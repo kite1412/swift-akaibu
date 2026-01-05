@@ -38,7 +38,11 @@ enum RootDestination: CaseIterable {
     var content: some View {
         switch self {
         case .home: HomeView()
-        case .myAnime: Text("My Anime")
+        case .myAnime: UserMediaView(
+            statuses: UserAnimeStatus.allCases.map(\.rawValue),
+            completedStatus: UserAnimeStatus.completed.rawValue,
+            service: AnimeUserMediaService()
+        )
         case .myManga: Text("My Manga")
         case .categories: Text("Categories")
         case .seasonalAnime: Text("Seasonal Anime")
