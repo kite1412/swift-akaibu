@@ -18,11 +18,11 @@ extension UserAnime {
             genres: genres,
             status: airingStatus.rawValue,
             type: type,
-            userStatus: userStatus.rawValue,
-            userScore: userScore,
-            consumedUnits: totalEpisodesWatched,
             totalUnits: totalEpisodes ?? 0,
-            updatedAt: updatedAt
+            userStatus: progress.status.rawValue,
+            userScore: progress.score,
+            consumedUnits: progress.totalEpisodesWatched,
+            updatedAt: progress.updatedAt
         )
     }
 }

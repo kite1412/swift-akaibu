@@ -66,6 +66,23 @@ class HTTPClient {
         )
     }
     
+    func performFormURLEncodedRequest<T: Decodable>(
+        path: String,
+        httpMethod: String,
+        parameters: [String: String]
+    ) async throws -> T {
+        var req = createAuthenticatedRequest(path: path, httpMethod: httpMethod)
+        let paramArray = parameters.map { key, value in
+            "\(key)=\(value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
+        }
+        let postData = paramArray.joined(separator: "&").data(using: .utf8)!
+        
+        req.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        req.httpBody = postData
+        
+        return try await perform(req)
+    }
+    
     func perform<T: Decodable>(_ request: URLRequest) async throws -> T {
         let (data, response) = try await session.data(for: request)
         guard let httpResp = response as? HTTPURLResponse, (200...299).contains(httpResp.statusCode) else {

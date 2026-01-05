@@ -22,6 +22,10 @@ class AnimeUserMediaService: UserMediaService {
         media
     }
     
+    func updateStatus(for media: UserMediaData, with status: String) async throws -> UserMediaData {
+        media
+    }
+    
     private class PaginatedResultMapper: PaginatedResultUserMediaMapper {
         func mapResult(_ result: PaginatedResult<[UserAnime]>) -> PaginatedResult<[UserMediaData]> {
             PaginatedResult(

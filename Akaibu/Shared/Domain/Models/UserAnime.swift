@@ -18,9 +18,6 @@ struct UserAnime: Identifiable {
     let genres: [String]
     let airingStatus: AiringStatus
     let type: String
-    let userStatus: UserAnimeStatus
-    var userScore: Int
-    var totalEpisodesWatched: Int
     let totalEpisodes: Int?
-    let updatedAt: Date
+    var progress: UserAnimeProgress
 }

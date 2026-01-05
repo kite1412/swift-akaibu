@@ -24,4 +24,10 @@ class MockUserMediaService: UserMediaService {
             data.userScore = score
         }
     }
+    
+    func updateStatus(for media: UserMediaData, with status: String) async throws -> UserMediaData {
+        media.applying { data in
+            data.status = status
+        }
+    }
 }

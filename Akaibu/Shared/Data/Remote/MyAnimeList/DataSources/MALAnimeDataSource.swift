@@ -60,4 +60,14 @@ class MALAnimeDataSource: AnimeRemoteDataSource {
         
         return res.toDomain()
     }
+    
+    func updateUserAnimeProgress(for anime: UserAnime, with progress: UserAnimeProgress) async throws -> UserAnimeProgress {
+        let res: MALUserAnimeListStatus = try await client.performFormURLEncodedRequest(
+            path: MALPaths.updateAnimeListStatus(id: anime.id),
+            httpMethod: "PATCH",
+            parameters: progress.toFormURLEncoded()
+        )
+        
+        return res.toDomain()
+    }
 }

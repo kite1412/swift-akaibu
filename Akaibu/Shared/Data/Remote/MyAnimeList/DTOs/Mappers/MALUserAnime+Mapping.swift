@@ -18,11 +18,13 @@ extension MALUserAnime {
             genres: node.genres.toStrings(),
             airingStatus: node.status.toDomain(),
             type: node.mediaType.dislpayName(),
-            userStatus: listStatus.status.toDomain(),
-            userScore: listStatus.score,
-            totalEpisodesWatched: listStatus.numEpisodesWatched,
             totalEpisodes: node.numEpisodes,
-            updatedAt: DateFormatter.format(dateString: listStatus.updatedAt, with: .iso8601)
+            progress: UserAnimeProgress(
+                status: listStatus.status.toDomain(),
+                score: listStatus.score,
+                totalEpisodesWatched: listStatus.numEpisodesWatched,
+                updatedAt: DateFormatter.format(dateString: listStatus.updatedAt, with: .iso8601)
+            )
         )
     }
 }

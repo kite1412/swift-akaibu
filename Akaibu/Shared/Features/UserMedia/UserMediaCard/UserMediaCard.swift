@@ -189,10 +189,10 @@ let userMediaData = UserMediaData(
     genres: ["Fantasy", "Drama", "Action"],
     status: "Completed",
     type: "TV",
+    totalUnits: 12,
     userStatus: "Watching",
     userScore: 10,
     consumedUnits: 8,
-    totalUnits: 12,
     updatedAt: Date()
 )
 
@@ -207,10 +207,10 @@ let userMediaDataMinimum = UserMediaData(
     genres: ["Fantasy", "Drama", "Action"],
     status: "Completed",
     type: "TV",
+    totalUnits: 12,
     userStatus: "Watching",
     userScore: 0,
     consumedUnits: 8,
-    totalUnits: 12,
     updatedAt: Date()
 )
 
@@ -233,10 +233,10 @@ let userMediaDataMinimum = UserMediaData(
                     genres: media.genres,
                     status: media.status,
                     type: media.type,
+                    totalUnits: media.totalUnits,
                     userStatus: media.userStatus,
                     userScore: media.userScore,
                     consumedUnits: newProgress,
-                    totalUnits: media.totalUnits,
                     updatedAt: media.updatedAt
                 )
             },
@@ -252,10 +252,10 @@ let userMediaDataMinimum = UserMediaData(
                     genres: media.genres,
                     status: media.status,
                     type: media.type,
+                    totalUnits: media.totalUnits,
                     userStatus: media.userStatus,
                     userScore: newScore,
                     consumedUnits: media.consumedUnits,
-                    totalUnits: media.totalUnits,
                     updatedAt: media.updatedAt
                 )
             },
@@ -271,10 +271,10 @@ let userMediaDataMinimum = UserMediaData(
                     genres: media.genres,
                     status: media.status,
                     type: media.type,
+                    totalUnits: media.totalUnits,
                     userStatus: newStatus,
                     userScore: media.userScore,
                     consumedUnits: media.consumedUnits,
-                    totalUnits: media.totalUnits,
                     updatedAt: media.updatedAt
                 )
             }

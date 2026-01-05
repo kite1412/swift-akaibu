@@ -59,7 +59,7 @@ class MALAuthDataSource: AuthRemoteDataSource {
     
     func exchangeCode(_ authorizationCode: String) async throws -> Token {
         try await performTokenRequest(
-            bodyParams: [
+            parameters: [
                 "grant_type": "authorization_code",
                 "client_id": Secrets.malClientId,
                 "client_secret": Secrets.malClientSecret,
@@ -72,7 +72,7 @@ class MALAuthDataSource: AuthRemoteDataSource {
     
     func refreshToken(_ refreshToken: String) async throws -> Token {
         try await performTokenRequest(
-            bodyParams: [
+            parameters: [
                 "grant_type": "refresh_token",
                 "refresh_token": refreshToken,
                 "client_id": Secrets.malClientId,
@@ -82,24 +82,18 @@ class MALAuthDataSource: AuthRemoteDataSource {
     }
     
     private func performTokenRequest(
-        bodyParams: [String: String]
+        parameters: [String: String]
     ) async throws -> Token {
-        var req = client.createRequest(path: "token", httpMethod: "POST")
-        let paramArray = bodyParams.map { key, value in
-            "\(key)=\(value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
-        }
-        let postData = paramArray.joined(separator: "&").data(using: .utf8)!
-        
-        req.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        req.httpBody = postData
+        let res: MALToken = try await client.performFormURLEncodedRequest(
+            path: "token",
+            httpMethod: "POST",
+            parameters: parameters
+        )
         
         debugOnly {
-            AppLogger.auth.debug("token request url: \(req.url?.absoluteString ?? "<unknown>")")
-            AppLogger.auth.debug("token request body: \(String(decoding: postData, as: UTF8.self))")
+            AppLogger.auth.info("Success performing token request with type: \(res.tokenType)")
         }
         
-        let token: MALToken = try await client.perform(req)
-        
-        return token.toDomain()
+        return res.toDomain()
     }
 }

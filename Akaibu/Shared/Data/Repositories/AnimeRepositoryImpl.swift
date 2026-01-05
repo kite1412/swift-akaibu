@@ -27,4 +27,8 @@ class AnimeRepositoryImpl: AnimeRepository {
     func getUserAnimeList(status: UserAnimeStatus?) async throws -> PaginatedResult<[UserAnime]> {
         try await remoteDataSource.fetchUserAnimeList(status: status)
     }
+    
+    func updateUserAnimeProgress(for anime: UserAnime, with progress: UserAnimeProgress) async throws -> UserAnimeProgress {
+        try await remoteDataSource.updateUserAnimeProgress(for: anime, with: progress)
+    }
 }
