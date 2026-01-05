@@ -5,6 +5,8 @@
 //  Created by kite1412 on 05/01/26.
 //
 
+import Foundation
+
 class AnimeUserMediaService: UserMediaService {
     private let repository = DIContainer.shared.animeRepository
     private let mapper = PaginatedResultMapper()
@@ -15,15 +17,52 @@ class AnimeUserMediaService: UserMediaService {
     }
     
     func updateConsumedUnits(for media: UserMediaData, with consumedUnits: Int) async throws -> UserMediaData {
-        media
+        try await updateUserAnimeProgress(for: media, totalEpisodesWatched: consumedUnits)
     }
     
     func updateScore(for media: UserMediaData, with score: Int) async throws -> UserMediaData {
-        media
+        try await updateUserAnimeProgress(for: media, score: score)
     }
     
     func updateStatus(for media: UserMediaData, with status: String) async throws -> UserMediaData {
-        media
+        try await updateUserAnimeProgress(for: media, status: status)
+    }
+    
+    private func updateUserAnimeProgress(
+        for media: UserMediaData,
+        status: String? = nil,
+        totalEpisodesWatched: Int? = nil,
+        score: Int? = nil
+    ) async throws -> UserMediaData {
+        let res = try await repository.updateUserAnimeProgress(
+            animeId: media.id,
+            with: newProgress(
+                media: media,
+                status: status,
+                totalEpisodesWatched: totalEpisodesWatched,
+                score: score
+            )
+        )
+        
+        return media.applying { data in
+            data.userStatus = status ?? data.userStatus
+            data.consumedUnits = totalEpisodesWatched ?? data.consumedUnits
+            data.userScore = score ?? data.userScore
+        }
+    }
+    
+    private func newProgress(
+        media: UserMediaData,
+        status: String? = nil,
+        totalEpisodesWatched: Int? = nil,
+        score: Int? = nil
+    ) -> UserAnimeProgress {
+        UserAnimeProgress(
+            status: UserAnimeStatus(rawValue: status ?? media.userStatus)!,
+            score: score ?? media.userScore,
+            totalEpisodesWatched: totalEpisodesWatched ?? media.consumedUnits,
+            updatedAt: Date()
+        )
     }
     
     private class PaginatedResultMapper: PaginatedResultUserMediaMapper {

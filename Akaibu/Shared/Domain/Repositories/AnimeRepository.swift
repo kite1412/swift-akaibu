@@ -10,5 +10,5 @@ protocol AnimeRepository {
     func getAnimeRanks(limit: Int) async throws -> PaginatedResult<[MediaRank]>
     func getAnimeSuggestions() async throws -> PaginatedResult<[AnimeBase]>
     func getUserAnimeList(status: UserAnimeStatus?) async throws -> PaginatedResult<[UserAnime]>
-    func updateUserAnimeProgress(for anime: UserAnime, with progress: UserAnimeProgress) async throws -> UserAnimeProgress
+    func updateUserAnimeProgress(animeId: Int, with progress: UserAnimeProgress) async throws -> UserAnimeProgress
 }

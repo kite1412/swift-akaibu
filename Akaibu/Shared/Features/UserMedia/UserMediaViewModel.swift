@@ -41,16 +41,43 @@ class UserMediaViewModel: ObservableObject {
         }
     }
     
-    private func allList() -> [UserMediaData] {
-        userMediaList.flatMap(\.value)
-            .sorted { 
+    func updateMediaScore(for media: UserMediaData, score: Int) {
+        Task {
+            let updated = await FetchHelpers.tryFetch {
+                try await service.updateScore(for: media, with: score)
+            }
+            
+            if case .success(let data) = updated {
+                if let index = userMediaList[data.userStatus]?.firstIndex(where: { $0.id == data.id }) {
+                    userMediaList[data.userStatus]?[index] = data
+                    filteredUserMediaList = selectedStatus == "All" ? allList() : userMediaList[selectedStatus] ?? []
+                }
+            }
+        }
+    }
+    
+    private func allList(sorted: Bool = true) -> [UserMediaData] {
+        let all = userMediaList.flatMap(\.value)
+        
+        if sorted {
+            return all.sorted {
                 $0.updatedAt > $1.updatedAt
             }
+        } else {
+            return all
+        }
     }
     
     private func addToAllList(_ list: [UserMediaData]) {
-        let all = Array(Set((userMediaList["All"] ?? []) + list))
-        userMediaList["All"] = all
+        let grouped = Dictionary(grouping: list) { media in media.userStatus }
+        
+        grouped.forEach { key, mediaList in
+            if userMediaList[key] == nil {
+                userMediaList[key] = []
+            }
+            
+            userMediaList[key]?.append(contentsOf: mediaList)
+        }
     }
     
     private func saveNextResult(status: String, nextResult: NextResultClosure<[UserMediaData]>) {

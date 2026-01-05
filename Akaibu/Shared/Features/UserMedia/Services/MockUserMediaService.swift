@@ -27,7 +27,7 @@ class MockUserMediaService: UserMediaService {
     
     func updateStatus(for media: UserMediaData, with status: String) async throws -> UserMediaData {
         media.applying { data in
-            data.status = status
+            data.userStatus = status
         }
     }
 }

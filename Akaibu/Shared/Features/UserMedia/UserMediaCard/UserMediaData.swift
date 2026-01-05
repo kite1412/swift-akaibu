@@ -16,10 +16,10 @@ struct UserMediaData: Identifiable, Hashable {
     let score: Double?
     let scoringUsers: Int?
     let genres: [String]
-    var status: String
+    let status: String
     let type: String
     let totalUnits: Int?
-    let userStatus: String
+    var userStatus: String
     var userScore: Int
     var consumedUnits: Int
     let updatedAt: Date

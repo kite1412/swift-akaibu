@@ -10,5 +10,5 @@ protocol AnimeRemoteDataSource {
     func fetchAnimeRanks(limit: Int) async throws -> PaginatedResult<[MediaRank]>
     func fetchAnimeSuggestions() async throws -> PaginatedResult<[AnimeBase]>
     func fetchUserAnimeList(status: UserAnimeStatus?) async throws -> PaginatedResult<[UserAnime]>
-    func updateUserAnimeProgress(for anime: UserAnime, with progress: UserAnimeProgress) async throws -> UserAnimeProgress
+    func updateUserAnimeProgress(animeId: Int, with progress: UserAnimeProgress) async throws -> UserAnimeProgress
 }
