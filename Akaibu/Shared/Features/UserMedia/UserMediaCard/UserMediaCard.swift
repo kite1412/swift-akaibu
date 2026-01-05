@@ -9,74 +9,107 @@ import SwiftUI
 
 struct UserMediaCard: View {
     let data: UserMediaData
+    let availableStatuses: [String]
     let onProgressUpdate: (Int) -> Void
     let onScoreUpdate: (Int) -> Void
+    let onStatusUpdate: (String) -> Void
     
     @State private var proggres: String = ""
     @State private var score: String = ""
     @State private var progressPopover: Bool = false
     @State private var scorePopover: Bool = false
+    @State private var statusPopOver: Bool = false
     
     init(
         data: UserMediaData,
+        availableStatuses: [String],
         onProgressUpdate: @escaping (Int) -> Void,
-        onScoreUpdate: @escaping (Int) -> Void
+        onScoreUpdate: @escaping (Int) -> Void,
+        onStatusUpdate: @escaping (String) -> Void
     ) {
         self.data = data
+        self.availableStatuses = availableStatuses
         self.onScoreUpdate = onScoreUpdate
         self.onProgressUpdate = onProgressUpdate
+        self.onStatusUpdate = onStatusUpdate
         _proggres = State(initialValue: String(data.consumedUnits))
         _score = State(initialValue: String(data.userScore))
     }
     
     var body: some View {
         MediaCard(media: data.toMediaCardData()) {
-            HStack {
+            VStack(alignment: .leading, spacing: 4) {
                 editableProp(
-                    label: "Progress",
-                    value: "\(data.consumedUnits) / \(data.totalUnits.map { String($0) } ?? "*")",
-                    systemImage: "chevron.down",
-                    showPopover: $progressPopover
+                    label: "Status",
+                    value: data.userStatus,
+                    systemImage: nil,
+                    showPopover: $statusPopOver
                 )
-                .popover(isPresented: $progressPopover, arrowEdge: .bottom) {
+                .popover(isPresented: $statusPopOver, arrowEdge: .bottom) {
                     popoverContent {
-                        editField(
-                            label: "Progress",
-                            value: $proggres,
-                            trailing: "/ \(data.totalUnits.map(\.description) ?? "*")"
-                        ) { newValue in
-                            progressPopover = false
-                            onProgressUpdate(Int(newValue) ?? 0)
+                        VStack {
+                            ForEach(availableStatuses, id: \.self) { status in
+                                VStack(spacing: 4) {
+                                    Text(status)
+                                    Divider()
+                                }
+                                .onTapGesture {
+                                    statusPopOver = false
+                                    onStatusUpdate(status)
+                                }
+                                .foregroundStyle(data.userStatus == status ? .accent : .primary)
+                            }
                         }
-                    }
-                }
-                .onChange(of: progressPopover) {
-                    if progressPopover {
-                        proggres = String(data.consumedUnits)
                     }
                 }
                 
-                editableProp(
-                    label: "Score",
-                    value: String(data.userScore),
-                    systemImage: "star.fill",
-                    showPopover: $scorePopover
-                )
-                .popover(isPresented: $scorePopover, arrowEdge: .bottom) {
-                    popoverContent {
-                        editField(
-                            label: "Score",
-                            value: $score,
-                            trailing: "/ 10"
-                        ) { newValue in
-                            scorePopover = false
-                            onScoreUpdate(Int(newValue) ?? 0)
+                HStack {
+                    editableProp(
+                        label: "Progress",
+                        value: "\(data.consumedUnits) / \(data.totalUnits.map { String($0) } ?? "*")",
+                        systemImage: "chevron.down",
+                        showPopover: $progressPopover
+                    )
+                    .popover(isPresented: $progressPopover, arrowEdge: .bottom) {
+                        popoverContent {
+                            editField(
+                                label: "Progress",
+                                value: $proggres,
+                                trailing: "/ \(data.totalUnits.map(\.description) ?? "*")"
+                            ) { newValue in
+                                progressPopover = false
+                                onProgressUpdate(Int(newValue) ?? 0)
+                            }
                         }
                     }
-                }
-                .onChange(of: scorePopover) {
-                    if scorePopover {
-                        score = String(data.userScore)
+                    .onChange(of: progressPopover) {
+                        if progressPopover {
+                            proggres = String(data.consumedUnits)
+                        }
+                    }
+                    
+                    editableProp(
+                        label: "Score",
+                        value: String(data.userScore),
+                        systemImage: "star.fill",
+                        showPopover: $scorePopover
+                    )
+                    .popover(isPresented: $scorePopover, arrowEdge: .bottom) {
+                        popoverContent {
+                            editField(
+                                label: "Score",
+                                value: $score,
+                                trailing: "/ 10"
+                            ) { newValue in
+                                scorePopover = false
+                                onScoreUpdate(Int(newValue) ?? 0)
+                            }
+                        }
+                    }
+                    .onChange(of: scorePopover) {
+                        if scorePopover {
+                            score = String(data.userScore)
+                        }
                     }
                 }
             }
@@ -87,7 +120,7 @@ struct UserMediaCard: View {
     private func editableProp(
         label: String,
         value: String,
-        systemImage: String,
+        systemImage: String?,
         showPopover: Binding<Bool>
     ) -> some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -95,8 +128,10 @@ struct UserMediaCard: View {
                 .foregroundStyle(.secondary)
             HStack {
                 Text(value)
-                Image(systemName: systemImage)
-                    .foregroundStyle(.accent)
+                if let systemImage {
+                    Image(systemName: systemImage)
+                        .foregroundStyle(.accent)
+                }
             }
             .padding(8)
             .background(
@@ -185,6 +220,7 @@ let userMediaDataMinimum = UserMediaData(
     List(Array(mediaCardDataList.enumerated()), id: \.element.id) { index, media in
         UserMediaCard(
             data: media,
+            availableStatuses: ["Watching", "Completed", "Plan To Watch"],
             onProgressUpdate: { newProgress in
                 mediaCardDataList[index] = UserMediaData(
                     id: media.id,
@@ -218,6 +254,25 @@ let userMediaDataMinimum = UserMediaData(
                     type: media.type,
                     userStatus: media.userStatus,
                     userScore: newScore,
+                    consumedUnits: media.consumedUnits,
+                    totalUnits: media.totalUnits,
+                    updatedAt: media.updatedAt
+                )
+            },
+            onStatusUpdate: { newStatus in
+                mediaCardDataList[index] = UserMediaData(
+                    id: media.id,
+                    title: media.title,
+                    synopsis: media.synopsis,
+                    coverImageUrl: media.coverImageUrl,
+                    isAdult: media.isAdult,
+                    score: media.score,
+                    scoringUsers: media.scoringUsers,
+                    genres: media.genres,
+                    status: media.status,
+                    type: media.type,
+                    userStatus: newStatus,
+                    userScore: media.userScore,
                     consumedUnits: media.consumedUnits,
                     totalUnits: media.totalUnits,
                     updatedAt: media.updatedAt

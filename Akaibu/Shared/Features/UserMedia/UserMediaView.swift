@@ -47,6 +47,7 @@ struct UserMediaView: View {
                         .fill(.thinMaterial)
                 )
                 .padding(.leading)
+                .padding(.top)
             }
             .scrollTargetBehavior(.viewAligned)
             .scrollPosition(
@@ -66,9 +67,16 @@ struct UserMediaView: View {
                         ScrollView {
                             VStack(alignment: .leading) {
                                 ForEach(viewModel.filteredUserMediaList) { media in
-                                    UserMediaCard(data: media) { newConsumedUnits in
+                                    UserMediaCard(
+                                        data: media,
+                                        availableStatuses: statuses.filter { status in
+                                            status != "All"
+                                        }
+                                    ) { newConsumedUnits in
                                         
                                     } onScoreUpdate: { newScore in
+                                        
+                                    } onStatusUpdate: { newStatus in
                                         
                                     }
                                 }
