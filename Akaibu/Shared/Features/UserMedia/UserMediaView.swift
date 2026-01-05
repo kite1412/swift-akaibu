@@ -57,29 +57,39 @@ struct UserMediaView: View {
             )
             .scrollIndicators(.hidden)
             
-            if !viewModel.filteredUserMediaList.isEmpty {
-                ScrollView {
-                    VStack(alignment: .leading) {
-                        ForEach(viewModel.filteredUserMediaList) { media in
-                            UserMediaCard(data: media) { newConsumedUnits in
-                                
-                            } onScoreUpdate: { newScore in
-                                
+            ZStack {
+                switch viewModel.uiState {
+                case .loading:
+                    Loading(loadingText: "Loading list...")
+                case .success:
+                    if !viewModel.filteredUserMediaList.isEmpty {
+                        ScrollView {
+                            VStack(alignment: .leading) {
+                                ForEach(viewModel.filteredUserMediaList) { media in
+                                    UserMediaCard(data: media) { newConsumedUnits in
+                                        
+                                    } onScoreUpdate: { newScore in
+                                        
+                                    }
+                                }
                             }
+                            .padding(.horizontal)
+                            .padding(.vertical, 8)
                         }
+                    } else {
+                        VStack {
+                            Image(systemName: "text.page.slash")
+                            Text("list is empty")
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .font(.title)
+                        .foregroundStyle(.secondary)
                     }
-                    .padding(.horizontal)
-                    .padding(.vertical, 8)
+                case .failure:
+                    Text("Failed to load the list. Please try again later.")
                 }
-            } else {
-                VStack {
-                    Image(systemName: "text.page.slash")
-                    Text("list is empty")
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .font(.title)
-                .foregroundStyle(.secondary)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
     

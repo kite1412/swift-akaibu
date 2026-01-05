@@ -58,16 +58,7 @@ struct FetchStateView<Data, Content: View>: View {
         case .success(let data):
             successView(data)
         case .loading:
-            VStack {
-                ProgressView()
-                    .progressViewStyle(.circular)
-                if let loadingText {
-                    Text(loadingText)
-                        .font(.caption)
-                        .italic()
-                }
-            }
-            .foregroundStyle(.secondary)
+            Loading(loadingText: loadingText)
         }
     }
 }
