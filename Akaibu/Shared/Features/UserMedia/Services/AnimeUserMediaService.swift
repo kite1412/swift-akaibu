@@ -17,7 +17,11 @@ class AnimeUserMediaService: UserMediaService {
     }
     
     func updateConsumedUnits(for media: UserMediaData, with consumedUnits: Int) async throws -> UserMediaData {
-        try await updateUserAnimeProgress(for: media, totalEpisodesWatched: consumedUnits)
+        if media.userStatus != UserAnimeStatus.completed.rawValue {
+            return try await updateUserAnimeProgress(for: media, totalEpisodesWatched: consumedUnits)
+        } else {
+            return media
+        }
     }
     
     func updateScore(for media: UserMediaData, with score: Int) async throws -> UserMediaData {
@@ -25,7 +29,11 @@ class AnimeUserMediaService: UserMediaService {
     }
     
     func updateStatus(for media: UserMediaData, with status: String) async throws -> UserMediaData {
-        try await updateUserAnimeProgress(for: media, status: status)
+        try await updateUserAnimeProgress(
+            for: media,
+            status: status,
+            totalEpisodesWatched: status == UserAnimeStatus.completed.rawValue ? media.totalUnits != nil ? media.totalUnits! : nil : nil
+        )
     }
     
     private func updateUserAnimeProgress(

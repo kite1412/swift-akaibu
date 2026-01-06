@@ -71,7 +71,8 @@ struct UserMediaView: View {
                                         data: media,
                                         availableStatuses: statuses.filter { status in
                                             status != "All"
-                                        }
+                                        },
+                                        completedStatus: completedStatus
                                     ) { newConsumedUnits in
                                         viewModel.updateMediaConsumedUnits(for: media, consumedUnits: newConsumedUnits)
                                     } onScoreUpdate: { newScore in

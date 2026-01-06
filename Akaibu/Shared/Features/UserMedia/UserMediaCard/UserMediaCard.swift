@@ -10,6 +10,7 @@ import SwiftUI
 struct UserMediaCard: View {
     let data: UserMediaData
     let availableStatuses: [String]
+    let completedStatus: String
     let onProgressUpdate: (Int) -> Void
     let onScoreUpdate: (Int) -> Void
     let onStatusUpdate: (String) -> Void
@@ -23,12 +24,20 @@ struct UserMediaCard: View {
     init(
         data: UserMediaData,
         availableStatuses: [String],
+        completedStatus: String,
         onConsumedUnitsUpdate: @escaping (Int) -> Void,
         onScoreUpdate: @escaping (Int) -> Void,
         onStatusUpdate: @escaping (String) -> Void
     ) {
         self.data = data
-        self.availableStatuses = availableStatuses
+        self.completedStatus = completedStatus
+        
+        if data.totalUnits == nil {
+            self.availableStatuses = availableStatuses.filter { $0 != completedStatus }
+        } else {
+            self.availableStatuses = availableStatuses
+        }
+        
         self.onScoreUpdate = onScoreUpdate
         self.onProgressUpdate = onConsumedUnitsUpdate
         self.onStatusUpdate = onStatusUpdate
@@ -243,6 +252,7 @@ let userMediaDataMinimum = UserMediaData(
         UserMediaCard(
             data: media,
             availableStatuses: ["Watching", "Completed", "Plan To Watch"],
+            completedStatus: "Completed",
             onConsumedUnitsUpdate: { newProgress in
                 mediaCardDataList[index] = UserMediaData(
                     id: media.id,
