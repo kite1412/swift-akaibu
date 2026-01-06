@@ -14,25 +14,25 @@ struct UserMediaCard: View {
     let onScoreUpdate: (Int) -> Void
     let onStatusUpdate: (String) -> Void
     
-    @State private var proggres: String = ""
+    @State private var consumedUnits: String = ""
     @State private var score: String = ""
-    @State private var progressPopover: Bool = false
+    @State private var consumedUnitsPopover: Bool = false
     @State private var scorePopover: Bool = false
     @State private var statusPopover: Bool = false
     
     init(
         data: UserMediaData,
         availableStatuses: [String],
-        onProgressUpdate: @escaping (Int) -> Void,
+        onConsumedUnitsUpdate: @escaping (Int) -> Void,
         onScoreUpdate: @escaping (Int) -> Void,
         onStatusUpdate: @escaping (String) -> Void
     ) {
         self.data = data
         self.availableStatuses = availableStatuses
         self.onScoreUpdate = onScoreUpdate
-        self.onProgressUpdate = onProgressUpdate
+        self.onProgressUpdate = onConsumedUnitsUpdate
         self.onStatusUpdate = onStatusUpdate
-        _proggres = State(initialValue: String(data.consumedUnits))
+        _consumedUnits = State(initialValue: String(data.consumedUnits))
         _score = State(initialValue: String(data.userScore))
     }
     
@@ -68,23 +68,35 @@ struct UserMediaCard: View {
                         label: "Progress",
                         value: "\(data.consumedUnits) / \(data.totalUnits.map { String($0) } ?? "*")",
                         systemImage: "chevron.down",
-                        showPopover: $progressPopover
+                        showPopover: $consumedUnitsPopover
                     )
-                    .popover(isPresented: $progressPopover, arrowEdge: .bottom) {
+                    .popover(isPresented: $consumedUnitsPopover, arrowEdge: .bottom) {
                         popoverContent {
                             editField(
                                 label: "Progress",
-                                value: $proggres,
+                                value: $consumedUnits,
                                 trailing: "/ \(data.totalUnits.map(\.description) ?? "*")"
                             ) { newValue in
-                                progressPopover = false
-                                onProgressUpdate(Int(newValue) ?? 0)
+                                consumedUnitsPopover = false
+                                if let newProgress = Int(newValue) {
+                                    onProgressUpdate(newProgress)
+                                }
+                            }
+                            .onChange(of: consumedUnits) {
+                                if let consumedUnits = Int(consumedUnits) {
+                                    self.consumedUnits = String(
+                                        intThreshold(
+                                            actualValue: consumedUnits,
+                                            maxValue: data.totalUnits ?? Int.max
+                                        )
+                                    )
+                                }
                             }
                         }
                     }
-                    .onChange(of: progressPopover) {
-                        if progressPopover {
-                            proggres = String(data.consumedUnits)
+                    .onChange(of: consumedUnitsPopover) {
+                        if consumedUnitsPopover {
+                            consumedUnits = String(data.consumedUnits)
                         }
                     }
                     
@@ -104,6 +116,11 @@ struct UserMediaCard: View {
                                 scorePopover = false
                                 onScoreUpdate(Int(newValue) ?? 0)
                             }
+                            .onChange(of: score) {
+                                if let score = Int(score) {
+                                    self.score = String(intThreshold(actualValue: score, maxValue: 10))
+                                }
+                            }
                         }
                     }
                     .onChange(of: scorePopover) {
@@ -115,6 +132,10 @@ struct UserMediaCard: View {
             }
             .padding(.top, 8)
         }
+    }
+    
+    private func intThreshold(actualValue: Int, maxValue: Int) -> Int {
+        min(actualValue >= 0 ? actualValue : 0, maxValue)
     }
     
     private func editableProp(
@@ -222,7 +243,7 @@ let userMediaDataMinimum = UserMediaData(
         UserMediaCard(
             data: media,
             availableStatuses: ["Watching", "Completed", "Plan To Watch"],
-            onProgressUpdate: { newProgress in
+            onConsumedUnitsUpdate: { newProgress in
                 mediaCardDataList[index] = UserMediaData(
                     id: media.id,
                     title: media.title,
