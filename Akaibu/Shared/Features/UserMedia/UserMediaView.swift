@@ -73,11 +73,11 @@ struct UserMediaView: View {
                                             status != "All"
                                         }
                                     ) { newConsumedUnits in
-                                        
+                                        viewModel.updateMediaConsumedUnits(for: media, consumedUnits: newConsumedUnits)
                                     } onScoreUpdate: { newScore in
                                         viewModel.updateMediaScore(for: media, score: newScore)
                                     } onStatusUpdate: { newStatus in
-                                        
+                                        viewModel.updateMediaStatus(for: media, status: newStatus)
                                     }
                                 }
                             }

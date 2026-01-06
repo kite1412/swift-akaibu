@@ -18,7 +18,7 @@ struct UserMediaCard: View {
     @State private var score: String = ""
     @State private var progressPopover: Bool = false
     @State private var scorePopover: Bool = false
-    @State private var statusPopOver: Bool = false
+    @State private var statusPopover: Bool = false
     
     init(
         data: UserMediaData,
@@ -43,9 +43,9 @@ struct UserMediaCard: View {
                     label: "Status",
                     value: data.userStatus,
                     systemImage: nil,
-                    showPopover: $statusPopOver
+                    showPopover: $statusPopover
                 )
-                .popover(isPresented: $statusPopOver, arrowEdge: .bottom) {
+                .popover(isPresented: $statusPopover, arrowEdge: .bottom) {
                     popoverContent {
                         VStack {
                             ForEach(availableStatuses, id: \.self) { status in
@@ -54,7 +54,7 @@ struct UserMediaCard: View {
                                     Divider()
                                 }
                                 .onTapGesture {
-                                    statusPopOver = false
+                                    statusPopover = false
                                     onStatusUpdate(status)
                                 }
                                 .foregroundStyle(data.userStatus == status ? .accent : .primary)
