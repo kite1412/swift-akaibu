@@ -47,4 +47,14 @@ class MALMangaDataSource: MangaRemoteDataSource {
         
         return res.toDomain()
     }
+    
+    func updateUserMangaProgress(mangaId: Int, with progress: UserMangaProgress) async throws -> UserMangaProgress {
+        let res: MALUserMangaListStatus = try await client.performFormURLEncodedRequest(
+            path: MALPaths.updateMangaListStatus(id: mangaId),
+            httpMethod: "PATCH",
+            parameters: progress.toFormURLEncoded()
+        )
+        
+        return res.toDomain()
+    }
 }

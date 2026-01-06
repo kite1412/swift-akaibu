@@ -23,4 +23,8 @@ class MangaRepositoryImpl: MangaRepository {
     func getUserMangaList(status: UserMangaStatus?) async throws -> PaginatedResult<[UserManga]> {
         try await remoteDataSource.fetchUserMangaList(status: status)
     }
+    
+    func updateUserMangaProgress(mangaId: Int, with progress: UserMangaProgress) async throws -> UserMangaProgress {
+        try await remoteDataSource.updateUserMangaProgress(mangaId: mangaId, with: progress)
+    }
 }

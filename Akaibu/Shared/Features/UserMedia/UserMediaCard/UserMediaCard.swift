@@ -57,7 +57,7 @@ struct UserMediaCard: View {
                 .popover(isPresented: $statusPopover, arrowEdge: .bottom) {
                     popoverContent {
                         VStack {
-                            ForEach(availableStatuses, id: \.self) { status in
+                            ForEach(filteredAvailableStatuses, id: \.self) { status in
                                 VStack(spacing: 4) {
                                     Text(status)
                                     Divider()
@@ -75,7 +75,7 @@ struct UserMediaCard: View {
                 HStack {
                     editableProp(
                         label: "Progress",
-                        value: "\(data.consumedUnits) / \(data.totalUnits.map { String($0) } ?? "*")",
+                        value: "\(data.consumedUnits) / \(totalUnitsString)",
                         systemImage: "chevron.down",
                         showPopover: $consumedUnitsPopover
                     )
@@ -84,7 +84,7 @@ struct UserMediaCard: View {
                             editField(
                                 label: "Progress",
                                 value: $consumedUnits,
-                                trailing: "/ \(data.totalUnits.map(\.description) ?? "*")"
+                                trailing: "/ \(totalUnitsString)"
                             ) { newValue in
                                 consumedUnitsPopover = false
                                 if let newProgress = Int(newValue) {
@@ -140,6 +140,28 @@ struct UserMediaCard: View {
                 }
             }
             .padding(.top, 8)
+        }
+    }
+    
+    private var totalUnitsString: String {
+        let unknownTotalUnits: String = "~"
+        
+        if let totalUnits = data.totalUnits {
+            if totalUnits == 0 {
+                return unknownTotalUnits
+            } else {
+                return String(totalUnits)
+            }
+        } else {
+            return unknownTotalUnits
+        }
+    }
+    
+    private var filteredAvailableStatuses: [String] {
+        if data.totalUnits == 0 {
+            return availableStatuses.filter { $0 != completedStatus }
+        } else {
+            return availableStatuses
         }
     }
     
