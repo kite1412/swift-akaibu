@@ -70,6 +70,17 @@ class UserMediaViewModel: ObservableObject {
         }
     }
     
+    func filterByTitle(_ title: String) {
+        if title.isEmpty {
+            filteredUserMediaList = currentListByStatus()
+            return
+        }
+        
+        filteredUserMediaList = currentListByStatus().filter { media in
+            media.title.localizedCaseInsensitiveContains(title)
+        }
+    }
+    
     private func updateMediaProgress(
         for media: UserMediaData,
         with operation: @escaping () async throws -> UserMediaData

@@ -13,9 +13,10 @@ struct UserMediaView: View {
     
     @StateObject private var viewModel: UserMediaViewModel
     @State private var showCompletedStatusConstraintAlert: Bool = false
+    @State private var searchTitle: String = ""
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 0) {
             ScrollView(.horizontal) {
                 HStack(spacing: 0) {
                     ForEach(statuses, id: \.self) { status in
@@ -48,7 +49,7 @@ struct UserMediaView: View {
                         .fill(.thinMaterial)
                 )
                 .padding(.leading)
-                .padding(.top)
+                .padding(.vertical, 8)
             }
             .scrollTargetBehavior(.viewAligned)
             .scrollPosition(
@@ -112,6 +113,14 @@ struct UserMediaView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .searchable(
+                text: $searchTitle,
+                placement: .toolbar,
+                prompt: "Search by title"
+            )
+            .onChange(of: searchTitle) {
+                viewModel.filterByTitle(searchTitle)
+            }
         }
     }
     
