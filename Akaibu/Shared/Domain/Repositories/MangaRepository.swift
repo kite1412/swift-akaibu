@@ -8,4 +8,5 @@
 protocol MangaRepository {
     func getMangaBases(title: String) async throws -> PaginatedResult<[MangaBase]>
     func getMangaRanks(limit: Int) async throws -> PaginatedResult<[MediaRank]>
+    func getUserMangaList(status: UserMangaStatus?) async throws -> PaginatedResult<[UserManga]>
 }

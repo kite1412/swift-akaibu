@@ -6,7 +6,7 @@
 //
 
 struct MALUserMangaListStatus: Codable {
-    let status: MALUserMangaStatus?
+    let status: MALUserMangaStatus
     let score: Int
     let numVolumesRead: Int
     let numChaptersRead: Int

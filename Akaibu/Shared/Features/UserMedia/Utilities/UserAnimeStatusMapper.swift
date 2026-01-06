@@ -28,8 +28,4 @@ struct UserAnimeStatusMapper {
             return nil
         }
     }
-    
-    static func string(from status: UserAnimeStatus?) -> String? {
-        status?.rawValue
-    }
 }

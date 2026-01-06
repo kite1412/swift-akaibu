@@ -11,4 +11,5 @@ struct MALMangaFields {
     
     static let base = "[synopsis,media_type,nsfw,status,genres,mean,num_scoring_users]"
     static let rank = "[mean,synopsis,media_type,status,rating,nsfw]"
+    static let userManga = "[synopsis,media_type,nsfw,status,genres,mean,num_scoring_users,num_chapters,list_status]"
 }

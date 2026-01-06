@@ -19,4 +19,8 @@ class MangaRepositoryImpl: MangaRepository {
     func getMangaRanks(limit: Int) async throws -> PaginatedResult<[MediaRank]> {
         try await remoteDataSource.fetchMangaRanks(limit: limit)
     }
+    
+    func getUserMangaList(status: UserMangaStatus?) async throws -> PaginatedResult<[UserManga]> {
+        try await remoteDataSource.fetchUserMangaList(status: status)
+    }
 }

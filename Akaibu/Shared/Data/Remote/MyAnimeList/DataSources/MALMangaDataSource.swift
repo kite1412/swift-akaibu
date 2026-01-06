@@ -34,4 +34,17 @@ class MALMangaDataSource: MangaRemoteDataSource {
         
         return res.toDomain()
     }
+    
+    func fetchUserMangaList(status: UserMangaStatus?) async throws -> PaginatedResult<[UserManga]> {
+        let res: PaginatedResult<MALUserMangaList> = try await paginator.getPaginated(
+            path: MALPaths.userMangaList,
+            headers: nil,
+            params: [
+                "fields": MALMangaFields.userManga,
+                "status": status?.toMALUserMangaStatus().rawValue ?? ""
+            ]
+        )
+        
+        return res.toDomain()
+    }
 }
