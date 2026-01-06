@@ -12,6 +12,7 @@ struct UserMediaView: View {
     let completedStatus: String
     
     @StateObject private var viewModel: UserMediaViewModel
+    @State private var showCompletedStatusConstraintAlert: Bool = false
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -74,11 +75,23 @@ struct UserMediaView: View {
                                         },
                                         completedStatus: completedStatus
                                     ) { newConsumedUnits in
-                                        viewModel.updateMediaConsumedUnits(for: media, consumedUnits: newConsumedUnits)
+                                        if newConsumedUnits < media.totalUnits ?? 0 && media.userStatus == completedStatus {
+                                            showCompletedStatusConstraintAlert = true
+                                        } else {
+                                            viewModel.updateMediaConsumedUnits(for: media, consumedUnits: newConsumedUnits)
+                                        }
                                     } onScoreUpdate: { newScore in
                                         viewModel.updateMediaScore(for: media, score: newScore)
                                     } onStatusUpdate: { newStatus in
                                         viewModel.updateMediaStatus(for: media, status: newStatus)
+                                    }
+                                    .alert(
+                                        "Can't update the progress when status is set to \(completedStatus)",
+                                        isPresented: $showCompletedStatusConstraintAlert,
+                                    ) {
+                                        Button("Ok", role: .confirm) {
+                                            showCompletedStatusConstraintAlert = false
+                                        }
                                     }
                                 }
                             }
