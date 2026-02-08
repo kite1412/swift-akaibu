@@ -12,6 +12,7 @@ struct AppLogger {
     
     static let auth = Logger(subsystem: subsystem, category: "Auth")
     static let network = Logger(subsystem: subsystem, category: "Network")
+    static let data = Logger(subsystem: subsystem, category: "Data")
     
     private init() {}
 }

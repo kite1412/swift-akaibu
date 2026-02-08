@@ -49,6 +49,37 @@ class MediaSearchResultsViewModel: ObservableObject {
         }
     }
     
+    func loadMoreAnimeResults() {
+        if case .success(let data) = animeSearchResults {
+            if let nextAnimeSearchResults {
+                Task {
+                    let res = await FetchHelpers.tryFetch(nextAnimeSearchResults)
+                    
+                    if case .success(let newData) = res {
+                        animeSearchResults = .success(data: (data + (newData?.data ?? [])).uniqueByID())
+                        self.nextAnimeSearchResults = newData?.next
+                    }
+                }
+            }
+        }
+    }
+    
+    private func loadMoreMediaResults<T>(
+        for target: inout FetchResult<[T]>,
+        with nextResult: inout NextResultClosure<[T]>
+    ) async {
+        if case .success(let data) = target {
+            if let next = nextResult {
+                let res = await FetchHelpers.tryFetch(next)
+                
+                if case .success(let newData) = res {
+                    target = .success(data: data + (newData?.data ?? []))
+                    nextResult = newData?.next
+                }
+            }
+        }
+    }
+    
     private func updateSearchResults<T>(
         for target: inout FetchResult<T>,
         nextResult: inout NextResultClosure<T>,

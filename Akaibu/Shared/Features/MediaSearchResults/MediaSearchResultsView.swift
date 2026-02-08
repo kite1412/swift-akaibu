@@ -30,14 +30,18 @@ struct MediaSearchResultsView: View {
                             fetchResult: viewModel.animeSearchResults,
                             errorText: "Failed to fetch anime with title: \(searchTitle)"
                         ) { searchResults in
-                            mediaCards(for: searchResults.map { $0.toMediaCardData() })
+                            mediaCards(for: searchResults.map { $0.toMediaCardData() }) {
+                                viewModel.loadMoreAnimeResults()
+                            }
                         }
                     } else {
                         FetchStateView(
                             fetchResult: viewModel.mangaSearchResults,
                             errorText: "Failed to fetch manga with title: \(searchTitle)"
                         ) { searchResults in
-                            mediaCards(for: searchResults.map { $0.toMediaCardData() })
+                            mediaCards(for: searchResults.map { $0.toMediaCardData() }) {
+                                
+                            }
                         }
                     }
                 }
@@ -66,15 +70,20 @@ struct MediaSearchResultsView: View {
         }
     }
     
-    private func mediaCards(for mediaCardDataList: [MediaCardData]) -> some View {
-        VStack(spacing: 0) {
-            ForEach(Array(mediaCardDataList.enumerated()), id: \.element.id) { index, media in
-                MediaCard(media: media)
-                    .id(index)
-                    .padding(.horizontal)
-                    .padding(.vertical, 4)
-            }
+    private func mediaCards(for mediaCardDataList: [MediaCardData], loadMore: @escaping () -> Void) -> some View {
+        InfiniteScrollView(items: mediaCardDataList, loadMore: loadMore) { media in
+            MediaCard(media: media)
+                .padding(.horizontal)
+                .padding(.vertical, 4)
         }
+//        VStack(spacing: 0) {
+//            ForEach(Array(mediaCardDataList.enumerated()), id: \.element.id) { index, media in
+//                MediaCard(media: media)
+//                    .id(index)
+//                    .padding(.horizontal)
+//                    .padding(.vertical, 4)
+//            }
+//        }
     }
 }
 
