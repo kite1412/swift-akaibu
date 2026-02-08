@@ -12,8 +12,8 @@ import Combine
 class MediaSearchResultsViewModel: ObservableObject {
     private let animeRepository = DIContainer.shared.animeRepository
     private let mangaRepository = DIContainer.shared.mangaRepository
-    private var nextAnimeSearchResults: NextResultClosure<[AnimeBase]> = nil
-    private var nextMangaSearchResults: NextResultClosure<[MangaBase]> = nil
+    @Published var nextAnimeSearchResults: NextResultClosure<[AnimeBase]> = nil
+    @Published var nextMangaSearchResults: NextResultClosure<[MangaBase]> = nil
     
     @Published var showAnimeSearchResults: Bool = true
     @Published var animeSearchResults: FetchResult<[AnimeBase]> = .loading
@@ -58,6 +58,8 @@ class MediaSearchResultsViewModel: ObservableObject {
                     if case .success(let newData) = res {
                         animeSearchResults = .success(data: (data + (newData?.data ?? [])).uniqueByID())
                         self.nextAnimeSearchResults = newData?.next
+                    } else {
+                        self.nextAnimeSearchResults = nil
                     }
                 }
             }

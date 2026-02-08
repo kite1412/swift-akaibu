@@ -30,9 +30,12 @@ struct MediaSearchResultsView: View {
                             fetchResult: viewModel.animeSearchResults,
                             errorText: "Failed to fetch anime with title: \(searchTitle)"
                         ) { searchResults in
-                            mediaCards(for: searchResults.map { $0.toMediaCardData() }) {
-                                viewModel.loadMoreAnimeResults()
-                            }
+                            mediaCards(
+                                for: searchResults.map { $0.toMediaCardData() },
+                                loadMore: viewModel.nextAnimeSearchResults == nil ? nil : {
+                                    viewModel.loadMoreAnimeResults()
+                                }
+                            )
                         }
                     } else {
                         FetchStateView(
@@ -70,7 +73,7 @@ struct MediaSearchResultsView: View {
         }
     }
     
-    private func mediaCards(for mediaCardDataList: [MediaCardData], loadMore: @escaping () -> Void) -> some View {
+    private func mediaCards(for mediaCardDataList: [MediaCardData], loadMore: (() -> Void)?) -> some View {
         InfiniteScrollView(items: mediaCardDataList, loadMore: loadMore) { media in
             MediaCard(media: media)
                 .padding(.horizontal)

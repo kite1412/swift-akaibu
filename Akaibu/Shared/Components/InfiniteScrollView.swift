@@ -10,23 +10,25 @@ import OSLog
 
 struct InfiniteScrollView<Item: Identifiable, Content: View>: View {
     var items: [Item]
-    var loadMore: () -> Void
+    var loadMore: (() -> Void)?
     var content: (Item) -> Content
     
     var body: some View {
-        ScrollView {
-            LazyVStack {
-                ForEach(items) { item in
-                    content(item)
-                        .onAppear {
-                            if item.id == items.last?.id {
-                                debugOnly {
-                                    AppLogger.data.debug("Load new data")
-                                }
-                                loadMore()
-                            }
+        LazyVStack {
+            ForEach(items) { item in
+                content(item)
+            }
+            
+            if let loadMore {
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .onAppear {
+                        debugOnly {
+                            AppLogger.data.debug("Load new data")
                         }
-                }
+                        loadMore()
+                    }
+                    .padding()
             }
         }
     }
