@@ -15,6 +15,16 @@ struct UserMediaView: View {
     @State private var showCompletedStatusConstraintAlert: Bool = false
     @State private var searchTitle: String = ""
     
+    init(statuses: [String], completedStatus: String, service: UserMediaService) {
+        _viewModel = StateObject(wrappedValue: UserMediaViewModel(service: service))
+        self.statuses = ["All"] + statuses
+        if statuses.contains(where: { completedStatus == $0 }) {
+            self.completedStatus = completedStatus
+        } else {
+            fatalError(".completedStatus is not present in .statuses")
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ScrollView(.horizontal) {
@@ -66,38 +76,33 @@ struct UserMediaView: View {
                     Loading(loadingText: "Loading list...")
                 case .success:
                     if !viewModel.filteredUserMediaList.isEmpty {
-                        ScrollView {
-                            VStack(alignment: .leading) {
-                                ForEach(viewModel.filteredUserMediaList) { media in
-                                    UserMediaCard(
-                                        data: media,
-                                        availableStatuses: statuses.filter { status in
-                                            status != "All"
-                                        },
-                                        completedStatus: completedStatus
-                                    ) { newConsumedUnits in
-                                        if newConsumedUnits < media.totalUnits ?? 0 && media.userStatus == completedStatus {
-                                            showCompletedStatusConstraintAlert = true
-                                        } else {
-                                            viewModel.updateMediaConsumedUnits(for: media, consumedUnits: newConsumedUnits)
-                                        }
-                                    } onScoreUpdate: { newScore in
-                                        viewModel.updateMediaScore(for: media, score: newScore)
-                                    } onStatusUpdate: { newStatus in
-                                        viewModel.updateMediaStatus(for: media, status: newStatus)
-                                    }
-                                    .alert(
-                                        "Can't update the progress when status is set to \(completedStatus)",
-                                        isPresented: $showCompletedStatusConstraintAlert,
-                                    ) {
-                                        Button("Ok", role: .confirm) {
-                                            showCompletedStatusConstraintAlert = false
-                                        }
-                                    }
+                        InfiniteScrollView(items: viewModel.filteredUserMediaList, loadMore: {}) { media in
+                            UserMediaCard(
+                                data: media,
+                                availableStatuses: statuses.filter { status in
+                                    status != "All"
+                                },
+                                completedStatus: completedStatus
+                            ) { newConsumedUnits in
+                                if newConsumedUnits < media.totalUnits ?? 0 && media.userStatus == completedStatus {
+                                    showCompletedStatusConstraintAlert = true
+                                } else {
+                                    viewModel.updateMediaConsumedUnits(for: media, consumedUnits: newConsumedUnits)
                                 }
+                            } onScoreUpdate: { newScore in
+                                viewModel.updateMediaScore(for: media, score: newScore)
+                            } onStatusUpdate: { newStatus in
+                                viewModel.updateMediaStatus(for: media, status: newStatus)
                             }
                             .padding(.horizontal)
-                            .padding(.vertical, 8)
+                            .alert(
+                                "Can't update the progress when status is set to \(completedStatus)",
+                                isPresented: $showCompletedStatusConstraintAlert,
+                            ) {
+                                Button("Ok", role: .confirm) {
+                                    showCompletedStatusConstraintAlert = false
+                                }
+                            }
                         }
                     } else {
                         VStack {
@@ -121,16 +126,6 @@ struct UserMediaView: View {
             .onChange(of: searchTitle) {
                 viewModel.filterByTitle(searchTitle)
             }
-        }
-    }
-    
-    init(statuses: [String], completedStatus: String, service: UserMediaService) {
-        _viewModel = StateObject(wrappedValue: UserMediaViewModel(service: service))
-        self.statuses = ["All"] + statuses
-        if statuses.contains(where: { completedStatus == $0 }) {
-            self.completedStatus = completedStatus
-        } else {
-            fatalError(".completedStatus is not present in .statuses")
         }
     }
 }

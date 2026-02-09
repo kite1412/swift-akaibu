@@ -14,21 +14,24 @@ struct InfiniteScrollView<Item: Identifiable, Content: View>: View {
     var content: (Item) -> Content
     
     var body: some View {
-        LazyVStack {
-            ForEach(items) { item in
-                content(item)
-            }
-            
-            if let loadMore {
-                ProgressView()
-                    .progressViewStyle(.circular)
-                    .onAppear {
-                        debugOnly {
-                            AppLogger.data.debug("Load new data")
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                ForEach(items) { item in
+                    content(item)
+                }
+                .padding(.vertical, 4)
+                
+                if let loadMore {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .onAppear {
+                            debugOnly {
+                                AppLogger.data.debug("Load new data")
+                            }
+                            loadMore()
                         }
-                        loadMore()
-                    }
-                    .padding()
+                        .padding()
+                }
             }
         }
     }

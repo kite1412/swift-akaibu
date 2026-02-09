@@ -139,7 +139,6 @@ struct UserMediaCard: View {
                     }
                 }
             }
-            .padding(.top, 8)
         }
     }
     
