@@ -27,10 +27,10 @@ class MediaSearchResultsViewModel: ObservableObject {
                 default:
                     updateSearchResults(
                         for: &animeSearchResults,
-                        nextResult: &nextAnimeSearchResults,
                         with: await FetchHelpers.tryFetch {
                             try await animeRepository.getAnimeBases(title: title)
-                        }
+                        },
+                        saveNextResultTo: &nextAnimeSearchResults
                     )
                 }
             } else {
@@ -39,10 +39,10 @@ class MediaSearchResultsViewModel: ObservableObject {
                 default:
                     updateSearchResults(
                         for: &mangaSearchResults,
-                        nextResult: &nextMangaSearchResults,
                         with: await FetchHelpers.tryFetch {
                             try await mangaRepository.getMangaBases(title: title)
-                        }
+                        },
+                        saveNextResultTo: &nextMangaSearchResults
                     )
                 }
             }
@@ -50,42 +50,42 @@ class MediaSearchResultsViewModel: ObservableObject {
     }
     
     func loadMoreAnimeResults() {
-        if case .success(let data) = animeSearchResults {
-            if let nextAnimeSearchResults {
-                Task {
-                    let res = await FetchHelpers.tryFetch(nextAnimeSearchResults)
-                    
-                    if case .success(let newData) = res {
-                        animeSearchResults = .success(data: (data + (newData?.data ?? [])).uniqueByID())
-                        self.nextAnimeSearchResults = newData?.next
-                    } else {
-                        self.nextAnimeSearchResults = nil
-                    }
+        Task {
+            let res = await FetchHelpers.tryFetch {
+                if let nextAnimeSearchResults {
+                    return try await nextAnimeSearchResults()
+                } else {
+                    return nil
                 }
             }
+            
+            loadMoreMediaResults(
+                for: &animeSearchResults,
+                with: res,
+                saveNextResultTo: &nextAnimeSearchResults
+            )
         }
     }
     
-    private func loadMoreMediaResults<T>(
+    private func loadMoreMediaResults<T: Identifiable>(
         for target: inout FetchResult<[T]>,
-        with nextResult: inout NextResultClosure<[T]>
-    ) async {
+        with result: FetchResult<PaginatedResult<[T]>?>,
+        saveNextResultTo nextResult: inout NextResultClosure<[T]>
+    ) {
         if case .success(let data) = target {
-            if let next = nextResult {
-                let res = await FetchHelpers.tryFetch(next)
-                
-                if case .success(let newData) = res {
-                    target = .success(data: data + (newData?.data ?? []))
-                    nextResult = newData?.next
-                }
+            if case .success(let newData) = result {
+                target = .success(data: (data + (newData?.data ?? [])).uniqueByID())
+                nextResult = newData?.next
+            } else {
+                nextResult = nil
             }
         }
     }
     
     private func updateSearchResults<T>(
         for target: inout FetchResult<T>,
-        nextResult: inout NextResultClosure<T>,
-        with result: FetchResult<PaginatedResult<T>>
+        with result: FetchResult<PaginatedResult<T>>,
+        saveNextResultTo nextResult: inout NextResultClosure<T>,
     ) {
         target = .loading
         
