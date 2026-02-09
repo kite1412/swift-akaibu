@@ -12,9 +12,9 @@ import Combine
 class MediaSearchResultsViewModel: ObservableObject {
     private let animeRepository = DIContainer.shared.animeRepository
     private let mangaRepository = DIContainer.shared.mangaRepository
+    
     @Published var nextAnimeSearchResults: NextResultClosure<[AnimeBase]> = nil
     @Published var nextMangaSearchResults: NextResultClosure<[MangaBase]> = nil
-    
     @Published var showAnimeSearchResults: Bool = true
     @Published var animeSearchResults: FetchResult<[AnimeBase]> = .loading
     @Published var mangaSearchResults: FetchResult<[MangaBase]> = .loading
@@ -63,6 +63,24 @@ class MediaSearchResultsViewModel: ObservableObject {
                 for: &animeSearchResults,
                 with: res,
                 saveNextResultTo: &nextAnimeSearchResults
+            )
+        }
+    }
+    
+    func loadMoreMangaResults() {
+        Task {
+            let res = await FetchHelpers.tryFetch {
+                if let nextMangaSearchResults {
+                    return try await nextMangaSearchResults()
+                } else {
+                    return nil
+                }
+            }
+            
+            loadMoreMediaResults(
+                for: &mangaSearchResults,
+                with: res,
+                saveNextResultTo: &nextMangaSearchResults
             )
         }
     }

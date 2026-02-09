@@ -42,9 +42,12 @@ struct MediaSearchResultsView: View {
                             fetchResult: viewModel.mangaSearchResults,
                             errorText: "Failed to fetch manga with title: \(searchTitle)"
                         ) { searchResults in
-                            mediaCards(for: searchResults.map { $0.toMediaCardData() }) {
-                                
-                            }
+                            mediaCards(
+                                for: searchResults.map { $0.toMediaCardData() },
+                                loadMore: viewModel.nextMangaSearchResults == nil ? nil : {
+                                    viewModel.loadMoreMangaResults()
+                                }
+                            )
                         }
                     }
                 }
