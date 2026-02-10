@@ -10,14 +10,25 @@ import Combine
 
 @MainActor
 class UserMediaViewModel: ObservableObject {
+    private var userMediaList: [String: [UserMediaData]] = [:]
+    private var nextResults: [String: NextResultClosure<[UserMediaData]>] = [:]
+    
     let service: UserMediaService
     
     @Published var filteredUserMediaList: [UserMediaData] = []
     @Published var selectedStatus: String = "All"
     @Published var uiState: UIState = .loading
-    
-    private var userMediaList: [String: [UserMediaData]] = [:]
-    private var nextResults: [String: NextResultClosure<[UserMediaData]>] = [:]
+
+    var isNextResultAvailable: Bool {
+        if
+            let stored = nextResults[selectedStatus],
+            let _ = stored
+        {
+            return true
+        } else {
+            return false
+        }
+    }
     
     init(service: UserMediaService) {
         self.service = service
@@ -27,7 +38,7 @@ class UserMediaViewModel: ObservableObject {
             }
             if case .success(let data) = fetchResult {
                 addToAllList(data.data)
-                saveNextResult(status: "All", nextResult: data.next)
+                nextResults["All"] = data.next
             }
             uiState = fetchResult.toUIState()
             
@@ -81,6 +92,27 @@ class UserMediaViewModel: ObservableObject {
         }
     }
     
+    func loadMoreMedia() {
+        if
+            let stored = nextResults[selectedStatus],
+            let nextResult = stored
+        {
+            Task {
+                let res = await FetchHelpers.tryFetch {
+                    try await nextResult()
+                }
+                
+                if case .success(let data) = res {
+                    addToAllList(data?.data ?? [])
+                    nextResults[selectedStatus] = data?.next
+                    filteredUserMediaList = currentListByStatus()
+                } else {
+                    nextResults[selectedStatus] = nil
+                }
+            }
+        }
+    }
+    
     private func updateMediaProgress(
         for media: UserMediaData,
         with operation: @escaping () async throws -> UserMediaData
@@ -126,9 +158,5 @@ class UserMediaViewModel: ObservableObject {
             
             userMediaList[key]?.append(contentsOf: mediaList)
         }
-    }
-    
-    private func saveNextResult(status: String, nextResult: NextResultClosure<[UserMediaData]>) {
-        nextResults[status] = nextResult
     }
 }

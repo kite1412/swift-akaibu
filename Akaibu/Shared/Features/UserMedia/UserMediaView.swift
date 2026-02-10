@@ -76,7 +76,12 @@ struct UserMediaView: View {
                     Loading(loadingText: "Loading list...")
                 case .success:
                     if !viewModel.filteredUserMediaList.isEmpty {
-                        InfiniteScrollView(items: viewModel.filteredUserMediaList, loadMore: {}) { media in
+                        InfiniteScrollView(
+                            items: viewModel.filteredUserMediaList,
+                            loadMore: viewModel.isNextResultAvailable ? {
+                                viewModel.loadMoreMedia()
+                            } : nil
+                        ) { media in
                             UserMediaCard(
                                 data: media,
                                 availableStatuses: statuses.filter { status in

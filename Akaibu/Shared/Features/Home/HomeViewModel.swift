@@ -13,8 +13,8 @@ class HomeViewModel: ObservableObject {
     private let animeRepository = DIContainer.shared.animeRepository
     private let mangaRepository = DIContainer.shared.mangaRepository
     private let mediaRanksLimit = 5
-    private var nextAnimeSearchResults: NextResultClosure<[AnimeBase]> = nil
-    private var nextMangaSearchResults: NextResultClosure<[MangaBase]> = nil
+    private var nextAnimeSearchResults: NextResultClosure<[AnimeBase]>? = nil
+    private var nextMangaSearchResults: NextResultClosure<[MangaBase]>? = nil
     
     @Published var animeRanks: FetchResult<[MediaRank]> = .loading
     @Published var mangaRanks: FetchResult<[MediaRank]> = .loading
