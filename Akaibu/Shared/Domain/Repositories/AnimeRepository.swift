@@ -6,9 +6,9 @@
 //
 
 protocol AnimeRepository {
-    func getAnimeBases(title: String) async throws -> PaginatedResult<[AnimeBase]>
-    func getAnimeRanks(limit: Int) async throws -> PaginatedResult<[MediaRank]>
-    func getAnimeSuggestions() async throws -> PaginatedResult<[AnimeBase]>
-    func getUserAnimeList(status: UserAnimeStatus?) async throws -> PaginatedResult<[UserAnime]>
+    func getAnimeBases(title: String, params: [String: String]?) async throws -> PaginatedResult<[AnimeBase]>
+    func getAnimeRanks(limit: Int, params: [String: String]?) async throws -> PaginatedResult<[MediaRank]>
+    func getAnimeSuggestions(params: [String: String]?) async throws -> PaginatedResult<[AnimeBase]>
+    func getUserAnimeList(status: UserAnimeStatus?, params: [String: String]?) async throws -> PaginatedResult<[UserAnime]>
     func updateUserAnimeProgress(animeId: Int, with progress: UserAnimeProgress) async throws -> UserAnimeProgress
 }

@@ -9,40 +9,49 @@ class MALMangaDataSource: MangaRemoteDataSource {
     private let client: MALHttpClient = .shared
     private let paginator: MALPaginator = .shared
     
-    func fetchMangaBases(title: String) async throws -> PaginatedResult<[MangaBase]> {
+    func fetchMangaBases(title: String, params: [String: String]?) async throws -> PaginatedResult<[MangaBase]> {
         let res: PaginatedResult<MALMangaList> = try await paginator.getPaginated(
             path: MALPaths.manga,
             headers: nil,
-            params: [
-                "fields": MALMangaFields.base,
-                "q": title
-            ]
+            params: client.mergeParams(
+                [
+                    "fields": MALMangaFields.base,
+                    "q": title
+                ],
+                params
+            )
         )
         
         return res.toDomain()
     }
     
-    func fetchMangaRanks(limit: Int) async throws -> PaginatedResult<[MediaRank]> {
+    func fetchMangaRanks(limit: Int, params: [String: String]?) async throws -> PaginatedResult<[MediaRank]> {
         let res: PaginatedResult<MALMangaRanking> = try await paginator.getPaginated(
             path: MALPaths.mangaRanking,
             headers: nil,
-            params: [
-                "fields": MALMangaFields.rank,
-                "limit": String(limit)
-            ]
+            params: client.mergeParams(
+                [
+                    "fields": MALMangaFields.rank,
+                    "limit": String(limit)
+                ],
+                params
+            )
         )
         
         return res.toDomain()
     }
     
-    func fetchUserMangaList(status: UserMangaStatus?) async throws -> PaginatedResult<[UserManga]> {
+    func fetchUserMangaList(status: UserMangaStatus?, params: [String: String]?) async throws -> PaginatedResult<[UserManga]> {
         let res: PaginatedResult<MALUserMangaList> = try await paginator.getPaginated(
             path: MALPaths.userMangaList,
             headers: nil,
-            params: [
-                "fields": MALMangaFields.userManga,
-                "status": status?.toMALUserMangaStatus().rawValue ?? ""
-            ]
+            params: client.mergeParams(
+                [
+                    "fields": MALMangaFields.userManga,
+                    "status": status?.toMALUserMangaStatus().rawValue ?? ""
+                ],
+                params
+            )
         )
         
         return res.toDomain()

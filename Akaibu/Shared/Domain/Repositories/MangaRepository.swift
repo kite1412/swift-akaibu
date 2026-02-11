@@ -6,8 +6,8 @@
 //
 
 protocol MangaRepository {
-    func getMangaBases(title: String) async throws -> PaginatedResult<[MangaBase]>
-    func getMangaRanks(limit: Int) async throws -> PaginatedResult<[MediaRank]>
-    func getUserMangaList(status: UserMangaStatus?) async throws -> PaginatedResult<[UserManga]>
+    func getMangaBases(title: String, params: [String: String]?) async throws -> PaginatedResult<[MangaBase]>
+    func getMangaRanks(limit: Int, params: [String: String]?) async throws -> PaginatedResult<[MediaRank]>
+    func getUserMangaList(status: UserMangaStatus?, params: [String: String]?) async throws -> PaginatedResult<[UserManga]>
     func updateUserMangaProgress(mangaId: Int, with progress: UserMangaProgress) async throws -> UserMangaProgress
 }

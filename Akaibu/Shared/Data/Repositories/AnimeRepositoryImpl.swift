@@ -12,20 +12,20 @@ class AnimeRepositoryImpl: AnimeRepository {
         self.remoteDataSource = remoteDataSource
     }
     
-    func getAnimeBases(title: String) async throws -> PaginatedResult<[AnimeBase]> {
-        try await remoteDataSource.fetchAnimeBases(title: title)
+    func getAnimeBases(title: String, params: [String: String]?) async throws -> PaginatedResult<[AnimeBase]> {
+        try await remoteDataSource.fetchAnimeBases(title: title, params: params)
     }
     
-    func getAnimeRanks(limit: Int) async throws -> PaginatedResult<[MediaRank]> {
-        try await remoteDataSource.fetchAnimeRanks(limit: limit)
+    func getAnimeRanks(limit: Int, params: [String: String]?) async throws -> PaginatedResult<[MediaRank]> {
+        try await remoteDataSource.fetchAnimeRanks(limit: limit, params: params)
     }
     
-    func getAnimeSuggestions() async throws -> PaginatedResult<[AnimeBase]> {
-        try await remoteDataSource.fetchAnimeSuggestions()
+    func getAnimeSuggestions(params: [String: String]?) async throws -> PaginatedResult<[AnimeBase]> {
+        try await remoteDataSource.fetchAnimeSuggestions(params: params)
     }
     
-    func getUserAnimeList(status: UserAnimeStatus?) async throws -> PaginatedResult<[UserAnime]> {
-        try await remoteDataSource.fetchUserAnimeList(status: status)
+    func getUserAnimeList(status: UserAnimeStatus?, params: [String: String]?) async throws -> PaginatedResult<[UserAnime]> {
+        try await remoteDataSource.fetchUserAnimeList(status: status, params: params)
     }
     
     func updateUserAnimeProgress(animeId: Int, with progress: UserAnimeProgress) async throws -> UserAnimeProgress {

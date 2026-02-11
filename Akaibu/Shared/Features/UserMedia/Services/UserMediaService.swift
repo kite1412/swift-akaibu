@@ -6,7 +6,7 @@
 //
 
 protocol UserMediaService {
-    func getUserMediaList(status: String?) async throws -> PaginatedResult<[UserMediaData]>
+    func getUserMediaList(status: String?, params: [String: String]?) async throws -> PaginatedResult<[UserMediaData]>
     
     func updateConsumedUnits(for media: UserMediaData, with consumedUnits : Int) async throws -> UserMediaData
     

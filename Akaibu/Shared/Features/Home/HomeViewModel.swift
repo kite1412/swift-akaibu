@@ -68,7 +68,9 @@ class HomeViewModel: ObservableObject {
     }
     
     private func fetchAnimeSuggestions() async {
-        let res = await FetchHelpers.tryFetch(animeRepository.getAnimeSuggestions)
+        let res = await FetchHelpers.tryFetch {
+            try await animeRepository.getAnimeSuggestions()
+        }
         
         switch res {
         case .loading: animeSuggestions = .loading

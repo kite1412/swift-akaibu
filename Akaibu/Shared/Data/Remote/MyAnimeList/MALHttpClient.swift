@@ -13,4 +13,8 @@ class MALHttpClient: HTTPClient {
     private init() {
         super.init(baseURL: URL.init(string: MALPaths.baseURLString)!)
     }
+    
+    func mergeParams(_ a: [String: String], _ b: [String: String]?) -> [String: String] {
+        a.merging(b ?? [:]) { (_, new) in new }
+    }
 }

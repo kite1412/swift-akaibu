@@ -9,53 +9,65 @@ class MALAnimeDataSource: AnimeRemoteDataSource {
     private let client: MALHttpClient = .shared
     private let paginator: MALPaginator = .shared
     
-    func fetchAnimeBases(title: String) async throws -> PaginatedResult<[AnimeBase]> {
+    func fetchAnimeBases(title: String, params: [String: String]?) async throws -> PaginatedResult<[AnimeBase]> {
         let res: PaginatedResult<MALAnimeList> = try await paginator.getPaginated(
             path: MALPaths.anime,
             headers: nil,
-            params: [
-                "q": title,
-                "fields": MALAnimeFields.base
-            ]
+            params: client.mergeParams(
+                [
+                    "q": title,
+                    "fields": MALAnimeFields.base
+                ],
+                params
+            )
         )
         
         return res.toDomain()
     }
     
-    func fetchAnimeRanks(limit: Int) async throws -> PaginatedResult<[MediaRank]> {
+    func fetchAnimeRanks(limit: Int, params: [String: String]?) async throws -> PaginatedResult<[MediaRank]> {
         let res: PaginatedResult<MALAnimeRanking> = try await paginator.getPaginated(
             path: MALPaths.animeRanking,
             headers: nil,
-            params: [
-                "ranking_type": "all",
-                "fields": MALAnimeFields.rank,
-                "limit": String(limit)
-            ]
+            params: client.mergeParams(
+                [
+                    "ranking_type": "all",
+                    "fields": MALAnimeFields.rank,
+                    "limit": String(limit)
+                ],
+                params
+            )
         )
         
         return res.toDomain()
     }
     
-    func fetchAnimeSuggestions() async throws -> PaginatedResult<[AnimeBase]> {
+    func fetchAnimeSuggestions(params: [String: String]?) async throws -> PaginatedResult<[AnimeBase]> {
         let res: PaginatedResult<MALAnimeList> = try await paginator.getPaginated(
             path: MALPaths.animeSuggestions,
             headers: nil,
-            params: [
+            params: client.mergeParams(
+                [
                 "fields": MALAnimeFields.base
-            ]
+                ],
+                params
+            )
         )
         
         return res.toDomain()
     }
     
-    func fetchUserAnimeList(status: UserAnimeStatus?) async throws -> PaginatedResult<[UserAnime]> {
+    func fetchUserAnimeList(status: UserAnimeStatus?, params: [String: String]?) async throws -> PaginatedResult<[UserAnime]> {
         let res: PaginatedResult<MALUserAnimeList> = try await paginator.getPaginated(
             path: MALPaths.userAnimeList,
             headers: nil,
-            params: [
-                "fields": MALAnimeFields.userAnime,
-                "status": status?.toMALUserAnimeStatus().rawValue ?? ""
-            ]
+            params: client.mergeParams(
+                [
+                    "fields": MALAnimeFields.userAnime,
+                    "status": status?.toMALUserAnimeStatus().rawValue ?? ""
+                ],
+                params
+            )
         )
         
         return res.toDomain()

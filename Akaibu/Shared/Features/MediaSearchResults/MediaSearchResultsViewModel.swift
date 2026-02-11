@@ -28,7 +28,7 @@ class MediaSearchResultsViewModel: ObservableObject {
                     updateSearchResults(
                         for: &animeSearchResults,
                         with: await FetchHelpers.tryFetch {
-                            try await animeRepository.getAnimeBases(title: title)
+                            try await animeRepository.getAnimeBases(title: title, params: nil)
                         },
                         saveNextResultTo: &nextAnimeSearchResults
                     )

@@ -32,13 +32,17 @@ class UserMediaViewModel: ObservableObject {
     
     init(service: UserMediaService) {
         self.service = service
+        loadByStatus("All")
+    }
+    
+    func loadByStatus(_ status: String) {
         Task {
             let fetchResult = await FetchHelpers.tryFetch {
-                try await service.getUserMediaList(status: nil)
+                try await service.getUserMediaList(status: UserAnimeStatus(rawValue: status)?.rawValue ?? nil)
             }
             if case .success(let data) = fetchResult {
                 addToAllList(data.data)
-                nextResults["All"] = data.next
+                nextResults[status] = data.next
             }
             uiState = fetchResult.toUIState()
             
@@ -48,7 +52,12 @@ class UserMediaViewModel: ObservableObject {
     
     func changeSelectedStatus(_ status: String) {
         selectedStatus = status
-        filteredUserMediaList = currentListByStatus()
+        
+        if let _ = nextResults[status] {
+            filteredUserMediaList = currentListByStatus()
+        } else {
+            loadByStatus(status)
+        }
     }
     
     func updateMediaScore(for media: UserMediaData, score: Int) {

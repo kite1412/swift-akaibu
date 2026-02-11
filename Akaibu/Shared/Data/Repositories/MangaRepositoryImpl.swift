@@ -12,16 +12,16 @@ class MangaRepositoryImpl: MangaRepository {
         self.remoteDataSource = remoteDataSource
     }
     
-    func getMangaBases(title: String) async throws -> PaginatedResult<[MangaBase]> {
-        try await remoteDataSource.fetchMangaBases(title: title)
+    func getMangaBases(title: String, params: [String: String]?) async throws -> PaginatedResult<[MangaBase]> {
+        try await remoteDataSource.fetchMangaBases(title: title, params: params)
     }
     
-    func getMangaRanks(limit: Int) async throws -> PaginatedResult<[MediaRank]> {
-        try await remoteDataSource.fetchMangaRanks(limit: limit)
+    func getMangaRanks(limit: Int, params: [String: String]?) async throws -> PaginatedResult<[MediaRank]> {
+        try await remoteDataSource.fetchMangaRanks(limit: limit, params: params)
     }
     
-    func getUserMangaList(status: UserMangaStatus?) async throws -> PaginatedResult<[UserManga]> {
-        try await remoteDataSource.fetchUserMangaList(status: status)
+    func getUserMangaList(status: UserMangaStatus?, params: [String: String]?) async throws -> PaginatedResult<[UserManga]> {
+        try await remoteDataSource.fetchUserMangaList(status: status, params: params)
     }
     
     func updateUserMangaProgress(mangaId: Int, with progress: UserMangaProgress) async throws -> UserMangaProgress {

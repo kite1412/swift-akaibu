@@ -11,8 +11,8 @@ class MangaUserMediaService: UserMediaService {
     private let repository = DIContainer.shared.mangaRepository
     private let mapper = PaginatedResultMapper()
     
-    func getUserMediaList(status: String?) async throws -> PaginatedResult<[UserMediaData]> {
-        let res = try await repository.getUserMangaList(status: UserMangaStatusMapper.status(from: status))
+    func getUserMediaList(status: String?, params: [String: String]?) async throws -> PaginatedResult<[UserMediaData]> {
+        let res = try await repository.getUserMangaList(status: UserMangaStatusMapper.status(from: status), params: params)
         return mapper.mapResult(res)
     }
     

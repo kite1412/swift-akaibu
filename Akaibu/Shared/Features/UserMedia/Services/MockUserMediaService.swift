@@ -6,7 +6,7 @@
 //
 
 class MockUserMediaService: UserMediaService {
-    func getUserMediaList(status: String?) async throws -> PaginatedResult<[UserMediaData]> {
+    func getUserMediaList(status: String?, params: [String: String]? = nil) async throws -> PaginatedResult<[UserMediaData]> {
         PaginatedResult(
             data: [userMediaData, userMediaDataMinimum],
             next: nil

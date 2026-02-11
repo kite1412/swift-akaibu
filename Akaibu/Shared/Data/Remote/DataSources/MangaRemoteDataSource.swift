@@ -6,8 +6,8 @@
 //
 
 protocol MangaRemoteDataSource {
-    func fetchMangaBases(title: String) async throws -> PaginatedResult<[MangaBase]>
-    func fetchMangaRanks(limit: Int) async throws -> PaginatedResult<[MediaRank]>
-    func fetchUserMangaList(status: UserMangaStatus?) async throws -> PaginatedResult<[UserManga]>
+    func fetchMangaBases(title: String, params: [String: String]?) async throws -> PaginatedResult<[MangaBase]>
+    func fetchMangaRanks(limit: Int, params: [String: String]?) async throws -> PaginatedResult<[MediaRank]>
+    func fetchUserMangaList(status: UserMangaStatus?, params: [String: String]?) async throws -> PaginatedResult<[UserManga]>
     func updateUserMangaProgress(mangaId: Int, with progress: UserMangaProgress) async throws -> UserMangaProgress
 }
