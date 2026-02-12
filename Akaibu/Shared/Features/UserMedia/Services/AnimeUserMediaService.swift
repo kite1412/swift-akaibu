@@ -76,17 +76,19 @@ class AnimeUserMediaService: UserMediaService {
     
     private class PaginatedResultMapper: PaginatedResultUserMediaMapper {
         func mapResult(_ result: PaginatedResult<[UserAnime]>) -> PaginatedResult<[UserMediaData]> {
-            PaginatedResult(
+            let next = result.next != nil ? { [weak self] in
+                if let res = try await result.next?() {
+                    return self?.mapResult(res)
+                } else {
+                    return nil
+                }
+            } : nil
+            
+            return PaginatedResult(
                 data: result.data.map { anime in
                     anime.toUserMediaData()
                 },
-                next: { [weak self] in
-                    if let res = try await result.next?() {
-                        return self?.mapResult(res)
-                    } else {
-                        return nil
-                    }
-                }
+                next: next
             )
         }
     }

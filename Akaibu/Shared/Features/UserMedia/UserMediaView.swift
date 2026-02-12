@@ -76,12 +76,15 @@ struct UserMediaView: View {
                     Loading(loadingText: "Loading list...")
                 case .success:
                     if !viewModel.filteredUserMediaList.isEmpty {
+                        let loadMoreEnabled = viewModel.isNextResultAvailable && searchTitle.isEmpty
+                        
                         ScrollViewReader { proxy in
                             InfiniteScrollView(
                                 items: viewModel.filteredUserMediaList,
                                 loadMore: viewModel.isNextResultAvailable ? {
                                     viewModel.loadMoreMedia()
-                                } : nil
+                                } : nil,
+                                loadMoreEnabled: loadMoreEnabled
                             ) { media in
                                 UserMediaCard(
                                     data: media,

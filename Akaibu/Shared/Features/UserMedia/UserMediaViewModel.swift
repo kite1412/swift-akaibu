@@ -47,7 +47,7 @@ class UserMediaViewModel: ObservableObject {
                 }
                 
                 return try await service.getUserMediaList(
-                    status: UserAnimeStatus(rawValue: status)?.rawValue ?? nil,
+                    status: status == "All" ? nil : status,
                     params: params
                 )
             }
