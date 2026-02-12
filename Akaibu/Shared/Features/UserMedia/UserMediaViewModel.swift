@@ -38,6 +38,7 @@ class UserMediaViewModel: ObservableObject {
     func loadByStatus(_ status: String) {
         Task {
             let fetchResult = await FetchHelpers.tryFetch {
+                uiState = .loading
                 var params: [String: String]? = nil
                 let mediaCount = userMedia.count(where: { $0.userStatus == status })
                 
