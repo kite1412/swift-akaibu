@@ -10,8 +10,9 @@ import Combine
 
 @MainActor
 class UserMediaViewModel: ObservableObject {
-    private var userMediaList: [String: [UserMediaData]] = [:]
+//    private var userMediaList: [String: [UserMediaData]] = [:]
     private var nextResults: [String: NextResultClosure<[UserMediaData]>] = [:]
+    private var userMedia: [UserMediaData] = []
     
     let service: UserMediaService
     
@@ -38,7 +39,17 @@ class UserMediaViewModel: ObservableObject {
     func loadByStatus(_ status: String) {
         Task {
             let fetchResult = await FetchHelpers.tryFetch {
-                try await service.getUserMediaList(status: UserAnimeStatus(rawValue: status)?.rawValue ?? nil)
+                var params: [String: String]? = nil
+                let mediaCount = userMedia.count(where: { $0.userStatus == status })
+                
+                if mediaCount > 0 {
+                    params = ["offset": "\(mediaCount)"]
+                }
+                
+                return try await service.getUserMediaList(
+                    status: UserAnimeStatus(rawValue: status)?.rawValue ?? nil,
+                    params: params
+                )
             }
             if case .success(let data) = fetchResult {
                 addToAllList(data.data)
@@ -132,17 +143,13 @@ class UserMediaViewModel: ObservableObject {
             }
             
             if case .success(let data) = updated {
-                if let index = userMediaList[media.userStatus]?.firstIndex(where: { $0.id == data.id }) {
+                if let index = userMedia.firstIndex(where: { $0.id == data.id }) {
                     if media.userStatus == data.userStatus {
-                        userMediaList[media.userStatus]?[index] = data
+                        userMedia[index] = data
                     } else {
-                        userMediaList[media.userStatus]?.remove(at: index)
+                        userMedia.remove(at: index)
                         
-                        if userMediaList[data.userStatus] == nil {
-                            userMediaList[data.userStatus] = []
-                        }
-                        
-                        userMediaList[data.userStatus]?.append(data)
+                        userMedia.append(data)
                     }
                     filteredUserMediaList = currentListByStatus()
                 }
@@ -151,21 +158,12 @@ class UserMediaViewModel: ObservableObject {
     }
     
     private func currentListByStatus() -> [UserMediaData] {
-        (selectedStatus == "All" ? userMediaList.flatMap(\.value) : userMediaList[selectedStatus] ?? [])
-            .sorted {
-                $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending
-            }
+        selectedStatus == "All" ? userMedia : userMedia.filter { media in
+            media.userStatus == selectedStatus
+        }
     }
     
     private func addToAllList(_ list: [UserMediaData]) {
-        let grouped = Dictionary(grouping: list) { media in media.userStatus }
-        
-        grouped.forEach { key, mediaList in
-            if userMediaList[key] == nil {
-                userMediaList[key] = []
-            }
-            
-            userMediaList[key]?.append(contentsOf: mediaList)
-        }
+        userMedia.append(contentsOf: list.filterUnique(with: userMedia))
     }
 }

@@ -10,4 +10,10 @@ extension Collection where Element : Identifiable {
         var seen = Set<Element.ID>()
         return self.filter { seen.insert($0.id).inserted }
     }
+    
+    func filterUnique(with other: [Element]) -> [Element] {
+        filter { item in
+            !other.contains(where: { $0.id == item.id })
+        }
+    }
 }
