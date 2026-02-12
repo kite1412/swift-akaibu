@@ -76,36 +76,44 @@ struct UserMediaView: View {
                     Loading(loadingText: "Loading list...")
                 case .success:
                     if !viewModel.filteredUserMediaList.isEmpty {
-                        InfiniteScrollView(
-                            items: viewModel.filteredUserMediaList,
-                            loadMore: viewModel.isNextResultAvailable ? {
-                                viewModel.loadMoreMedia()
-                            } : nil
-                        ) { media in
-                            UserMediaCard(
-                                data: media,
-                                availableStatuses: statuses.filter { status in
-                                    status != "All"
-                                },
-                                completedStatus: completedStatus
-                            ) { newConsumedUnits in
-                                if newConsumedUnits < media.totalUnits ?? 0 && media.userStatus == completedStatus {
-                                    showCompletedStatusConstraintAlert = true
-                                } else {
-                                    viewModel.updateMediaConsumedUnits(for: media, consumedUnits: newConsumedUnits)
+                        ScrollViewReader { proxy in
+                            InfiniteScrollView(
+                                items: viewModel.filteredUserMediaList,
+                                loadMore: viewModel.isNextResultAvailable ? {
+                                    viewModel.loadMoreMedia()
+                                } : nil
+                            ) { media in
+                                UserMediaCard(
+                                    data: media,
+                                    availableStatuses: statuses.filter { status in
+                                        status != "All"
+                                    },
+                                    completedStatus: completedStatus
+                                ) { newConsumedUnits in
+                                    if newConsumedUnits < media.totalUnits ?? 0 && media.userStatus == completedStatus {
+                                        showCompletedStatusConstraintAlert = true
+                                    } else {
+                                        viewModel.updateMediaConsumedUnits(for: media, consumedUnits: newConsumedUnits)
+                                    }
+                                } onScoreUpdate: { newScore in
+                                    viewModel.updateMediaScore(for: media, score: newScore)
+                                } onStatusUpdate: { newStatus in
+                                    viewModel.updateMediaStatus(for: media, status: newStatus)
                                 }
-                            } onScoreUpdate: { newScore in
-                                viewModel.updateMediaScore(for: media, score: newScore)
-                            } onStatusUpdate: { newStatus in
-                                viewModel.updateMediaStatus(for: media, status: newStatus)
+                                .id(media.id)
+                                .padding(.horizontal)
+                                .alert(
+                                    "Can't update the progress when status is set to \(completedStatus)",
+                                    isPresented: $showCompletedStatusConstraintAlert,
+                                ) {
+                                    Button("Ok", role: .confirm) {
+                                        showCompletedStatusConstraintAlert = false
+                                    }
+                                }
                             }
-                            .padding(.horizontal)
-                            .alert(
-                                "Can't update the progress when status is set to \(completedStatus)",
-                                isPresented: $showCompletedStatusConstraintAlert,
-                            ) {
-                                Button("Ok", role: .confirm) {
-                                    showCompletedStatusConstraintAlert = false
+                            .onChange(of: viewModel.selectedStatus) {
+                                DispatchQueue.main.async {
+                                    proxy.scrollTo(viewModel.filteredUserMediaList.first?.id ?? 0, anchor: .top)
                                 }
                             }
                         }

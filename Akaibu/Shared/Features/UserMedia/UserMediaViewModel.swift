@@ -10,7 +10,6 @@ import Combine
 
 @MainActor
 class UserMediaViewModel: ObservableObject {
-//    private var userMediaList: [String: [UserMediaData]] = [:]
     private var nextResults: [String: NextResultClosure<[UserMediaData]>] = [:]
     private var userMedia: [UserMediaData] = []
     
