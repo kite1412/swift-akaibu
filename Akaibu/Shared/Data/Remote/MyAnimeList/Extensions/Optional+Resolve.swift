@@ -60,3 +60,60 @@ extension Optional where Wrapped == MALMangaStatus {
         self?.toDomain() ?? .notYetPublished
     }
 }
+
+extension Optional where Wrapped == MALAlternativeTitles {
+    func toStrings() -> [String] {
+        self?.toStrings() ?? []
+    }
+}
+
+extension Optional where Wrapped == MALStartSeason {
+    func toString() -> String? {
+        if let self {
+            return "\(self.season.rawValue.capitalized) \(self.year)"
+        } else {
+            return nil
+        }
+    }
+}
+
+extension Optional where Wrapped == MALBroadcast {
+    var localizedDateString: String? {
+        guard let startTime = self?.startTime else { return nil }
+        guard let dayOfTheWeek = self?.dayOfTheWeek else { return nil }
+        
+        let formatter = Foundation.DateFormatter()
+        formatter.dateFormat = "EEEE HH:mm"
+        formatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
+        
+        guard let date = formatter.date(from: "\(dayOfTheWeek) \(startTime)") else { return nil }
+        
+        formatter.timeZone = .current
+        formatter.timeStyle = .short
+        formatter.dateStyle = .none
+        
+        return formatter.string(from: date)
+    }
+}
+
+extension Optional where Wrapped == Array<MALStudio> {
+    func toStrings() -> [String] {
+        if let self {
+            return self.map(\.name)
+        } else {
+            return []
+        }
+    }
+}
+
+extension Optional where Wrapped == Array<MALRelatedAnime> {
+    func toDomain() -> [RelatedAnime] {
+        if let self {
+            return self.map { related in
+                related.toDomain()
+            }
+        } else {
+            return []
+        }
+    }
+}

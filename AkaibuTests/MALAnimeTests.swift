@@ -21,7 +21,7 @@ final class MALAnimeTests: XCTestCase {
     // the device running this test must be logged in
     func testAnimeRankingPagination() async throws {
         let dataSource = await MALAnimeDataSource()
-        let res = try await dataSource.fetchAnimeBases(title: "One")
+        let res = try await dataSource.fetchAnimeBases(title: "One", params: nil)
         
         XCTAssertNotNil {
             await res.next
@@ -48,5 +48,12 @@ final class MALAnimeTests: XCTestCase {
         XCTAssert(first != second)
         XCTAssert(first != third)
         XCTAssert(second != third)
+    }
+    
+    func testAnimeDetail() async throws {
+        let dataSource = await MALAnimeDataSource()
+        let res = try await dataSource.fetchAnimeDetail(animeId: 21)
+        
+        print(res)
     }
 }

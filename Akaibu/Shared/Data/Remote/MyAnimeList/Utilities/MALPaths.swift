@@ -26,4 +26,8 @@ struct MALPaths {
     static func updateMangaListStatus(id: Int) -> String {
         "manga/\(id)/my_list_status"
     }
+    
+    static func animeDetail(id: Int) -> String {
+        "anime/\(id)"
+    }
 }

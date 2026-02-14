@@ -47,9 +47,7 @@ class MALAnimeDataSource: AnimeRemoteDataSource {
             path: MALPaths.animeSuggestions,
             headers: nil,
             params: client.mergeParams(
-                [
-                "fields": MALAnimeFields.base
-                ],
+                ["fields": MALAnimeFields.base],
                 params
             )
         )
@@ -69,6 +67,17 @@ class MALAnimeDataSource: AnimeRemoteDataSource {
                 params
             )
         )
+        
+        return res.toDomain()
+    }
+    
+    func fetchAnimeDetail(animeId: Int) async throws -> AnimeDetail {
+        let req = client.createAuthenticatedRequest(
+            path: MALPaths.animeDetail(id: animeId),
+            httpMethod: "GET",
+            params: ["fields": MALAnimeFields.detail]
+        )
+        let res: MALAnimeDetail = try await client.perform(req)
         
         return res.toDomain()
     }

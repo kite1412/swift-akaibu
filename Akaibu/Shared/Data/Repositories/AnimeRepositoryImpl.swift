@@ -28,6 +28,10 @@ class AnimeRepositoryImpl: AnimeRepository {
         try await remoteDataSource.fetchUserAnimeList(status: status, params: params)
     }
     
+    func getAnimeDetail(withId animeId: Int) async throws -> AnimeDetail {
+        try await remoteDataSource.fetchAnimeDetail(animeId: animeId)
+    }
+    
     func updateUserAnimeProgress(animeId: Int, with progress: UserAnimeProgress) async throws -> UserAnimeProgress {
         try await remoteDataSource.updateUserAnimeProgress(animeId: animeId, with: progress)
     }
