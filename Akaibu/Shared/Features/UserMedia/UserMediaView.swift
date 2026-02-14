@@ -32,7 +32,8 @@ struct UserMediaView: View {
                     ForEach(statuses, id: \.self) { status in
                         let selected = viewModel.selectedStatus == status
                         
-                        Text(status).tag(status)
+                        Text(status)
+                            .tag(status)
                             .padding(.vertical, 8)
                             .padding(.horizontal, 16)
                             .background(

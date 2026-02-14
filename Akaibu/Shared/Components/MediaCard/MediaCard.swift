@@ -28,9 +28,9 @@ struct MediaCard: View {
                 
                 if media.isAdult {
                     MediaLabel("Adult", kind: .adult)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                    .padding(4)
-                    .font(.caption2)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                        .padding(4)
+                        .font(.caption2)
                 }
             }
             .aspectRatio(2/3, contentMode: .fit)
