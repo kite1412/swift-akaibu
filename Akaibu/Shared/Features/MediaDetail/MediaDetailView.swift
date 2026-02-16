@@ -12,6 +12,13 @@ struct MediaDetailView: View {
     let data: MediaDetailData
     var additionalDetail: (() -> AnyView)? = nil
     
+    @State var isSynopsisExpanded: Bool = false
+    
+    private let synopsisLimit: Int = 200
+    private var isSynopsisExceedingLimit: Bool {
+        data.synopsis.map { $0.count > synopsisLimit } ?? false
+    }
+    
     init(data: MediaDetailData) {
         self.data = data
     }
@@ -23,7 +30,7 @@ struct MediaDetailView: View {
     
     var body: some View {
         ScrollView {
-            VStack {
+            VStack(alignment: .leading, spacing: 16) {
                 HStack(alignment: .top) {
                     BrowseImage(data.coverImageURL)
                         .aspectRatio(2/3, contentMode: .fit)
@@ -57,6 +64,40 @@ struct MediaDetailView: View {
                         .font(.caption)
                     }
                     .padding(4)
+                }
+                if let synopsis = data.synopsis {
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack {
+                            Text("Synopsis")
+                                .foregroundStyle(.primary)
+                                .bold()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            
+                        }
+                        
+                        Text(
+                            isSynopsisExceedingLimit ? isSynopsisExpanded ?
+                                synopsis.truncated(to: synopsisLimit, trailing: "...")
+                                : synopsis
+                                : synopsis
+                        )
+                        if isSynopsisExceedingLimit {
+                            Image(systemName: "chevron.down")
+                                .rotationEffect(Angle(degrees: isSynopsisExpanded ? 180 : 0))
+                                .onTapGesture {
+                                    isSynopsisExpanded.toggle()
+                                }
+                                .frame(maxWidth: .infinity)
+                                .foregroundStyle(.accent)
+                        }
+                    }
+                    .font(.subheadline)
+                    .padding(8)
+                    .background(.thinMaterial)
+                    .foregroundStyle(.secondary)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .animation(.easeInOut, value: isSynopsisExpanded)
                 }
             }
         }
@@ -153,7 +194,7 @@ struct MediaDetailView: View {
     MediaDetailView(
         data: MediaDetailData(
             title: "A title",
-            synopsis: "A synopsis",
+            synopsis: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
             coverImageURL: URL(string: "https://picsum.photos/300/200"),
             type: "A type",
             status: "Completed",
