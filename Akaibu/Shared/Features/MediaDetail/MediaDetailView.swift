@@ -78,16 +78,14 @@ struct MediaDetailView: View {
                         
                         Text(
                             isSynopsisExceedingLimit ? isSynopsisExpanded ?
-                                synopsis.truncated(to: synopsisLimit, trailing: "...")
-                                : synopsis
+                                synopsis
+                                : synopsis.truncated(to: synopsisLimit, trailing: "...")
                                 : synopsis
                         )
+                        
                         if isSynopsisExceedingLimit {
                             Image(systemName: "chevron.down")
                                 .rotationEffect(Angle(degrees: isSynopsisExpanded ? 180 : 0))
-                                .onTapGesture {
-                                    isSynopsisExpanded.toggle()
-                                }
                                 .frame(maxWidth: .infinity)
                                 .foregroundStyle(.accent)
                         }
@@ -98,6 +96,11 @@ struct MediaDetailView: View {
                     .foregroundStyle(.secondary)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                     .animation(.easeInOut, value: isSynopsisExpanded)
+                    .onTapGesture {
+                        if isSynopsisExceedingLimit {
+                            isSynopsisExpanded.toggle()
+                        }
+                    }
                 }
             }
         }

@@ -11,15 +11,9 @@ struct UserMediaCard: View {
     let data: UserMediaData
     let availableStatuses: [String]
     let completedStatus: String
-    let onProgressUpdate: (Int) -> Void
+    let onConsumedUnitsUpdate: (Int) -> Void
     let onScoreUpdate: (Int) -> Void
     let onStatusUpdate: (String) -> Void
-    
-    @State private var consumedUnits: String = ""
-    @State private var score: String = ""
-    @State private var consumedUnitsPopover: Bool = false
-    @State private var scorePopover: Bool = false
-    @State private var statusPopover: Bool = false
     
     init(
         data: UserMediaData,
@@ -39,193 +33,26 @@ struct UserMediaCard: View {
         }
         
         self.onScoreUpdate = onScoreUpdate
-        self.onProgressUpdate = onConsumedUnitsUpdate
+        self.onConsumedUnitsUpdate = onConsumedUnitsUpdate
         self.onStatusUpdate = onStatusUpdate
-        _consumedUnits = State(initialValue: String(data.consumedUnits))
-        _score = State(initialValue: String(data.userScore))
     }
     
     var body: some View {
         MediaCard(media: data.toMediaCardData()) {
             VStack(alignment: .leading, spacing: 4) {
-                editableProp(
-                    label: "Status",
-                    value: data.userStatus,
-                    systemImage: nil,
-                    showPopover: $statusPopover
+                UserMediaProgress(
+                    userStatus: data.userStatus,
+                    userScore: data.userScore,
+                    userConsumedUnits: data.consumedUnits,
+                    totalUnits: data.totalUnits,
+                    availableStatuses: availableStatuses,
+                    completedStatus: completedStatus,
+                    onStatusUpdate: onStatusUpdate,
+                    onScoreUpdate: onScoreUpdate,
+                    onConsumedUnitsUpdate: onConsumedUnitsUpdate
                 )
-                .popover(isPresented: $statusPopover, arrowEdge: .bottom) {
-                    popoverContent {
-                        VStack {
-                            ForEach(filteredAvailableStatuses, id: \.self) { status in
-                                VStack(spacing: 4) {
-                                    Text(status)
-                                    Divider()
-                                }
-                                .onTapGesture {
-                                    statusPopover = false
-                                    onStatusUpdate(status)
-                                }
-                                .foregroundStyle(data.userStatus == status ? .accent : .primary)
-                            }
-                        }
-                    }
-                }
-                
-                HStack {
-                    editableProp(
-                        label: "Progress",
-                        value: "\(data.consumedUnits) / \(totalUnitsString)",
-                        systemImage: "chevron.down",
-                        showPopover: $consumedUnitsPopover
-                    )
-                    .popover(isPresented: $consumedUnitsPopover, arrowEdge: .bottom) {
-                        popoverContent {
-                            editField(
-                                label: "Progress",
-                                value: $consumedUnits,
-                                trailing: "/ \(totalUnitsString)"
-                            ) { newValue in
-                                consumedUnitsPopover = false
-                                if let newProgress = Int(newValue) {
-                                    onProgressUpdate(newProgress)
-                                }
-                            }
-                            .onChange(of: consumedUnits) {
-                                if let consumedUnits = Int(consumedUnits) {
-                                    self.consumedUnits = String(
-                                        intThreshold(
-                                            actualValue: consumedUnits,
-                                            maxValue: data.totalUnits ?? Int.max
-                                        )
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    .onChange(of: consumedUnitsPopover) {
-                        if consumedUnitsPopover {
-                            consumedUnits = String(data.consumedUnits)
-                        }
-                    }
-                    
-                    editableProp(
-                        label: "Score",
-                        value: String(data.userScore),
-                        systemImage: "star.fill",
-                        showPopover: $scorePopover
-                    )
-                    .popover(isPresented: $scorePopover, arrowEdge: .bottom) {
-                        popoverContent {
-                            editField(
-                                label: "Score",
-                                value: $score,
-                                trailing: "/ 10"
-                            ) { newValue in
-                                scorePopover = false
-                                onScoreUpdate(Int(newValue) ?? 0)
-                            }
-                            .onChange(of: score) {
-                                if let score = Int(score) {
-                                    self.score = String(intThreshold(actualValue: score, maxValue: 10))
-                                }
-                            }
-                        }
-                    }
-                    .onChange(of: scorePopover) {
-                        if scorePopover {
-                            score = String(data.userScore)
-                        }
-                    }
-                }
             }
         }
-    }
-    
-    private var totalUnitsString: String {
-        let unknownTotalUnits: String = "~"
-        
-        if let totalUnits = data.totalUnits {
-            if totalUnits == 0 {
-                return unknownTotalUnits
-            } else {
-                return String(totalUnits)
-            }
-        } else {
-            return unknownTotalUnits
-        }
-    }
-    
-    private var filteredAvailableStatuses: [String] {
-        if data.totalUnits == 0 {
-            return availableStatuses.filter { $0 != completedStatus }
-        } else {
-            return availableStatuses
-        }
-    }
-    
-    private func intThreshold(actualValue: Int, maxValue: Int) -> Int {
-        min(actualValue >= 0 ? actualValue : 0, maxValue)
-    }
-    
-    private func editableProp(
-        label: String,
-        value: String,
-        systemImage: String?,
-        showPopover: Binding<Bool>
-    ) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(label)
-                .foregroundStyle(.secondary)
-            HStack {
-                Text(value)
-                if let systemImage {
-                    Image(systemName: systemImage)
-                        .foregroundStyle(.accent)
-                }
-            }
-            .padding(8)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(.gray.opacity(0.2))
-            )
-        }
-        .font(.caption)
-        .onTapGesture {
-            showPopover.wrappedValue.toggle()
-        }
-    }
-    
-    private func popoverContent(_ content: () -> some View) -> some View {
-        content()
-            .padding(8)
-            .presentationCompactAdaptation(.popover)
-    }
-    
-    private func editField(
-        label: String,
-        value: Binding<String>,
-        trailing: String,
-        onConfirm: @escaping (String) -> Void
-    ) -> some View {
-        VStack(spacing: 4) {
-            Text(label)
-                .foregroundStyle(.secondary)
-            HStack(spacing: 0) {
-                TextField("", text: value)
-                    #if os(iOS)
-                    .keyboardType(.numberPad)
-                    #endif
-                    .textFieldStyle(.roundedBorder)
-                    .onSubmit {
-                        onConfirm(value.wrappedValue)
-                    }
-                Text(" \(trailing)")
-                    .foregroundStyle(.secondary)
-            }
-            .frame(minWidth: 60)
-        }
-        .font(.subheadline)
     }
 }
 
