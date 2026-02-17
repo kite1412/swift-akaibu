@@ -19,6 +19,7 @@ extension AnimeDetail {
             scoringUsers: scoringUsers,
             alternativeTitles: alternativeTitles,
             rank: rank,
+            totalUnits: totalEpisodes,
             userProgress: userProgress?.toUserMediaProgress()
         )
     }

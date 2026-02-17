@@ -10,21 +10,63 @@ import Foundation
 
 struct MediaDetailView: View {
     let data: MediaDetailData?
+    let availableStatuses: [String]
+    let onGoingStatus: String
+    let completedStatus: String
+    let onUserMediaProgressUpdate: (UserMediaProgress) -> Void
     var additionalDetail: (() -> AnyView)? = nil
     
-    @State var isSynopsisExpanded: Bool = false
+    @State private var isSynopsisExpanded: Bool = false
+    @State private var showAddToListForm: Bool = false
+    @State private var userProgress: UserMediaProgress = UserMediaProgress(
+        status: "",
+        score: 0,
+        consumedUnits: 0,
+        updatedAt: Date()
+    )
     
     private let synopsisLimit: Int = 200
     private var isSynopsisExceedingLimit: Bool {
         data?.synopsis.map { $0.count > synopsisLimit } ?? false
     }
     
-    init(data: MediaDetailData?) {
+    init(
+        data: MediaDetailData?,
+        availableStatuses: [String],
+        onGoingStatus: String,
+        completedStatus: String,
+        onUserMediaProgressUpdate: @escaping (UserMediaProgress) -> Void
+    ) {
         self.data = data
+        self.availableStatuses = availableStatuses
+        self.onGoingStatus = onGoingStatus
+        self.completedStatus = completedStatus
+        self.onUserMediaProgressUpdate = onUserMediaProgressUpdate
+        
+        if let userProgress = data?.userProgress {
+            _userProgress = State(initialValue: userProgress)
+        } else {
+            _userProgress = State(
+                initialValue: defaultUserMediaProgress()
+            )
+        }
     }
     
-    init(data: MediaDetailData?, @ViewBuilder additionalDetail: @escaping () -> some View) {
-        self.data = data
+    init(
+        data: MediaDetailData?,
+        availableStatuses: [String],
+        onGoingStatus: String,
+        completedStatus: String,
+        onUserMediaProgressUpdate: @escaping (UserMediaProgress) -> Void,
+        @ViewBuilder additionalDetail: @escaping () -> some View
+    ) {
+        self.init(
+            data: data,
+            availableStatuses: availableStatuses,
+            onGoingStatus: onGoingStatus,
+            completedStatus: completedStatus,
+            onUserMediaProgressUpdate: onUserMediaProgressUpdate
+        )
         self.additionalDetail = { AnyView(additionalDetail()) }
     }
     
@@ -70,14 +112,10 @@ struct MediaDetailView: View {
                     }
                     if let synopsis = data.synopsis {
                         VStack(alignment: .leading, spacing: 4) {
-                            HStack {
-                                Text("Synopsis")
-                                    .foregroundStyle(.primary)
-                                    .bold()
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                
-                                
-                            }
+                            Text("Synopsis")
+                                .foregroundStyle(.primary)
+                                .bold()
+                                .frame(maxWidth: .infinity, alignment: .leading)
                             
                             Text(
                                 isSynopsisExceedingLimit ? isSynopsisExpanded ?
@@ -107,8 +145,63 @@ struct MediaDetailView: View {
                     }
                 }
                 .navigationTitle("Detail")
+                .toolbar {
+                    if data.userProgress == nil {
+                        ToolbarItem {
+                            Text("Add to list")
+                                .foregroundStyle(.accent)
+                                .onTapGesture {
+                                    showAddToListForm.toggle()
+                                }
+                        }
+                    }
+                }
             }
             .padding()
+            .overlay {
+                if showAddToListForm {
+                    Color.black.opacity(0.5)
+                        .ignoresSafeArea()
+                    
+                    VStack(alignment: .leading, spacing: 16) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            MediaProgress(
+                                data: userProgress,
+                                totalUnits: data.totalUnits,
+                                availableStatuses: availableStatuses,
+                                completedStatus: completedStatus
+                            ) { status in
+                                userProgress.status = status
+                            } onScoreUpdate: { score in
+                                userProgress.score = score
+                            } onConsumedUnitsUpdate: { consumedUnits in
+                                userProgress.consumedUnits = consumedUnits
+                            }
+                        }
+                        
+                        HStack {
+                            Button("Cancel") {
+                                showAddToListForm = false
+                                userProgress = defaultUserMediaProgress()
+                            }
+                            .foregroundStyle(.primary)
+                            .buttonStyle(.glass)
+                            
+                            Spacer()
+                            
+                            Button("Add") {
+                                showAddToListForm = false
+                            }
+                            .foregroundStyle(.accent)
+                            .buttonStyle(.glass)
+                        }
+                    }
+                    .frame(maxWidth: 240, alignment: .leading)
+                    .padding(16)
+                    .background(.background)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+            }
         } else {
             Loading(loadingText: "Loading Details...")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -141,16 +234,10 @@ struct MediaDetailView: View {
     @ViewBuilder
     private var genres: some View {
         if let genres = data?.genres {
-            HStack(spacing: 4) {
-                ForEach(genres, id: \.self) { genre in
-                    Text(genre)
-                        .font(.caption2)
-                        .padding(.vertical, 2)
-                        .padding(.horizontal, 8)
-                        .background(.thickMaterial)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                }
-            }
+            Text(genres.joined(separator: " · "))
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .italic()
         }
     }
     
@@ -208,6 +295,15 @@ struct MediaDetailView: View {
                 .foregroundStyle(textStyle)
         }
     }
+    
+    private func defaultUserMediaProgress() -> UserMediaProgress {
+        UserMediaProgress(
+            status: onGoingStatus,
+            score: 0,
+            consumedUnits: 0,
+            updatedAt: Date()
+        )
+    }
 }
 
 private let data = MediaDetailData(
@@ -220,24 +316,32 @@ private let data = MediaDetailData(
     type: "A type",
     status: "Completed",
     isAdult: true,
-    genres: ["genre 1", "genre 2", "genre 3", "genre 4"],
+    genres: ["genre 1", "genre 2", "genre 3", "genre 4", "genre 5"],
     score: 8,
     scoringUsers: 10000,
     alternativeTitles: ["A title", "Another title"],
     rank: 1000,
-    userProgress: UserMediaProgress(
-        status: "Completed",
-        score: 8,
-        consumedUnits: 10,
-        updatedAt: Date()
-    )
+    totalUnits: 12,
+//    userProgress: UserMediaProgress(
+//        status: "Completed",
+//        score: 8,
+//        consumedUnits: 10,
+//        updatedAt: Date()
+//    )
+    userProgress: nil
 )
 
 #Preview {
-    MediaDetailView(
-        data: nil,
-        additionalDetail: {
-            Text("Additional detail")
-        }
-    )
+    NavigationStack {
+        MediaDetailView(
+            data: data,
+            availableStatuses: ["Watching", "Completed", "Dropped"],
+            onGoingStatus: "Watching",
+            completedStatus: "Completed",
+            onUserMediaProgressUpdate: { progress in },
+            additionalDetail: {
+                Text("Additional detail")
+            }
+        )
+    }
 }

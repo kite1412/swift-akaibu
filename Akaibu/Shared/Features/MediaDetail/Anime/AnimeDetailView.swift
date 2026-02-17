@@ -15,7 +15,13 @@ struct AnimeDetailView: View {
     }
     
     var body: some View {
-        MediaDetailView(data: viewModel.mediaDetail)
+        MediaDetailView(
+            data: viewModel.mediaDetail,
+            availableStatuses: UserAnimeStatus.allCases.map(\.rawValue),
+            onGoingStatus: UserAnimeStatus.watching.rawValue,
+            completedStatus: UserAnimeStatus.completed.rawValue,
+            onUserMediaProgressUpdate: { progress in }
+        )
     }
 }
 
