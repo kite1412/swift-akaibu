@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MediaSearchResultsView: View {
+    @EnvironmentObject private var appRouter: AppRouter
     @StateObject private var viewModel = MediaSearchResultsViewModel()
     
     let searchTitle: String
@@ -33,6 +34,9 @@ struct MediaSearchResultsView: View {
                             for: searchResults.map { $0.toMediaCardData() },
                             loadMore: viewModel.nextAnimeSearchResults == nil ? nil : {
                                 viewModel.loadMoreAnimeResults()
+                            },
+                            onClick: { animeId in
+                                appRouter.goToAnimeDetail(withId: animeId)
                             }
                         )
                     }
@@ -46,6 +50,9 @@ struct MediaSearchResultsView: View {
                             for: searchResults.map { $0.toMediaCardData() },
                             loadMore: viewModel.nextMangaSearchResults == nil ? nil : {
                                 viewModel.loadMoreMangaResults()
+                            },
+                            onClick: { mangaId in
+                                
                             }
                         )
                     }
@@ -76,9 +83,13 @@ struct MediaSearchResultsView: View {
         }
     }
     
-    private func mediaCards(for mediaCardDataList: [MediaCardData], loadMore: (() -> Void)?) -> some View {
+    private func mediaCards(
+        for mediaCardDataList: [MediaCardData],
+        loadMore: (() -> Void)?,
+        onClick: @escaping (_ id: Int) -> Void
+    ) -> some View {
         InfiniteScrollView(items: mediaCardDataList, loadMore: loadMore) { media in
-            MediaCard(media: media)
+            MediaCard(media: media, onClick: onClick)
                 .padding(.horizontal)
         }
     }

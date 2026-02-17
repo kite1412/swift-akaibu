@@ -11,13 +11,19 @@ struct UserMediaView: View {
     let statuses: [String]
     let completedStatus: String
     
+    @EnvironmentObject private var appRouter: AppRouter
     @StateObject private var viewModel: UserMediaViewModel
     @State private var showCompletedStatusConstraintAlert: Bool = false
     @State private var searchTitle: String = ""
     
-    init(statuses: [String], completedStatus: String, service: UserMediaService) {
+    init(
+        statuses: [String],
+        completedStatus: String,
+        service: UserMediaService
+    ) {
         _viewModel = StateObject(wrappedValue: UserMediaViewModel(service: service))
         self.statuses = ["All"] + statuses
+        
         if statuses.contains(where: { completedStatus == $0 }) {
             self.completedStatus = completedStatus
         } else {
@@ -92,7 +98,10 @@ struct UserMediaView: View {
                                     availableStatuses: statuses.filter { status in
                                         status != "All"
                                     },
-                                    completedStatus: completedStatus
+                                    completedStatus: completedStatus,
+                                    onClick: { mediaId in
+                                        viewModel.navigateToDetail(mediaId: mediaId, router: appRouter)
+                                    }
                                 ) { newConsumedUnits in
                                     if newConsumedUnits < media.totalUnits ?? 0 && media.userMediaProgress.status == completedStatus {
                                         showCompletedStatusConstraintAlert = true

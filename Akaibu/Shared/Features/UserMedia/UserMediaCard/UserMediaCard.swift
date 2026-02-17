@@ -11,6 +11,7 @@ struct UserMediaCard: View {
     let data: UserMediaData
     let availableStatuses: [String]
     let completedStatus: String
+    let onClick: (_ id: Int) -> Void
     let onConsumedUnitsUpdate: (Int) -> Void
     let onScoreUpdate: (Int) -> Void
     let onStatusUpdate: (String) -> Void
@@ -19,12 +20,12 @@ struct UserMediaCard: View {
         data: UserMediaData,
         availableStatuses: [String],
         completedStatus: String,
+        onClick: @escaping (Int) -> Void,
         onConsumedUnitsUpdate: @escaping (Int) -> Void,
         onScoreUpdate: @escaping (Int) -> Void,
         onStatusUpdate: @escaping (String) -> Void
     ) {
         self.data = data
-        self.completedStatus = completedStatus
         
         if data.totalUnits == nil {
             self.availableStatuses = availableStatuses.filter { $0 != completedStatus }
@@ -32,13 +33,15 @@ struct UserMediaCard: View {
             self.availableStatuses = availableStatuses
         }
         
+        self.completedStatus = completedStatus
+        self.onClick = onClick
         self.onScoreUpdate = onScoreUpdate
         self.onConsumedUnitsUpdate = onConsumedUnitsUpdate
         self.onStatusUpdate = onStatusUpdate
     }
     
     var body: some View {
-        MediaCard(media: data.toMediaCardData()) {
+        MediaCard(media: data.toMediaCardData(), onClick: onClick) {
             VStack(alignment: .leading, spacing: 4) {
                 MediaProgress(
                     data: UserMediaProgress(
@@ -108,6 +111,7 @@ let userMediaDataMinimum = UserMediaData(
             data: media,
             availableStatuses: ["Watching", "Completed", "Plan To Watch"],
             completedStatus: "Completed",
+            onClick: { id in },
             onConsumedUnitsUpdate: { newConsumedUnits in
                 mediaCardDataList[index] = UserMediaData(
                     id: media.id,

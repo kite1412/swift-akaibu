@@ -6,6 +6,7 @@
 //
 
 protocol UserMediaService {
+    func navigateToDetail(withId mediaId: Int, router: AppRouter)
     func getUserMediaList(status: String?, params: [String: String]?) async throws -> PaginatedResult<[UserMediaData]>
     func updateConsumedUnits(for media: UserMediaData, with consumedUnits : Int) async throws -> UserMediaData
     func updateScore(for media: UserMediaData, with score: Int) async throws -> UserMediaData

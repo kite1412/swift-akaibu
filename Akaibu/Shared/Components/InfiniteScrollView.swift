@@ -46,7 +46,7 @@ struct InfiniteScrollView<Item: Identifiable, Content: View>: View {
         items: [MockAnime.animeBase, MockAnime.animeBaseMinimum],
         loadMore: {},
         content: { item in
-            MediaCard(media: item.toMediaCardData())
+            MediaCard(media: item.toMediaCardData(), onClick: { id in })
         }
     )
 }

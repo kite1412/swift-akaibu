@@ -133,6 +133,10 @@ class UserMediaViewModel: ObservableObject {
         }
     }
     
+    func navigateToDetail(mediaId: Int, router: AppRouter) {
+        service.navigateToDetail(withId: mediaId, router: router)
+    }
+    
     private func updateMediaProgress(
         for media: UserMediaData,
         with operation: @escaping () async throws -> UserMediaData

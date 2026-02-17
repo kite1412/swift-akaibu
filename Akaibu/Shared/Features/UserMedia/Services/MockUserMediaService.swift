@@ -6,6 +6,8 @@
 //
 
 class MockUserMediaService: UserMediaService {
+    func navigateToDetail(withId mediaId: Int, router: AppRouter) {}
+    
     func getUserMediaList(status: String?, params: [String: String]? = nil) async throws -> PaginatedResult<[UserMediaData]> {
         PaginatedResult(
             data: [userMediaData, userMediaDataMinimum],

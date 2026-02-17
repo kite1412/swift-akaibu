@@ -27,6 +27,8 @@ struct iOSMainView: View {
                                 switch destination {
                                 case .mediaSearchResults(let searchTitle):
                                     MediaSearchResultsView(searchTitle: searchTitle)
+                                case .animeDetail(let animeId):
+                                    AnimeDetailView(animeId: animeId)
                                 }
                             }
                     }

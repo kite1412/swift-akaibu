@@ -31,7 +31,12 @@ struct HomeView: View {
                     .italic()
                     .padding(.leading, 8) // from MediaSlider frame to outer padding
                     
-                    MediaSlider(data: suggestions)
+                    MediaSlider(
+                        data: suggestions,
+                        onClick: { animeId in
+                            appRouter.goToAnimeDetail(withId: animeId)
+                        }
+                    )
                 }
             }
             if horizontalSizeClass == .compact {
@@ -108,20 +113,32 @@ struct HomeView: View {
             loadingText: "Loading anime ranks...",
             errorText: "Failed to get anime ranks"
         ) { animeRanks in
-            ranking(for: "Anime", mediaRanks: animeRanks)
+            ranking(
+                for: "Anime",
+                mediaRanks: animeRanks,
+                onClick: { animeId in
+                    appRouter.goToAnimeDetail(withId: animeId)
+                }
+            )
         }
         FetchStateView(
             fetchResult: viewModel.mangaRanks,
             loadingText: "Loading manga ranks...",
             errorText: "Failed to get manga ranks"
         ) { mangaRanks in
-            ranking(for: "Manga", mediaRanks: mangaRanks, trophyImage: "trophy")
+            ranking(
+                for: "Manga",
+                mediaRanks: mangaRanks,
+                onClick: { mangaId in },
+                trophyImage: "trophy"
+            )
         }
     }
     
     private func ranking(
         for mediaType: String,
         mediaRanks: [MediaRank],
+        onClick: @escaping (_ id: Int) -> Void,
         trophyImage: String = "trophy.fill"
     ) -> some View {
         VStack {
@@ -143,7 +160,7 @@ struct HomeView: View {
                 }
             }
             ForEach(mediaRanks) { media in
-                MediaRankCard(mediaRank: media)
+                MediaRankCard(mediaRank: media, onClick: onClick)
             }
         }
     }

@@ -8,15 +8,17 @@
 import SwiftUI
 
 struct MediaSlider: View {
+    let data: [MediaSliderData]
+    let onClick: (_ id: Int) -> Void
+    
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     private var isCompact: Bool {
         horizontalSizeClass == UserInterfaceSizeClass.compact
     }
+    
     private var height: CGFloat {
         isCompact ? 150 : 250
     }
-    
-    let data: [MediaSliderData]
     
     // TODO use TabView
     var body: some View {
@@ -98,6 +100,9 @@ struct MediaSlider: View {
                                     .stroke(.white.opacity(0.4))
                                     .padding(8) // frame to outer
                             }
+                            .onTapGesture {
+                                onClick(media.id)
+                            }
                         }
                     }
                 }
@@ -144,5 +149,5 @@ private let mediaMinimum = MediaSliderData(
 )
 
 #Preview {
-    MediaSlider(data: [media, mediaMinimum])
+    MediaSlider(data: [media, mediaMinimum], onClick: { id in })
 }

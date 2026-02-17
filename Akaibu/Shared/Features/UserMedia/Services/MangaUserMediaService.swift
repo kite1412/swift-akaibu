@@ -6,10 +6,16 @@
 //
 
 import Foundation
+import SwiftUI
 
 class MangaUserMediaService: UserMediaService {
+    @EnvironmentObject private var appRouter: AppRouter
     private let repository = DIContainer.shared.mangaRepository
     private let mapper = PaginatedResultMapper()
+    
+    func navigateToDetail(withId mediaId: Int, router: AppRouter) {
+        
+    }
     
     func getUserMediaList(status: String?, params: [String: String]?) async throws -> PaginatedResult<[UserMediaData]> {
         let res = try await repository.getUserMangaList(status: UserMangaStatusMapper.status(from: status), params: params)

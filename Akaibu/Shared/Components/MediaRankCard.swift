@@ -10,6 +10,7 @@ import Kingfisher
 
 struct MediaRankCard: View {
     let mediaRank: MediaRank
+    let onClick: (_ id: Int) -> Void
     
     var body: some View {
         HStack(spacing: 4) {
@@ -62,13 +63,16 @@ struct MediaRankCard: View {
             }
         }
         .frame(maxWidth: .infinity)
+        .onTapGesture {
+            onClick(mediaRank.id)
+        }
     }
 }
 
 #Preview {
     VStack {
         ForEach([MockMedia.mediaRank, MockMedia.mediaRankMinimum]) { mediaRank in
-            MediaRankCard(mediaRank: mediaRank)
+            MediaRankCard(mediaRank: mediaRank, onClick: { id in })
         }
     }
     .padding()

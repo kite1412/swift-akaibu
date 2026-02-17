@@ -10,14 +10,16 @@ import Kingfisher
 
 struct MediaCard: View {
     let media: MediaCardData
+    let onClick: (_ id: Int) -> Void
     var content: (() -> AnyView)? = nil
     
-    init(media: MediaCardData) {
+    init(media: MediaCardData, onClick: @escaping (Int) -> Void) {
         self.media = media
+        self.onClick = onClick
     }
     
-    init(media: MediaCardData, @ViewBuilder content: @escaping () -> some View) {
-        self.media = media
+    init(media: MediaCardData, onClick: @escaping (Int) -> Void, @ViewBuilder content: @escaping () -> some View) {
+        self.init(media: media, onClick: onClick)
         self.content = { AnyView(content()) }
     }
     
@@ -75,6 +77,9 @@ struct MediaCard: View {
                 .stroke(.primary.opacity(0.5), lineWidth: 2)
                 .fill(.ultraThinMaterial)
         )
+        .onTapGesture {
+            onClick(media.id)
+        }
     }
     
     private var score: some View {
@@ -167,7 +172,7 @@ private let minimum = MediaCardData(
 #Preview {
     ScrollView {
         ForEach([mock, minimum]) { data in
-            MediaCard(media: data)
+            MediaCard(media: data, onClick: { id in })
         }
         .padding()
     }

@@ -7,4 +7,5 @@
 
 enum StackDestination: Hashable {
     case mediaSearchResults(searchTitle: String)
+    case animeDetail(animeId: Int)
 }

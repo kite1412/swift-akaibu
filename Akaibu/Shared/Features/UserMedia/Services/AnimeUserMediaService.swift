@@ -11,6 +11,10 @@ class AnimeUserMediaService: UserMediaService {
     private let repository = DIContainer.shared.animeRepository
     private let mapper = PaginatedResultMapper()
     
+    func navigateToDetail(withId mediaId: Int, router: AppRouter) {
+        router.goToAnimeDetail(withId: mediaId)
+    }
+    
     func getUserMediaList(status: String?, params: [String: String]?) async throws -> PaginatedResult<[UserMediaData]> {
         let res = try await repository.getUserAnimeList(status: UserAnimeStatusMapper.status(from: status), params: params)
         return mapper.mapResult(res)

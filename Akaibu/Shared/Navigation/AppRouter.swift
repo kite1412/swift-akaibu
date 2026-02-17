@@ -16,6 +16,10 @@ final class AppRouter: ObservableObject {
         path.append(StackDestination.mediaSearchResults(searchTitle: searchTitle))
     }
     
+    func goToAnimeDetail(withId animeId: Int) {
+        path.append(StackDestination.animeDetail(animeId: animeId))
+    }
+    
     private func navigate(to destination: StackDestination) {
         path.append(destination)
     }
