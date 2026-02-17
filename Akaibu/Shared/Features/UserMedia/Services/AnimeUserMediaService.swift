@@ -17,7 +17,7 @@ class AnimeUserMediaService: UserMediaService {
     }
     
     func updateConsumedUnits(for media: UserMediaData, with consumedUnits: Int) async throws -> UserMediaData {
-        if media.userStatus != UserAnimeStatus.completed.rawValue {
+        if media.userMediaProgress.status != UserAnimeStatus.completed.rawValue {
             return try await updateUserAnimeProgress(for: media, totalEpisodesWatched: consumedUnits)
         } else {
             return media
@@ -53,10 +53,10 @@ class AnimeUserMediaService: UserMediaService {
         )
         
         return media.applying { data in
-            data.userStatus = status ?? data.userStatus
-            data.consumedUnits = totalEpisodesWatched ?? data.consumedUnits
-            data.userScore = score ?? data.userScore
-            data.updatedAt = res.updatedAt
+            data.userMediaProgress.status = status ?? data.userMediaProgress.status
+            data.userMediaProgress.consumedUnits = totalEpisodesWatched ?? data.userMediaProgress.consumedUnits
+            data.userMediaProgress.score = score ?? data.userMediaProgress.score
+            data.userMediaProgress.updatedAt = res.updatedAt
         }
     }
     
@@ -67,9 +67,9 @@ class AnimeUserMediaService: UserMediaService {
         score: Int? = nil
     ) -> UserAnimeProgress {
         UserAnimeProgress(
-            status: UserAnimeStatus(rawValue: status ?? media.userStatus)!,
-            score: score ?? media.userScore,
-            totalEpisodesWatched: totalEpisodesWatched ?? media.consumedUnits,
+            status: UserAnimeStatus(rawValue: status ?? media.userMediaProgress.status)!,
+            score: score ?? media.userMediaProgress.score,
+            totalEpisodesWatched: totalEpisodesWatched ?? media.userMediaProgress.consumedUnits,
             updatedAt: Date()
         )
     }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UserMediaData: Identifiable, Hashable {
+struct UserMediaData: Identifiable {
     let id: Int
     let title: String
     let synopsis: String?
@@ -19,8 +19,5 @@ struct UserMediaData: Identifiable, Hashable {
     let status: String
     let type: String
     let totalUnits: Int?
-    var userStatus: String
-    var userScore: Int
-    var consumedUnits: Int
-    var updatedAt: Date
+    var userMediaProgress: UserMediaProgress
 }

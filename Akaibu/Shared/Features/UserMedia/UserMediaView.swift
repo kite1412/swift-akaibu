@@ -94,7 +94,7 @@ struct UserMediaView: View {
                                     },
                                     completedStatus: completedStatus
                                 ) { newConsumedUnits in
-                                    if newConsumedUnits < media.totalUnits ?? 0 && media.userStatus == completedStatus {
+                                    if newConsumedUnits < media.totalUnits ?? 0 && media.userMediaProgress.status == completedStatus {
                                         showCompletedStatusConstraintAlert = true
                                     } else {
                                         viewModel.updateMediaConsumedUnits(for: media, consumedUnits: newConsumedUnits)

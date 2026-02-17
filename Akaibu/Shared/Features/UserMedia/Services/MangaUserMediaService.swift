@@ -17,7 +17,7 @@ class MangaUserMediaService: UserMediaService {
     }
     
     func updateConsumedUnits(for media: UserMediaData, with consumedUnits: Int) async throws -> UserMediaData {
-        if media.userStatus != UserMangaStatus.completed.rawValue {
+        if media.userMediaProgress.status != UserMangaStatus.completed.rawValue {
             return try await updateUserMangaProgress(for: media, totalChaptersRead: consumedUnits)
         } else {
             return media
@@ -53,10 +53,10 @@ class MangaUserMediaService: UserMediaService {
         )
         
         return media.applying { data in
-            data.userStatus = status ?? data.userStatus
-            data.consumedUnits = totalChaptersRead ?? data.consumedUnits
-            data.userScore = score ?? data.userScore
-            data.updatedAt = res.updatedAt
+            data.userMediaProgress.status = status ?? data.userMediaProgress.status
+            data.userMediaProgress.consumedUnits = totalChaptersRead ?? data.userMediaProgress.consumedUnits
+            data.userMediaProgress.score = score ?? data.userMediaProgress.score
+            data.userMediaProgress.updatedAt = res.updatedAt
         }
     }
     
@@ -67,9 +67,9 @@ class MangaUserMediaService: UserMediaService {
         score: Int? = nil
     ) -> UserMangaProgress {
         UserMangaProgress(
-            status: UserMangaStatus(rawValue: status ?? media.userStatus)!,
-            score: score ?? media.userScore,
-            totalChaptersRead: totalChaptersRead ?? media.consumedUnits,
+            status: UserMangaStatus(rawValue: status ?? media.userMediaProgress.status)!,
+            score: score ?? media.userMediaProgress.score,
+            totalChaptersRead: totalChaptersRead ?? media.userMediaProgress.consumedUnits,
             updatedAt: Date()
         )
     }

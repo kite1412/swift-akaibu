@@ -19,10 +19,12 @@ extension UserAnime {
             status: airingStatus.rawValue,
             type: type,
             totalUnits: totalEpisodes ?? 0,
-            userStatus: progress.status.rawValue,
-            userScore: progress.score,
-            consumedUnits: progress.totalEpisodesWatched,
-            updatedAt: progress.updatedAt
+            userMediaProgress: UserMediaProgress(
+                status: progress.status.rawValue,
+                score: progress.score,
+                consumedUnits: progress.totalEpisodesWatched,
+                updatedAt: progress.updatedAt
+            )
         )
     }
 }

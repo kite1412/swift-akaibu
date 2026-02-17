@@ -19,4 +19,5 @@ struct MediaDetailData {
     let scoringUsers: Int?
     let alternativeTitles: [String]
     let rank: Int?
+    let userProgress: UserMediaProgress?
 }

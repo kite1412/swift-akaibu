@@ -40,7 +40,7 @@ class UserMediaViewModel: ObservableObject {
             let fetchResult = await FetchHelpers.tryFetch {
                 uiState = .loading
                 var params: [String: String]? = nil
-                let mediaCount = userMedia.count(where: { $0.userStatus == status })
+                let mediaCount = userMedia.count(where: { $0.userMediaProgress.status == status })
                 
                 if mediaCount > 0 {
                     params = ["offset": "\(mediaCount)"]
@@ -72,7 +72,7 @@ class UserMediaViewModel: ObservableObject {
     }
     
     func updateMediaScore(for media: UserMediaData, score: Int) {
-        if media.userScore == score {
+        if media.userMediaProgress.score == score {
             return
         }
         
@@ -82,7 +82,7 @@ class UserMediaViewModel: ObservableObject {
     }
     
     func updateMediaStatus(for media: UserMediaData, status: String) {
-        if media.userStatus == status {
+        if media.userMediaProgress.status == status {
             return
         }
         
@@ -92,7 +92,7 @@ class UserMediaViewModel: ObservableObject {
     }
     
     func updateMediaConsumedUnits(for media: UserMediaData, consumedUnits: Int) {
-        if media.consumedUnits == consumedUnits {
+        if media.userMediaProgress.consumedUnits == consumedUnits {
             return
         }
         
@@ -144,7 +144,7 @@ class UserMediaViewModel: ObservableObject {
             
             if case .success(let data) = updated {
                 if let index = userMedia.firstIndex(where: { $0.id == data.id }) {
-                    if media.userStatus == data.userStatus {
+                    if media.userMediaProgress.status == data.userMediaProgress.status {
                         userMedia[index] = data
                     } else {
                         userMedia.remove(at: index)
@@ -159,7 +159,7 @@ class UserMediaViewModel: ObservableObject {
     
     private func currentListByStatus() -> [UserMediaData] {
         selectedStatus == "All" ? userMedia : userMedia.filter { media in
-            media.userStatus == selectedStatus
+            media.userMediaProgress.status == selectedStatus
         }
     }
     

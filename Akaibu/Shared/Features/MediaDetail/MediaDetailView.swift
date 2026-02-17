@@ -206,7 +206,13 @@ struct MediaDetailView: View {
             score: 8,
             scoringUsers: 10000,
             alternativeTitles: ["A title", "Another title"],
-            rank: 1000
+            rank: 1000,
+            userProgress: UserMediaProgress(
+                status: "Completed",
+                score: 8,
+                consumedUnits: 10,
+                updatedAt: Date()
+            )
         ),
         additionalDetail: {
             Text("Additional detail")

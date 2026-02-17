@@ -19,10 +19,12 @@ extension UserManga {
             status: publishingStatus.rawValue,
             type: type,
             totalUnits: totalChapters,
-            userStatus: progress.status.rawValue,
-            userScore: progress.score,
-            consumedUnits: progress.totalChaptersRead,
-            updatedAt: progress.updatedAt
+            userMediaProgress: UserMediaProgress(
+                status: progress.status.rawValue,
+                score: progress.score,
+                consumedUnits: progress.totalChaptersRead,
+                updatedAt: progress.updatedAt
+            )
         )
     }
 }

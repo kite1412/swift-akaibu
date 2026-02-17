@@ -40,10 +40,13 @@ struct UserMediaCard: View {
     var body: some View {
         MediaCard(media: data.toMediaCardData()) {
             VStack(alignment: .leading, spacing: 4) {
-                UserMediaProgress(
-                    userStatus: data.userStatus,
-                    userScore: data.userScore,
-                    userConsumedUnits: data.consumedUnits,
+                MediaProgress(
+                    data: UserMediaProgress(
+                        status: data.userMediaProgress.status,
+                        score: data.userMediaProgress.score,
+                        consumedUnits: data.userMediaProgress.consumedUnits,
+                        updatedAt: data.userMediaProgress.updatedAt
+                    ),
                     totalUnits: data.totalUnits,
                     availableStatuses: availableStatuses,
                     completedStatus: completedStatus,
@@ -69,10 +72,12 @@ let userMediaData = UserMediaData(
     status: "Completed",
     type: "TV",
     totalUnits: 12,
-    userStatus: "Watching",
-    userScore: 10,
-    consumedUnits: 8,
-    updatedAt: Date()
+    userMediaProgress: UserMediaProgress(
+        status: "Watching",
+        score: 10,
+        consumedUnits: 8,
+        updatedAt: Date()
+    )
 )
 
 let userMediaDataMinimum = UserMediaData(
@@ -87,10 +92,12 @@ let userMediaDataMinimum = UserMediaData(
     status: "Completed",
     type: "TV",
     totalUnits: 12,
-    userStatus: "Watching",
-    userScore: 0,
-    consumedUnits: 8,
-    updatedAt: Date()
+    userMediaProgress: UserMediaProgress(
+        status: "Watching",
+        score: 10,
+        consumedUnits: 8,
+        updatedAt: Date()
+    )
 )
 
 #Preview {
@@ -101,7 +108,7 @@ let userMediaDataMinimum = UserMediaData(
             data: media,
             availableStatuses: ["Watching", "Completed", "Plan To Watch"],
             completedStatus: "Completed",
-            onConsumedUnitsUpdate: { newProgress in
+            onConsumedUnitsUpdate: { newConsumedUnits in
                 mediaCardDataList[index] = UserMediaData(
                     id: media.id,
                     title: media.title,
@@ -114,10 +121,12 @@ let userMediaDataMinimum = UserMediaData(
                     status: media.status,
                     type: media.type,
                     totalUnits: media.totalUnits,
-                    userStatus: media.userStatus,
-                    userScore: media.userScore,
-                    consumedUnits: newProgress,
-                    updatedAt: media.updatedAt
+                    userMediaProgress: UserMediaProgress(
+                        status: "Watching",
+                        score: 10,
+                        consumedUnits: newConsumedUnits,
+                        updatedAt: Date()
+                    )
                 )
             },
             onScoreUpdate: { newScore in
@@ -133,10 +142,12 @@ let userMediaDataMinimum = UserMediaData(
                     status: media.status,
                     type: media.type,
                     totalUnits: media.totalUnits,
-                    userStatus: media.userStatus,
-                    userScore: newScore,
-                    consumedUnits: media.consumedUnits,
-                    updatedAt: media.updatedAt
+                    userMediaProgress: UserMediaProgress(
+                        status: "Watching",
+                        score: newScore,
+                        consumedUnits: 8,
+                        updatedAt: Date()
+                    )
                 )
             },
             onStatusUpdate: { newStatus in
@@ -152,10 +163,12 @@ let userMediaDataMinimum = UserMediaData(
                     status: media.status,
                     type: media.type,
                     totalUnits: media.totalUnits,
-                    userStatus: newStatus,
-                    userScore: media.userScore,
-                    consumedUnits: media.consumedUnits,
-                    updatedAt: media.updatedAt
+                    userMediaProgress: UserMediaProgress(
+                        status: newStatus,
+                        score: 10,
+                        consumedUnits: 8,
+                        updatedAt: Date()
+                    )
                 )
             }
         )

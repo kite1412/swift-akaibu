@@ -1,16 +1,15 @@
 //
-//  UserMediaProgress.swift
+//  MediaProgress.swift
 //  Akaibu
 //
 //  Created by kite1412 on 17/02/26.
 //
 
+import Foundation
 import SwiftUI
 
-struct UserMediaProgress: View {
-    let userStatus: String
-    let userScore: Int
-    let userConsumedUnits: Int
+struct MediaProgress: View {
+    let data: UserMediaProgress
     var totalUnits: Int?
     let availableStatuses: [String]
     let completedStatus: String
@@ -25,9 +24,7 @@ struct UserMediaProgress: View {
     @State private var consumedUnitsPopover: Bool = false
     
     init(
-        userStatus: String,
-        userScore: Int,
-        userConsumedUnits: Int,
+        data: UserMediaProgress,
         totalUnits: Int?,
         availableStatuses: [String],
         completedStatus: String,
@@ -35,9 +32,7 @@ struct UserMediaProgress: View {
         onScoreUpdate: @escaping (Int) -> Void,
         onConsumedUnitsUpdate: @escaping (Int) -> Void
     ) {
-        self.userStatus = userStatus
-        self.userScore = userScore
-        self.userConsumedUnits = userConsumedUnits
+        self.data = data
         self.totalUnits = totalUnits
         self.completedStatus = completedStatus
         self.onStatusUpdate = onStatusUpdate
@@ -50,14 +45,14 @@ struct UserMediaProgress: View {
             self.availableStatuses = availableStatuses
         }
         
-        _consumedUnits = State(initialValue: String(userConsumedUnits))
-        _score = State(initialValue: String(userScore))
+        _consumedUnits = State(initialValue: String(data.consumedUnits))
+        _score = State(initialValue: String(data.score))
     }
     
     var body: some View {
         editableProp(
             label: "Status",
-            value: userStatus,
+            value: data.status,
             systemImage: nil,
             showPopover: $statusPopover
         )
@@ -73,13 +68,13 @@ struct UserMediaProgress: View {
                             statusPopover = false
                             onStatusUpdate(status)
                         }
-                        .foregroundStyle(userStatus == status ? .accent : .primary)
+                        .foregroundStyle(data.status == status ? .accent : .primary)
                     }
                 }
             }
         }
-        .onChange(of: userStatus) {
-            if userStatus == completedStatus {
+        .onChange(of: data.status) {
+            if data.status == completedStatus {
                 if let totalUnits {
                     consumedUnits = String(totalUnits)
                 }
@@ -89,7 +84,7 @@ struct UserMediaProgress: View {
         HStack {
             editableProp(
                 label: "Progress",
-                value: "\(userConsumedUnits) / \(totalUnitsString)",
+                value: "\(data.consumedUnits) / \(totalUnitsString)",
                 systemImage: "chevron.down",
                 showPopover: $consumedUnitsPopover
             )
@@ -125,7 +120,7 @@ struct UserMediaProgress: View {
             
             editableProp(
                 label: "Score",
-                value: String(userScore),
+                value: String(data.score),
                 systemImage: "star.fill",
                 showPopover: $scorePopover
             )
@@ -148,7 +143,7 @@ struct UserMediaProgress: View {
             }
             .onChange(of: scorePopover) {
                 if scorePopover {
-                    score = String(userScore)
+                    score = String(data.score)
                 }
             }
         }
@@ -243,10 +238,13 @@ struct UserMediaProgress: View {
 }
 
 #Preview {
-    UserMediaProgress(
-        userStatus: "Completed",
-        userScore: 8,
-        userConsumedUnits: 10,
+    MediaProgress(
+        data: UserMediaProgress(
+            status: "Completed",
+            score: 8,
+            consumedUnits: 10,
+            updatedAt: Date()
+        ),
         totalUnits: 12,
         availableStatuses: ["Completed", "Watching", "Dropped"],
         completedStatus: "Completed",
