@@ -13,9 +13,7 @@ struct MediaProgress: View {
     var totalUnits: Int?
     let availableStatuses: [String]
     let completedStatus: String
-    let onStatusUpdate: (String) -> Void
-    let onScoreUpdate: (Int) -> Void
-    let onConsumedUnitsUpdate: (Int) -> Void
+    let onUserMediaProgressUpdate: (UserMediaProgress) -> Void
     
     @State private var consumedUnits: String = ""
     @State private var score: String = ""
@@ -28,16 +26,12 @@ struct MediaProgress: View {
         totalUnits: Int?,
         availableStatuses: [String],
         completedStatus: String,
-        onStatusUpdate: @escaping (String) -> Void,
-        onScoreUpdate: @escaping (Int) -> Void,
-        onConsumedUnitsUpdate: @escaping (Int) -> Void
+        onUserMediaProgressUpdate: @escaping (UserMediaProgress) -> Void
     ) {
         self.data = data
         self.totalUnits = totalUnits
         self.completedStatus = completedStatus
-        self.onStatusUpdate = onStatusUpdate
-        self.onScoreUpdate = onScoreUpdate
-        self.onConsumedUnitsUpdate = onConsumedUnitsUpdate
+        self.onUserMediaProgressUpdate = onUserMediaProgressUpdate
         
         if totalUnits == nil {
             self.availableStatuses = availableStatuses.filter { $0 != completedStatus }
@@ -66,7 +60,18 @@ struct MediaProgress: View {
                         }
                         .onTapGesture {
                             statusPopover = false
-                            onStatusUpdate(status)
+                            
+                            let data = data.applying { data in
+                                data.status = status
+                                
+                                if status == completedStatus {
+                                    if let totalUnits {
+                                        data.consumedUnits = totalUnits
+                                    }
+                                }
+                            }
+                            
+                            onUserMediaProgressUpdate(data)
                         }
                         .foregroundStyle(data.status == status ? .accent : .primary)
                     }
@@ -97,7 +102,11 @@ struct MediaProgress: View {
                     ) { newValue in
                         consumedUnitsPopover = false
                         if let newProgress = Int(newValue) {
-                            onConsumedUnitsUpdate(newProgress)
+                            let data = data.applying { data in
+                                data.consumedUnits = newProgress
+                            }
+                            
+                            onUserMediaProgressUpdate(data)
                         }
                     }
                     .onChange(of: consumedUnits) {
@@ -132,7 +141,11 @@ struct MediaProgress: View {
                         trailing: "/ 10"
                     ) { newValue in
                         scorePopover = false
-                        onScoreUpdate(Int(newValue) ?? 0)
+                        let data = data.applying { data in
+                            data.score = Int(newValue) ?? 0
+                        }
+                        
+                        onUserMediaProgressUpdate(data)
                     }
                     .onChange(of: score) {
                         if let score = Int(score) {
@@ -248,8 +261,6 @@ struct MediaProgress: View {
         totalUnits: 12,
         availableStatuses: ["Completed", "Watching", "Dropped"],
         completedStatus: "Completed",
-        onStatusUpdate: { status in },
-        onScoreUpdate: { score in },
-        onConsumedUnitsUpdate: { consumedUnits in }
+        onUserMediaProgressUpdate: { progress in }
     )
 }

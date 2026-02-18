@@ -12,18 +12,14 @@ struct UserMediaCard: View {
     let availableStatuses: [String]
     let completedStatus: String
     let onClick: (_ id: Int) -> Void
-    let onConsumedUnitsUpdate: (Int) -> Void
-    let onScoreUpdate: (Int) -> Void
-    let onStatusUpdate: (String) -> Void
+    let onUserMediaProgressUpdate: (UserMediaProgress) -> Void
     
     init(
         data: UserMediaData,
         availableStatuses: [String],
         completedStatus: String,
         onClick: @escaping (Int) -> Void,
-        onConsumedUnitsUpdate: @escaping (Int) -> Void,
-        onScoreUpdate: @escaping (Int) -> Void,
-        onStatusUpdate: @escaping (String) -> Void
+        onUserMediaProgressUpdate: @escaping (UserMediaProgress) -> Void
     ) {
         self.data = data
         
@@ -35,9 +31,7 @@ struct UserMediaCard: View {
         
         self.completedStatus = completedStatus
         self.onClick = onClick
-        self.onScoreUpdate = onScoreUpdate
-        self.onConsumedUnitsUpdate = onConsumedUnitsUpdate
-        self.onStatusUpdate = onStatusUpdate
+        self.onUserMediaProgressUpdate = onUserMediaProgressUpdate
     }
     
     var body: some View {
@@ -53,9 +47,7 @@ struct UserMediaCard: View {
                     totalUnits: data.totalUnits,
                     availableStatuses: availableStatuses,
                     completedStatus: completedStatus,
-                    onStatusUpdate: onStatusUpdate,
-                    onScoreUpdate: onScoreUpdate,
-                    onConsumedUnitsUpdate: onConsumedUnitsUpdate
+                    onUserMediaProgressUpdate: onUserMediaProgressUpdate
                 )
             }
         }
@@ -112,7 +104,7 @@ let userMediaDataMinimum = UserMediaData(
             availableStatuses: ["Watching", "Completed", "Plan To Watch"],
             completedStatus: "Completed",
             onClick: { id in },
-            onConsumedUnitsUpdate: { newConsumedUnits in
+            onUserMediaProgressUpdate: { progress in
                 mediaCardDataList[index] = UserMediaData(
                     id: media.id,
                     title: media.title,
@@ -125,54 +117,7 @@ let userMediaDataMinimum = UserMediaData(
                     status: media.status,
                     type: media.type,
                     totalUnits: media.totalUnits,
-                    userMediaProgress: UserMediaProgress(
-                        status: "Watching",
-                        score: 10,
-                        consumedUnits: newConsumedUnits,
-                        updatedAt: Date()
-                    )
-                )
-            },
-            onScoreUpdate: { newScore in
-                mediaCardDataList[index] = UserMediaData(
-                    id: media.id,
-                    title: media.title,
-                    synopsis: media.synopsis,
-                    coverImageUrl: media.coverImageUrl,
-                    isAdult: media.isAdult,
-                    score: media.score,
-                    scoringUsers: media.scoringUsers,
-                    genres: media.genres,
-                    status: media.status,
-                    type: media.type,
-                    totalUnits: media.totalUnits,
-                    userMediaProgress: UserMediaProgress(
-                        status: "Watching",
-                        score: newScore,
-                        consumedUnits: 8,
-                        updatedAt: Date()
-                    )
-                )
-            },
-            onStatusUpdate: { newStatus in
-                mediaCardDataList[index] = UserMediaData(
-                    id: media.id,
-                    title: media.title,
-                    synopsis: media.synopsis,
-                    coverImageUrl: media.coverImageUrl,
-                    isAdult: media.isAdult,
-                    score: media.score,
-                    scoringUsers: media.scoringUsers,
-                    genres: media.genres,
-                    status: media.status,
-                    type: media.type,
-                    totalUnits: media.totalUnits,
-                    userMediaProgress: UserMediaProgress(
-                        status: newStatus,
-                        score: 10,
-                        consumedUnits: 8,
-                        updatedAt: Date()
-                    )
+                    userMediaProgress: progress
                 )
             }
         )

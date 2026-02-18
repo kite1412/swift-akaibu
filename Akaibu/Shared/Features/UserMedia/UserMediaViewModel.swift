@@ -71,33 +71,16 @@ class UserMediaViewModel: ObservableObject {
         }
     }
     
-    func updateMediaScore(for media: UserMediaData, score: Int) {
-        if media.userMediaProgress.score == score {
+    func updateUserMediaProgress(for media: UserMediaData, with newProgress: UserMediaProgress) {
+        if media.userMediaProgress.status == newProgress.status
+            && media.userMediaProgress.score == newProgress.score
+            && media.userMediaProgress.consumedUnits == newProgress.consumedUnits
+        {
             return
         }
         
         updateMediaProgress(for: media) { [weak self] in
-            try await self?.service.updateScore(for: media, with: score) ?? media
-        }
-    }
-    
-    func updateMediaStatus(for media: UserMediaData, status: String) {
-        if media.userMediaProgress.status == status {
-            return
-        }
-        
-        updateMediaProgress(for: media) { [weak self] in
-            try await self?.service.updateStatus(for: media, with: status) ?? media
-        }
-    }
-    
-    func updateMediaConsumedUnits(for media: UserMediaData, consumedUnits: Int) {
-        if media.userMediaProgress.consumedUnits == consumedUnits {
-            return
-        }
-        
-        updateMediaProgress(for: media) { [weak self] in
-            try await self?.service.updateConsumedUnits(for: media, with: consumedUnits) ?? media
+            try await self?.service.updateProgress(for: media, with: newProgress) ?? media
         }
     }
     

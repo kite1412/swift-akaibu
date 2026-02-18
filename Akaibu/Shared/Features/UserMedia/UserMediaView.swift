@@ -101,18 +101,11 @@ struct UserMediaView: View {
                                     completedStatus: completedStatus,
                                     onClick: { mediaId in
                                         viewModel.navigateToDetail(mediaId: mediaId, router: appRouter)
+                                    },
+                                    onUserMediaProgressUpdate: { progress in
+                                        viewModel.updateUserMediaProgress(for: media, with: progress)
                                     }
-                                ) { newConsumedUnits in
-                                    if newConsumedUnits < media.totalUnits ?? 0 && media.userMediaProgress.status == completedStatus {
-                                        showCompletedStatusConstraintAlert = true
-                                    } else {
-                                        viewModel.updateMediaConsumedUnits(for: media, consumedUnits: newConsumedUnits)
-                                    }
-                                } onScoreUpdate: { newScore in
-                                    viewModel.updateMediaScore(for: media, score: newScore)
-                                } onStatusUpdate: { newStatus in
-                                    viewModel.updateMediaStatus(for: media, status: newStatus)
-                                }
+                                )
                                 .id(media.id)
                                 .padding(.horizontal)
                                 .alert(

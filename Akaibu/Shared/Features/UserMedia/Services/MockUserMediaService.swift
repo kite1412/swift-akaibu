@@ -15,21 +15,9 @@ class MockUserMediaService: UserMediaService {
         )
     }
     
-    func updateConsumedUnits(for media: UserMediaData, with consumedUnits: Int) async throws -> UserMediaData {
+    func updateProgress(for media: UserMediaData, with newProgress: UserMediaProgress) async throws -> UserMediaData {
         media.applying { data in
-            data.userMediaProgress.consumedUnits = consumedUnits
-        }
-    }
-    
-    func updateScore(for media: UserMediaData, with score: Int) async throws -> UserMediaData {
-        media.applying { data in
-            data.userMediaProgress.score = score
-        }
-    }
-    
-    func updateStatus(for media: UserMediaData, with status: String) async throws -> UserMediaData {
-        media.applying { data in
-            data.userMediaProgress.status = status
+            data.userMediaProgress = newProgress
         }
     }
 }

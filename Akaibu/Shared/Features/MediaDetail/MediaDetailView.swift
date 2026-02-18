@@ -96,15 +96,7 @@ struct MediaDetailView: View {
                                         totalUnits: data.totalUnits,
                                         availableStatuses: availableStatuses,
                                         completedStatus: completedStatus,
-                                        onStatusUpdate: { _ in
-                                            onUserMediaProgressUpdate(userProgress)
-                                        },
-                                        onScoreUpdate: { _ in
-                                            onUserMediaProgressUpdate(userProgress)
-                                        },
-                                        onConsumedUnitsUpdate: { _ in
-                                            onUserMediaProgressUpdate(userProgress)
-                                        }
+                                        onUserMediaProgressUpdate: onUserMediaProgressUpdate
                                     )
                                 }
                             }
@@ -191,14 +183,11 @@ struct MediaDetailView: View {
                                 data: userProgress,
                                 totalUnits: data.totalUnits,
                                 availableStatuses: availableStatuses,
-                                completedStatus: completedStatus
-                            ) { status in
-                                userProgress.status = status
-                            } onScoreUpdate: { score in
-                                userProgress.score = score
-                            } onConsumedUnitsUpdate: { consumedUnits in
-                                userProgress.consumedUnits = consumedUnits
-                            }
+                                completedStatus: completedStatus,
+                                onUserMediaProgressUpdate: { progress in
+                                    userProgress = progress
+                                }
+                            )
                         }
                         
                         HStack {
