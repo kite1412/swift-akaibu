@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SmallMediaCard: View {
     let data: SmallMediaCardData
+    let onClick: (_ id: Int) -> Void
     
     private let maxWidth: CGFloat = 80
     
@@ -36,6 +37,9 @@ struct SmallMediaCard: View {
                     .frame(width: maxWidth, alignment: .leading)
             }
         }
+        .onTapGesture {
+            onClick(data.id)
+        }
     }
 }
 
@@ -46,6 +50,7 @@ struct SmallMediaCard: View {
             title: "A Very Long Long Long Title",
             coverImageURL: URL.init(string: "https://picsum.photos/300/200"),
             description: "A very long long long long long long long long description"
-        )
+        ),
+        onClick: { mediaId in }
     )
 }

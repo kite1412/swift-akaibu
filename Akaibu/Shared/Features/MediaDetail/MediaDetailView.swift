@@ -15,6 +15,7 @@ struct MediaDetailView: View {
     let completedStatus: String
     var additionalDetails: [AdditionalDetail]
     let onUserMediaProgressUpdate: (UserMediaProgress) -> Void
+    let onMediaClick: (_ id: Int) -> Void
     
     @State private var isSynopsisExpanded: Bool = false
     @State private var showAddToListForm: Bool = false
@@ -36,7 +37,8 @@ struct MediaDetailView: View {
         onGoingStatus: String,
         completedStatus: String,
         additionalDetails: [AdditionalDetail],
-        onUserMediaProgressUpdate: @escaping (UserMediaProgress) -> Void
+        onUserMediaProgressUpdate: @escaping (UserMediaProgress) -> Void,
+        onMediaClick: @escaping (_ id: Int) -> Void
     ) {
         self.data = data
         self.availableStatuses = availableStatuses
@@ -44,6 +46,7 @@ struct MediaDetailView: View {
         self.completedStatus = completedStatus
         self.additionalDetails = additionalDetails
         self.onUserMediaProgressUpdate = onUserMediaProgressUpdate
+        self.onMediaClick = onMediaClick
         _userProgress = State(
             initialValue: defaultUserMediaProgress()
         )
@@ -171,7 +174,8 @@ struct MediaDetailView: View {
                                 LazyHStack(alignment: .top) {
                                     ForEach(recommendations, id: \.id) { media in
                                         SmallMediaCard(
-                                            data: media.toSmallMediaCardData(description: "Votes: \(media.totalVotes)")
+                                            data: media.toSmallMediaCardData(description: "Votes: \(media.totalVotes)"),
+                                            onClick: onMediaClick
                                         )
                                     }
                                 }
@@ -399,7 +403,8 @@ private let data = MediaDetailData(
                 AdditionalDetail(title: "A Detail", systemImageName: "tv", value: "A detail value"),
                 AdditionalDetail(title: "Another Detail", systemImageName: "tv", value: "A detail value")
             ],
-            onUserMediaProgressUpdate: { progress in }
+            onUserMediaProgressUpdate: { progress in },
+            onMediaClick: { mediaId in }
         )
     }
 }

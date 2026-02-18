@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AnimeDetailView: View {
+    @EnvironmentObject private var appRouter: AppRouter
     @StateObject private var viewModel: AnimeDetailViewModel
     
     init(animeId: Int) {
@@ -21,7 +22,8 @@ struct AnimeDetailView: View {
             onGoingStatus: UserAnimeStatus.watching.rawValue,
             completedStatus: UserAnimeStatus.completed.rawValue,
             additionalDetails: additionalDetails,
-            onUserMediaProgressUpdate: { progress in }
+            onUserMediaProgressUpdate: { progress in },
+            onMediaClick: appRouter.goToAnimeDetail
         )
     }
     

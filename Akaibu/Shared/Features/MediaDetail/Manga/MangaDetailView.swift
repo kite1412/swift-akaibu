@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MangaDetailView: View {
+    @EnvironmentObject private var appRouter: AppRouter
     @StateObject private var viewModel: MangaDetailViewModel
     
     init(mangaId: Int) {
@@ -21,7 +22,8 @@ struct MangaDetailView: View {
             onGoingStatus: UserMangaStatus.reading.rawValue,
             completedStatus: UserMangaStatus.completed.rawValue,
             additionalDetails: additionalDetails,
-            onUserMediaProgressUpdate: { progress in }
+            onUserMediaProgressUpdate: { progress in },
+            onMediaClick: appRouter.goToMangaDetail
         )
     }
     
