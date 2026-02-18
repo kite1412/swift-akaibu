@@ -129,7 +129,9 @@ struct HomeView: View {
             ranking(
                 for: "Manga",
                 mediaRanks: mangaRanks,
-                onClick: { mangaId in },
+                onClick: { mangaId in
+                    appRouter.goToMangaDetail(withId: mangaId)
+                },
                 trophyImage: "trophy"
             )
         }

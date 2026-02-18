@@ -29,6 +29,8 @@ struct iOSMainView: View {
                                     MediaSearchResultsView(searchTitle: searchTitle)
                                 case .animeDetail(let animeId):
                                     AnimeDetailView(animeId: animeId)
+                                case .mangaDetail(let mangaId):
+                                    MangaDetailView(mangaId: mangaId)
                                 }
                             }
                     }

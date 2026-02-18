@@ -14,7 +14,7 @@ class MangaUserMediaService: UserMediaService {
     private let mapper = PaginatedResultMapper()
     
     func navigateToDetail(withId mediaId: Int, router: AppRouter) {
-        
+        router.goToMangaDetail(withId: mediaId)
     }
     
     func getUserMediaList(status: String?, params: [String: String]?) async throws -> PaginatedResult<[UserMediaData]> {
