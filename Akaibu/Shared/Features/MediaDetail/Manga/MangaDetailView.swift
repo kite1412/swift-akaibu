@@ -23,7 +23,7 @@ struct MangaDetailView: View {
             completedStatus: UserMangaStatus.completed.rawValue,
             additionalDetails: additionalDetails,
             onUserMediaProgressUpdate: viewModel.updateUserMangaProgress,
-            onDeleteFromList: {},
+            onDeleteFromList: viewModel.deleteUserMangaProgress,
             onMediaClick: appRouter.goToMangaDetail
         )
     }

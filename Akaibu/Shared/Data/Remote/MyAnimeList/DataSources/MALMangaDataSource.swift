@@ -77,4 +77,14 @@ class MALMangaDataSource: MangaRemoteDataSource {
         
         return res.toDomain()
     }
+    
+    func deleteUserMangaProgress(mangaId: Int) async throws -> Bool {
+        let req = client.createAuthenticatedRequest(
+            path: MALPaths.mangaListStatus(id: mangaId),
+            httpMethod: "DELETE"
+        )
+        try await client.performIgnoreResponse(req)
+        
+        return true
+    }
 }

@@ -11,4 +11,5 @@ protocol MangaRepository {
     func getUserMangaList(status: UserMangaStatus?, params: [String: String]?) async throws -> PaginatedResult<[UserManga]>
     func getMangaDetail(withId mangaId: Int) async throws -> MangaDetail
     func updateUserMangaProgress(mangaId: Int, with progress: UserMangaProgress) async throws -> UserMangaProgress
+    func deleteUserMangaProgress(withId mangaId: Int) async throws -> Bool
 }

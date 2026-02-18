@@ -39,6 +39,24 @@ class MangaDetailViewModel: ObservableObject {
         }
     }
     
+    func deleteUserMangaProgress() {
+        if let manga {
+            Task {
+                let res = await FetchHelpers.tryFetch {
+                    try await repository.deleteUserMangaProgress(withId: manga.id)
+                }
+                
+                if case .success = res {
+                    updateManga(
+                        with: manga.applying { manga in
+                            manga.userProgress = nil
+                        }
+                    )
+                }
+            }
+        }
+    }
+    
     private func getMangaDetail(mangaId: Int) {
         Task {
             let res = await FetchHelpers.tryFetch {

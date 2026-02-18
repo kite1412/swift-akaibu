@@ -31,4 +31,8 @@ class MangaRepositoryImpl: MangaRepository {
     func updateUserMangaProgress(mangaId: Int, with progress: UserMangaProgress) async throws -> UserMangaProgress {
         try await remoteDataSource.updateUserMangaProgress(mangaId: mangaId, with: progress)
     }
+    
+    func deleteUserMangaProgress(withId mangaId: Int) async throws -> Bool {
+        try await remoteDataSource.deleteUserMangaProgress(mangaId: mangaId)
+    }
 }

@@ -11,4 +11,5 @@ protocol MangaRemoteDataSource {
     func fetchUserMangaList(status: UserMangaStatus?, params: [String: String]?) async throws -> PaginatedResult<[UserManga]>
     func fetchMangaDetail(mangaId: Int) async throws -> MangaDetail
     func updateUserMangaProgress(mangaId: Int, with progress: UserMangaProgress) async throws -> UserMangaProgress
+    func deleteUserMangaProgress(mangaId: Int) async throws -> Bool
 }
