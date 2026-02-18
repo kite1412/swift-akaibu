@@ -91,4 +91,14 @@ class MALAnimeDataSource: AnimeRemoteDataSource {
         
         return res.toDomain()
     }
+    
+    func deleteUserAnimeProgress(animeId: Int) async throws -> Bool {
+        let req = client.createAuthenticatedRequest(
+            path: MALPaths.animeListStatus(id: animeId),
+            httpMethod: "DELETE"
+        )
+        try await client.performIgnoreResponse(req)
+        
+        return true
+    }
 }

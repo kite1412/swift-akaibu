@@ -35,4 +35,8 @@ class AnimeRepositoryImpl: AnimeRepository {
     func updateUserAnimeProgress(animeId: Int, with progress: UserAnimeProgress) async throws -> UserAnimeProgress {
         try await remoteDataSource.updateUserAnimeProgress(animeId: animeId, with: progress)
     }
+    
+    func deleteUserAnimeProgress(withId animeId: Int) async throws -> Bool {
+        try await remoteDataSource.deleteUserAnimeProgress(animeId: animeId)
+    }
 }

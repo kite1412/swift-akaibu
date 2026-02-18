@@ -84,11 +84,12 @@ class HTTPClient {
     }
     
     func perform<T: Decodable>(_ request: URLRequest) async throws -> T {
-        let (data, response) = try await session.data(for: request)
-        guard let httpResp = response as? HTTPURLResponse, (200...299).contains(httpResp.statusCode) else {
-            throw URLError(.badServerResponse)
-        }
+        let data = try await perform(request)
         return try API.decode(T.self, from: data)
+    }
+    
+    func performIgnoreResponse(_ request: URLRequest) async throws {
+        let _ = try await perform(request)
     }
     
     func createRequest(
@@ -146,5 +147,14 @@ class HTTPClient {
         req.httpBody = try API.encode(body)
         
         return try await perform(req)
+    }
+    
+    private func perform(_ request: URLRequest) async throws -> Data {
+        let (data, response) = try await session.data(for: request)
+        guard let httpResp = response as? HTTPURLResponse, (200...299).contains(httpResp.statusCode) else {
+            throw URLError(.badServerResponse)
+        }
+        
+        return data
     }
 }

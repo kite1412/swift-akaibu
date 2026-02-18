@@ -15,6 +15,7 @@ struct MediaDetailView: View {
     let completedStatus: String
     var additionalDetails: [AdditionalDetail]
     let onUserMediaProgressUpdate: (UserMediaProgress) -> Void
+    let onDeleteFromList: () -> Void
     let onMediaClick: (_ id: Int) -> Void
     
     @State private var isSynopsisExpanded: Bool = false
@@ -25,6 +26,7 @@ struct MediaDetailView: View {
         consumedUnits: 0,
         updatedAt: Date()
     )
+    @State private var showDeleteFromListAlert: Bool = false
     
     private let synopsisLimit: Int = 200
     private var isSynopsisExceedingLimit: Bool {
@@ -38,6 +40,7 @@ struct MediaDetailView: View {
         completedStatus: String,
         additionalDetails: [AdditionalDetail],
         onUserMediaProgressUpdate: @escaping (UserMediaProgress) -> Void,
+        onDeleteFromList: @escaping () -> Void,
         onMediaClick: @escaping (_ id: Int) -> Void
     ) {
         self.data = data
@@ -47,6 +50,7 @@ struct MediaDetailView: View {
         self.additionalDetails = additionalDetails
         self.onUserMediaProgressUpdate = onUserMediaProgressUpdate
         self.onMediaClick = onMediaClick
+        self.onDeleteFromList = onDeleteFromList
         _userProgress = State(
             initialValue: defaultUserMediaProgress()
         )
@@ -183,14 +187,18 @@ struct MediaDetailView: View {
                 }
                 .navigationTitle("Detail")
                 .toolbar {
-                    if data.userProgress == nil {
-                        ToolbarItem {
-                            Text("Add to list")
-                                .foregroundStyle(.accent)
-                                .onTapGesture {
+                    let isInList = data.userProgress != nil
+                    
+                    ToolbarItem {
+                        Text(isInList ? "Delete from list" : "Add to list")
+                            .foregroundStyle(isInList ? .red : .accent)
+                            .onTapGesture {
+                                if isInList {
+                                    showDeleteFromListAlert.toggle()
+                                } else {
                                     showAddToListForm.toggle()
                                 }
-                        }
+                            }
                     }
                 }
             }
@@ -236,6 +244,10 @@ struct MediaDetailView: View {
                     .background(.background)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
+            }
+            .alert("Delete from list?", isPresented: $showDeleteFromListAlert) {
+                Button("Cancel", role: .cancel) {}
+                Button("Delete", role: .destructive, action: onDeleteFromList)
             }
             .onAppear {
                 if let userProgress = data.userProgress {
@@ -423,6 +435,7 @@ private let data = MediaDetailData(
                 AdditionalDetail(title: "Another Detail", systemImageName: "tv", value: "A detail value")
             ],
             onUserMediaProgressUpdate: { progress in },
+            onDeleteFromList: {},
             onMediaClick: { mediaId in }
         )
     }

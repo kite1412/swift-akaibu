@@ -39,6 +39,24 @@ class AnimeDetailViewModel: ObservableObject {
         }
     }
     
+    func deleteUserAnimeProgress() {
+        if let anime {
+            Task {
+                let res = await FetchHelpers.tryFetch {
+                    try await repository.deleteUserAnimeProgress(withId: anime.id)
+                }
+                
+                if case .success = res {
+                    updateAnime(
+                        with: anime.applying { anime in
+                            anime.userProgress = nil
+                        }
+                    )
+                }
+            }
+        }
+    }
+    
     private func getAnimeDetail(animeId: Int) {
         Task {
             let res = await FetchHelpers.tryFetch {

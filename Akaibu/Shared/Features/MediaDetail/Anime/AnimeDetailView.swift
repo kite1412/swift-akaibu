@@ -23,6 +23,7 @@ struct AnimeDetailView: View {
             completedStatus: UserAnimeStatus.completed.rawValue,
             additionalDetails: additionalDetails,
             onUserMediaProgressUpdate: viewModel.updateUserAnimeProgress,
+            onDeleteFromList: viewModel.deleteUserAnimeProgress,
             onMediaClick: appRouter.goToAnimeDetail
         )
     }
