@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MangaDetail {
+struct MangaDetail: Applying {
     let id: Int
     let title: String
     let synopsis: String?
@@ -25,7 +25,7 @@ struct MangaDetail {
     let totalChapters: Int?
     let totalVolumes: Int?
     let authors: [Author]
-    let userProgress: UserMangaProgress?
+    var userProgress: UserMangaProgress?
     let relatedManga: [RelatedMedia]
     let recommendations: [MediaRecommendation]
 }

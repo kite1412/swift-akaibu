@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UserMediaProgress {
+struct UserMediaProgress: Applying {
     var status: String
     var score: Int
     var consumedUnits: Int

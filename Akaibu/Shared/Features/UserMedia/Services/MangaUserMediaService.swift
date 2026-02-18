@@ -34,7 +34,7 @@ class MangaUserMediaService: UserMediaService {
         )
         
         return media.applying { data in
-            data.userMediaProgress = newProgress
+            data.userMediaProgress = res.toUserMediaProgress()
         }
     }
     

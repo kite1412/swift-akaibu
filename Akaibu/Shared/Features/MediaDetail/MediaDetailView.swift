@@ -88,7 +88,7 @@ struct MediaDetailView: View {
                             .padding(4)
                         }
                         
-                        if let _ = data.userProgress {
+                        if let userProgress = data.userProgress {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("My Progress")
                                     .font(.headline)
@@ -225,6 +225,7 @@ struct MediaDetailView: View {
                             
                             Button("Add") {
                                 showAddToListForm = false
+                                onUserMediaProgressUpdate(userProgress)
                             }
                             .foregroundStyle(.accent)
                             .buttonStyle(.glass)

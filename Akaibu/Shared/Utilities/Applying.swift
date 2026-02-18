@@ -1,11 +1,13 @@
 //
-//  UserMediaProgress+Mapping.swift
+//  Applying.swift
 //  Akaibu
 //
-//  Created by kite1412 on 18/02/26.
+//  Created by kite1412 on 19/02/26.
 //
 
-extension UserMediaProgress {
+protocol Applying {}
+
+extension Applying {
     func applying(_ update: (inout Self) -> Void) -> Self {
         var copy = self
         update(&copy)

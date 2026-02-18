@@ -22,7 +22,7 @@ struct AnimeDetailView: View {
             onGoingStatus: UserAnimeStatus.watching.rawValue,
             completedStatus: UserAnimeStatus.completed.rawValue,
             additionalDetails: additionalDetails,
-            onUserMediaProgressUpdate: { progress in },
+            onUserMediaProgressUpdate: viewModel.updateUserAnimeProgress,
             onMediaClick: appRouter.goToAnimeDetail
         )
     }

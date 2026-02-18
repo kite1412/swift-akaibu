@@ -18,6 +18,27 @@ class AnimeDetailViewModel: ObservableObject {
         getAnimeDetail(animeId: animeId)
     }
     
+    func updateUserAnimeProgress(with newProgress: UserMediaProgress) {
+        if let anime {
+            Task {
+                let res = await FetchHelpers.tryFetch {
+                    try await repository.updateUserAnimeProgress(
+                        animeId: anime.id,
+                        with: newProgress.toUserAnimeProgress()
+                    )
+                }
+                
+                if case .success(let data) = res {
+                    updateAnime(
+                        with: anime.applying { anime in
+                            anime.userProgress = data
+                        }
+                    )
+                }
+            }
+        }
+    }
+    
     private func getAnimeDetail(animeId: Int) {
         Task {
             let res = await FetchHelpers.tryFetch {
@@ -25,9 +46,13 @@ class AnimeDetailViewModel: ObservableObject {
             }
             
             if case .success(let data) = res {
-                self.anime = data
-                self.mediaDetail = data.toMediaDetailData()
+                updateAnime(with: data)
             }
         }
+    }
+    
+    private func updateAnime(with anime: AnimeDetail) {
+        self.anime = anime
+        self.mediaDetail = anime.toMediaDetailData()
     }
 }

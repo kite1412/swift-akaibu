@@ -123,7 +123,7 @@ struct MediaProgress: View {
             }
             .onChange(of: consumedUnitsPopover) {
                 if consumedUnitsPopover {
-                    consumedUnits = String(consumedUnits)
+                    consumedUnits = String(data.consumedUnits)
                 }
             }
             

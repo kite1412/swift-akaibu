@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UserMediaData: Identifiable {
+struct UserMediaData: Identifiable, Applying {
     let id: Int
     let title: String
     let synopsis: String?

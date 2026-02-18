@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AnimeDetail {
+struct AnimeDetail: Applying {
     let id: Int
     let title: String
     let synopsis: String?
@@ -24,7 +24,7 @@ struct AnimeDetail {
     let startSeason: String?
     let rank: Int?
     let totalEpisodes: Int?
-    let userProgress: UserAnimeProgress?
+    var userProgress: UserAnimeProgress?
     let broadcastDate: String?
     let averageEpisodeDuration: Int?
     let studios: [String]
