@@ -118,6 +118,18 @@ extension Optional where Wrapped == Array<MALRelatedAnime> {
     }
 }
 
+extension Optional where Wrapped == Array<MALAnimeRecommendation> {
+    func toDomain() -> [MediaRecommendation] {
+        if let self {
+            return self.map { manga in
+                manga.toDomain()
+            }
+        } else {
+            return []
+        }
+    }
+}
+
 extension Optional where Wrapped == Array<MALAuthor> {
     func toDomain() -> [Author] {
         if let self {

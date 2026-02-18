@@ -20,7 +20,8 @@ extension AnimeDetail {
             alternativeTitles: alternativeTitles,
             rank: rank,
             totalUnits: totalEpisodes,
-            userProgress: userProgress?.toUserMediaProgress()
+            userProgress: userProgress?.toUserMediaProgress(),
+            recommendations: recommendations
         )
     }
 }

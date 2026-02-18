@@ -31,7 +31,8 @@ extension MALAnimeDetail {
             broadcastDate: broadcast.localizedDateString,
             averageEpisodeDuration: averageEpisodeDuration,
             studios: studios.toStrings(),
-            relatedAnime: relatedAnime.toDomain()
+            relatedAnime: relatedAnime.toDomain(),
+            recommendations: recommendations.toDomain()
         )
     }
 }

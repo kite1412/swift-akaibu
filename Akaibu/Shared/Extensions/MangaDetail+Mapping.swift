@@ -20,7 +20,8 @@ extension MangaDetail {
             alternativeTitles: alternativeTitles,
             rank: rank,
             totalUnits: totalChapters,
-            userProgress: userProgress?.toUserMediaProgress()
+            userProgress: userProgress?.toUserMediaProgress(),
+            recommendations: recommendations
         )
     }
 }

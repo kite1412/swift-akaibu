@@ -159,6 +159,25 @@ struct MediaDetailView: View {
                             }
                         }
                     }
+                    
+                    if !data.recommendations.isEmpty {
+                        let recommendations = data.recommendations
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Recommendations")
+                                .font(.headline)
+                            
+                            ScrollView(.horizontal) {
+                                LazyHStack {
+                                    ForEach(recommendations, id: \.id) { media in
+                                        SmallMediaCard(
+                                            data: media.toSmallMediaCardData(description: "Votes: \(media.totalVotes)")
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 .navigationTitle("Detail")
                 .toolbar {
@@ -363,8 +382,9 @@ private let data = MediaDetailData(
         score: 8,
         consumedUnits: 10,
         updatedAt: Date()
-    )
+    ),
 //    userProgress: nil
+    recommendations: []
 )
 
 #Preview {

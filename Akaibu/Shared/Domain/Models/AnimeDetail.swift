@@ -29,4 +29,5 @@ struct AnimeDetail {
     let averageEpisodeDuration: Int?
     let studios: [String]
     let relatedAnime: [RelatedAnime]
+    let recommendations: [MediaRecommendation]
 }
