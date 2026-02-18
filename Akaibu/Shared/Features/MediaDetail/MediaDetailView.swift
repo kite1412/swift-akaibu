@@ -13,8 +13,8 @@ struct MediaDetailView: View {
     let availableStatuses: [String]
     let onGoingStatus: String
     let completedStatus: String
+    var additionalDetails: [AdditionalDetail]
     let onUserMediaProgressUpdate: (UserMediaProgress) -> Void
-    var additionalDetail: (() -> AnyView)? = nil
     
     @State private var isSynopsisExpanded: Bool = false
     @State private var showAddToListForm: Bool = false
@@ -35,81 +35,103 @@ struct MediaDetailView: View {
         availableStatuses: [String],
         onGoingStatus: String,
         completedStatus: String,
+        additionalDetails: [AdditionalDetail],
         onUserMediaProgressUpdate: @escaping (UserMediaProgress) -> Void
     ) {
         self.data = data
         self.availableStatuses = availableStatuses
         self.onGoingStatus = onGoingStatus
         self.completedStatus = completedStatus
+        self.additionalDetails = additionalDetails
         self.onUserMediaProgressUpdate = onUserMediaProgressUpdate
-        
-        if let userProgress = data?.userProgress {
-            _userProgress = State(initialValue: userProgress)
-        } else {
-            _userProgress = State(
-                initialValue: defaultUserMediaProgress()
-            )
-        }
-    }
-    
-    init(
-        data: MediaDetailData?,
-        availableStatuses: [String],
-        onGoingStatus: String,
-        completedStatus: String,
-        onUserMediaProgressUpdate: @escaping (UserMediaProgress) -> Void,
-        @ViewBuilder additionalDetail: @escaping () -> some View
-    ) {
-        self.init(
-            data: data,
-            availableStatuses: availableStatuses,
-            onGoingStatus: onGoingStatus,
-            completedStatus: completedStatus,
-            onUserMediaProgressUpdate: onUserMediaProgressUpdate
+        _userProgress = State(
+            initialValue: defaultUserMediaProgress()
         )
-        self.additionalDetail = { AnyView(additionalDetail()) }
     }
     
     var body: some View {
         if let data {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    HStack(alignment: .top) {
-                        BrowseImage(data.coverImageURL)
-                            .aspectRatio(2/3, contentMode: .fit)
-                            .frame(maxHeight: 240)
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack(alignment: .top) {
+                            BrowseImage(data.coverImageURL)
+                                .aspectRatio(2/3, contentMode: .fit)
+                                .frame(maxHeight: 240)
+                                .clipShape(RoundedRectangle(cornerRadius: 16))
+                            
+                            VStack(alignment: .leading, spacing: 16) {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text(data.title)
+                                        .lineLimit(3)
+                                        .truncationMode(.middle)
+                                        .font(.title)
+                                    
+                                    score
+                                    genres
+                                    alternativeTitles
+                                }
+                                
+                                HStack(spacing: 4) {
+                                    MediaLabel(data.type, kind: .type)
+                                    MediaLabel(data.status, kind: .status)
+                                    
+                                    if data.isAdult {
+                                        MediaLabel("18+", kind: .adult)
+                                    }
+                                }
+                                .font(.caption)
+                            }
+                            .padding(4)
+                        }
                         
-                        VStack(alignment: .leading, spacing: 16) {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(data.title)
-                                    .lineLimit(3)
-                                    .truncationMode(.middle)
-                                    .font(.title)
+                        if let _ = data.userProgress {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("My Progress")
+                                    .font(.headline)
                                 
-                                score
-                                genres
-                            }
-                            
-                            VStack(alignment: .leading) {
-                                alternativeTitles
-                                rank
-                                additionalDetail?()
-                            }
-                            .font(.subheadline)
-                            
-                            HStack(spacing: 4) {
-                                MediaLabel(data.type, kind: .type)
-                                MediaLabel(data.status, kind: .status)
-                                
-                                if data.isAdult {
-                                    MediaLabel("18+", kind: .adult)
+                                HStack {
+                                    MediaProgress(
+                                        data: userProgress,
+                                        totalUnits: data.totalUnits,
+                                        availableStatuses: availableStatuses,
+                                        completedStatus: completedStatus,
+                                        onStatusUpdate: { _ in
+                                            onUserMediaProgressUpdate(userProgress)
+                                        },
+                                        onScoreUpdate: { _ in
+                                            onUserMediaProgressUpdate(userProgress)
+                                        },
+                                        onConsumedUnitsUpdate: { _ in
+                                            onUserMediaProgressUpdate(userProgress)
+                                        }
+                                    )
                                 }
                             }
-                            .font(.caption)
                         }
-                        .padding(4)
                     }
+                    
+                    LazyVGrid(
+                        columns: [
+                            GridItem(.flexible()),
+                            GridItem(.flexible())
+                        ],
+                        alignment: .leading,
+                        spacing: 16
+                    ) {
+                        rank
+                        ForEach(additionalDetails, id: \.title) { detail in
+                            detailRow(
+                                systemImageName: detail.systemImageName,
+                                label: detail.value,
+                                title: detail.title
+                            )
+                        }
+                    }
+                    .padding(16)
+                    .background(.thinMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    
                     if let synopsis = data.synopsis {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Synopsis")
@@ -202,6 +224,11 @@ struct MediaDetailView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
             }
+            .onAppear {
+                if let userProgress = data.userProgress {
+                    self.userProgress = userProgress
+                }
+            }
         } else {
             Loading(loadingText: "Loading Details...")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -259,7 +286,7 @@ struct MediaDetailView: View {
             let systemName = "number"
             
             if let rank = data.rank {
-                detailRow(systemImageName: systemName, label: rank)
+                detailRow(systemImageName: systemName, label: rank, title: "Rank")
             } else {
                 detailRow(systemImageName: systemName, label: "Not Ranked")
             }
@@ -269,30 +296,48 @@ struct MediaDetailView: View {
     private func detailRow(
         systemImageName: String,
         label: String,
+        title: String? = nil,
         imageStyle: some ShapeStyle = .secondary,
         textStyle: some ShapeStyle = .secondary
     ) -> some View {
-        HStack(spacing: 4) {
-            Image(systemName: systemImageName)
-                .foregroundStyle(imageStyle)
+        VStack(alignment: .leading, spacing: 4) {
+            if let title {
+                Text(title)
+                    .bold()
+                    .foregroundStyle(textStyle)
+            }
             
-            Text(label)
-                .foregroundStyle(textStyle)
+            HStack(spacing: 4) {
+                Image(systemName: systemImageName)
+                    .foregroundStyle(imageStyle)
+                
+                Text(label)
+                    .foregroundStyle(textStyle)
+            }
         }
     }
     
     private func detailRow(
         systemImageName: String,
         label: Int,
+        title: String? = nil,
         imageStyle: some ShapeStyle = .secondary,
         textStyle: some ShapeStyle = .secondary
     ) -> some View {
-        HStack(spacing: 4) {
-            Image(systemName: systemImageName)
-                .foregroundStyle(imageStyle)
+        VStack(alignment: .leading, spacing: 4) {
+            if let title {
+                Text(title)
+                    .bold()
+                    .foregroundStyle(textStyle)
+            }
             
-            Text(label, format: .number.locale(Locale(identifier: "en_US")))
-                .foregroundStyle(textStyle)
+            HStack(spacing: 4) {
+                Image(systemName: systemImageName)
+                    .foregroundStyle(imageStyle)
+                
+                Text(label, format: .number.locale(Locale(identifier: "en_US")))
+                    .foregroundStyle(textStyle)
+            }
         }
     }
     
@@ -322,13 +367,13 @@ private let data = MediaDetailData(
     alternativeTitles: ["A title", "Another title"],
     rank: 1000,
     totalUnits: 12,
-//    userProgress: UserMediaProgress(
-//        status: "Completed",
-//        score: 8,
-//        consumedUnits: 10,
-//        updatedAt: Date()
-//    )
-    userProgress: nil
+    userProgress: UserMediaProgress(
+        status: "Completed",
+        score: 8,
+        consumedUnits: 10,
+        updatedAt: Date()
+    )
+//    userProgress: nil
 )
 
 #Preview {
@@ -338,10 +383,12 @@ private let data = MediaDetailData(
             availableStatuses: ["Watching", "Completed", "Dropped"],
             onGoingStatus: "Watching",
             completedStatus: "Completed",
-            onUserMediaProgressUpdate: { progress in },
-            additionalDetail: {
-                Text("Additional detail")
-            }
+            additionalDetails: [
+                AdditionalDetail(title: "Total Episodes", systemImageName: "tv", value: "12"),
+                AdditionalDetail(title: "A Detail", systemImageName: "tv", value: "A detail value"),
+                AdditionalDetail(title: "Another Detail", systemImageName: "tv", value: "A detail value")
+            ],
+            onUserMediaProgressUpdate: { progress in }
         )
     }
 }

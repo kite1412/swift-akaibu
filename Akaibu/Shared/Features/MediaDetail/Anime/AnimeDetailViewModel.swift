@@ -10,8 +10,8 @@ import Combine
 @MainActor
 class AnimeDetailViewModel: ObservableObject {
     private let repository: AnimeRepository = DIContainer.shared.animeRepository
-    private var anime: AnimeDetail? = nil
     
+    @Published var anime: AnimeDetail? = nil
     @Published var mediaDetail: MediaDetailData? = nil
     
     init(animeId: Int) {
