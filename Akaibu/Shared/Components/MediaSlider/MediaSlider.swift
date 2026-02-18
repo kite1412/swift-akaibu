@@ -58,6 +58,7 @@ struct MediaSlider: View {
                                     }
                                     
                                     HStack {
+                                        MediaLabel(media.type, kind: .type)
                                         MediaLabel(media.status, kind: .status)
                                         
                                         if media.isAdult {
@@ -129,6 +130,7 @@ private let media = MediaSliderData(
     title: animeBase.title,
     synopsis: animeBase.synopsis,
     coverImageUrl: animeBase.coverImageURL,
+    type: animeBase.type,
     score: animeBase.score,
     scoringUsers: animeBase.scoringUsers,
     isAdult: true,
@@ -141,6 +143,7 @@ private let mediaMinimum = MediaSliderData(
     title: animeBaseMinimum.title,
     synopsis: animeBaseMinimum.synopsis,
     coverImageUrl: animeBaseMinimum.coverImageURL,
+    type: animeBase.type,
     score: animeBaseMinimum.score,
     scoringUsers: animeBaseMinimum.scoringUsers,
     isAdult: false,

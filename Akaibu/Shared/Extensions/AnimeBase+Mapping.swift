@@ -12,6 +12,7 @@ extension AnimeBase {
             title: title,
             synopsis: synopsis,
             coverImageUrl: coverImageURL,
+            type: type,
             score: score,
             scoringUsers: scoringUsers,
             isAdult: rating.isAdult,

@@ -10,17 +10,21 @@ import SwiftUI
 struct SmallMediaCard: View {
     let data: SmallMediaCardData
     
+    private let maxWidth: CGFloat = 80
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             BrowseImage(data.coverImageURL)
                 .aspectRatio(2/3, contentMode: .fit)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
+                .frame(width: maxWidth)
             
             Text(data.title)
                 .font(.caption)
                 .lineLimit(2)
                 .truncationMode(.middle)
                 .padding(.leading, 2)
+                .frame(width: maxWidth, alignment: .leading)
             
             if let description = data.description {
                 Text(description)
@@ -29,9 +33,9 @@ struct SmallMediaCard: View {
                     .padding(.leading, 2)
                     .lineLimit(4)
                     .truncationMode(.tail)
+                    .frame(width: maxWidth, alignment: .leading)
             }
         }
-        .frame(width: 80)
     }
 }
 

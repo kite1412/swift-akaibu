@@ -12,6 +12,7 @@ struct MediaSliderData: Identifiable {
     let title: String
     let synopsis: String?
     let coverImageUrl: URL?
+    let type: String
     let score: Double?
     let scoringUsers: Int?
     let isAdult: Bool

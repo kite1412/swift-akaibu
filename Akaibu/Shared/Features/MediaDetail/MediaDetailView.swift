@@ -168,7 +168,7 @@ struct MediaDetailView: View {
                                 .font(.headline)
                             
                             ScrollView(.horizontal) {
-                                LazyHStack {
+                                LazyHStack(alignment: .top) {
                                     ForEach(recommendations, id: \.id) { media in
                                         SmallMediaCard(
                                             data: media.toSmallMediaCardData(description: "Votes: \(media.totalVotes)")
