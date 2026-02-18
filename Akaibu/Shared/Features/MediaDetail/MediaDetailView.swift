@@ -153,7 +153,9 @@ struct MediaDetailView: View {
                         .animation(.easeInOut, value: isSynopsisExpanded)
                         .onTapGesture {
                             if isSynopsisExceedingLimit {
-                                isSynopsisExpanded.toggle()
+                                withAnimation(.easeInOut(duration: 0.5)) {
+                                    isSynopsisExpanded.toggle()
+                                }
                             }
                         }
                     }
