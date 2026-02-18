@@ -21,5 +21,6 @@ struct MediaDetailData {
     let rank: Int?
     let totalUnits: Int?
     let userProgress: UserMediaProgress?
+    let relatedMedia: [RelatedMedia]
     let recommendations: [MediaRecommendation]
 }

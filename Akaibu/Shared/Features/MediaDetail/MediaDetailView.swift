@@ -163,24 +163,22 @@ struct MediaDetailView: View {
                         }
                     }
                     
-                    if !data.recommendations.isEmpty {
-                        let recommendations = data.recommendations
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Recommendations")
-                                .font(.headline)
-                            
-                            ScrollView(.horizontal) {
-                                LazyHStack(alignment: .top) {
-                                    ForEach(recommendations, id: \.id) { media in
-                                        SmallMediaCard(
-                                            data: media.toSmallMediaCardData(description: "Votes: \(media.totalVotes)"),
-                                            onClick: onMediaClick
-                                        )
-                                    }
-                                }
+                    if !data.relatedMedia.isEmpty {
+                        otherMedia(
+                            sectionName: "Related",
+                            media: data.relatedMedia.map { media in
+                                media.toSmallMediaCardData(description: media.relationType)
                             }
-                        }
+                        )
+                    }
+                    
+                    if !data.recommendations.isEmpty {
+                        otherMedia(
+                            sectionName: "Recommendations",
+                            media: data.recommendations.map { media in
+                                media.toSmallMediaCardData(description: "Vote: \(media.totalVotes)")
+                            }
+                        )
                     }
                 }
                 .navigationTitle("Detail")
@@ -363,6 +361,25 @@ struct MediaDetailView: View {
             updatedAt: Date()
         )
     }
+    
+    @ViewBuilder
+    private func otherMedia(sectionName: String, media: [SmallMediaCardData]) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(sectionName)
+                .font(.headline)
+            
+            ScrollView(.horizontal) {
+                LazyHStack(alignment: .top) {
+                    ForEach(media) { media in
+                        SmallMediaCard(
+                            data: media,
+                            onClick: onMediaClick
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
 
 private let data = MediaDetailData(
@@ -387,6 +404,7 @@ private let data = MediaDetailData(
         consumedUnits: 10,
         updatedAt: Date()
     ),
+    relatedMedia: [],
 //    userProgress: nil
     recommendations: []
 )

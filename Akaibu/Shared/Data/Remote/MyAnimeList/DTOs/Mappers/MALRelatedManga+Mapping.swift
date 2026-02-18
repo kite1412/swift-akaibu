@@ -6,8 +6,8 @@
 //
 
 extension MALRelatedManga {
-    func toDomain() -> RelatedManga {
-        RelatedManga(
+    func toDomain() -> RelatedMedia {
+        RelatedMedia(
             id: node.id,
             title: node.title,
             coverImageURL: node.mainPicture.mediumURL(),

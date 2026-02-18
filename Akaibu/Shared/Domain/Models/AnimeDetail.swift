@@ -28,6 +28,6 @@ struct AnimeDetail {
     let broadcastDate: String?
     let averageEpisodeDuration: Int?
     let studios: [String]
-    let relatedAnime: [RelatedAnime]
+    let relatedAnime: [RelatedMedia]
     let recommendations: [MediaRecommendation]
 }

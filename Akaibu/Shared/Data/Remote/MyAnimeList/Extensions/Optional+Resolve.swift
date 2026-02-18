@@ -107,7 +107,7 @@ extension Optional where Wrapped == Array<MALStudio> {
 }
 
 extension Optional where Wrapped == Array<MALRelatedAnime> {
-    func toDomain() -> [RelatedAnime] {
+    func toDomain() -> [RelatedMedia] {
         if let self {
             return self.map { related in
                 related.toDomain()
@@ -144,7 +144,7 @@ extension Optional where Wrapped == Array<MALAuthor> {
 }
 
 extension Optional where Wrapped == Array<MALRelatedManga> {
-    func toDomain() -> [RelatedManga] {
+    func toDomain() -> [RelatedMedia] {
         if let self {
             return self.map { manga in
                 manga.toDomain()

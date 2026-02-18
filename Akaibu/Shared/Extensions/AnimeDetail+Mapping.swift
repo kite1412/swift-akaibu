@@ -21,6 +21,7 @@ extension AnimeDetail {
             rank: rank,
             totalUnits: totalEpisodes,
             userProgress: userProgress?.toUserMediaProgress(),
+            relatedMedia: relatedAnime,
             recommendations: recommendations
         )
     }

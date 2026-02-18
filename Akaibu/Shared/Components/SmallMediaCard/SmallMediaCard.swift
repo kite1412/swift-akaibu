@@ -18,14 +18,13 @@ struct SmallMediaCard: View {
             BrowseImage(data.coverImageURL)
                 .aspectRatio(2/3, contentMode: .fit)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
-                .frame(width: maxWidth)
+                .frame(height: (maxWidth * (3 / 2)))
             
             Text(data.title)
                 .font(.caption)
                 .lineLimit(2)
                 .truncationMode(.middle)
                 .padding(.leading, 2)
-                .frame(width: maxWidth, alignment: .leading)
             
             if let description = data.description {
                 Text(description)
@@ -34,9 +33,9 @@ struct SmallMediaCard: View {
                     .padding(.leading, 2)
                     .lineLimit(4)
                     .truncationMode(.tail)
-                    .frame(width: maxWidth, alignment: .leading)
             }
         }
+        .frame(width: maxWidth)
         .onTapGesture {
             onClick(data.id)
         }

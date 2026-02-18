@@ -26,6 +26,6 @@ struct MangaDetail {
     let totalVolumes: Int?
     let authors: [Author]
     let userProgress: UserMangaProgress?
-    let relatedManga: [RelatedManga]
+    let relatedManga: [RelatedMedia]
     let recommendations: [MediaRecommendation]
 }
