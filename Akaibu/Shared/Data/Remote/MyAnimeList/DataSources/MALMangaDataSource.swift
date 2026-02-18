@@ -57,6 +57,17 @@ class MALMangaDataSource: MangaRemoteDataSource {
         return res.toDomain()
     }
     
+    func fetchMangaDetail(mangaId: Int) async throws -> MangaDetail {
+        let req = client.createAuthenticatedRequest(
+            path: MALPaths.mangaDetail(id: mangaId),
+            httpMethod: "GET",
+            params: ["fields": MALMangaFields.detail]
+        )
+        let res: MALMangaDetail = try await client.perform(req)
+        
+        return res.toDomain()
+    }
+    
     func updateUserMangaProgress(mangaId: Int, with progress: UserMangaProgress) async throws -> UserMangaProgress {
         let res: MALUserMangaListStatus = try await client.performFormURLEncodedRequest(
             path: MALPaths.updateMangaListStatus(id: mangaId),
