@@ -22,7 +22,7 @@ struct MangaDetailView: View {
             onGoingStatus: UserMangaStatus.reading.rawValue,
             completedStatus: UserMangaStatus.completed.rawValue,
             additionalDetails: additionalDetails,
-            onUserMediaProgressUpdate: { progress in },
+            onUserMediaProgressUpdate: viewModel.updateUserMangaProgress,
             onMediaClick: appRouter.goToMangaDetail
         )
     }
