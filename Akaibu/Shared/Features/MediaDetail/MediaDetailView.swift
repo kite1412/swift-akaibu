@@ -17,6 +17,7 @@ struct MediaDetailView: View {
     let onUserMediaProgressUpdate: (UserMediaProgress) -> Void
     let onDeleteFromList: () -> Void
     let onMediaClick: (_ id: Int) -> Void
+    let otherInformation: [String: String]
     var heroAccessory: (() -> AnyView)? = nil
     
     @State private var isSynopsisExpanded: Bool = false
@@ -42,7 +43,8 @@ struct MediaDetailView: View {
         additionalDetails: [AdditionalDetail],
         onUserMediaProgressUpdate: @escaping (UserMediaProgress) -> Void,
         onDeleteFromList: @escaping () -> Void,
-        onMediaClick: @escaping (_ id: Int) -> Void
+        onMediaClick: @escaping (_ id: Int) -> Void,
+        otherInformation: [String: String] = [:]
     ) {
         self.data = data
         self.availableStatuses = availableStatuses
@@ -50,8 +52,9 @@ struct MediaDetailView: View {
         self.completedStatus = completedStatus
         self.additionalDetails = additionalDetails
         self.onUserMediaProgressUpdate = onUserMediaProgressUpdate
-        self.onMediaClick = onMediaClick
         self.onDeleteFromList = onDeleteFromList
+        self.onMediaClick = onMediaClick
+        self.otherInformation = otherInformation
         _userProgress = State(
             initialValue: defaultUserMediaProgress()
         )
@@ -66,6 +69,7 @@ struct MediaDetailView: View {
         onUserMediaProgressUpdate: @escaping (UserMediaProgress) -> Void,
         onDeleteFromList: @escaping () -> Void,
         onMediaClick: @escaping (_ id: Int) -> Void,
+        otherInformation: [String: String] = [:],
         heroAccessory: @escaping () -> some View
     ) {
         self.init(
@@ -76,7 +80,8 @@ struct MediaDetailView: View {
             additionalDetails: additionalDetails,
             onUserMediaProgressUpdate: onUserMediaProgressUpdate,
             onDeleteFromList: onDeleteFromList,
-            onMediaClick: onMediaClick
+            onMediaClick: onMediaClick,
+            otherInformation: otherInformation
         )
         self.heroAccessory = { AnyView(heroAccessory()) }
     }
@@ -192,6 +197,33 @@ struct MediaDetailView: View {
                                 }
                             }
                         }
+                    }
+                    
+                    if !otherInformation.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Other Information")
+                                .font(.headline)
+                                .foregroundStyle(.primary)
+                                .bold()
+                            
+                            ForEach(otherInformation.keys.sorted(), id: \.self) { key in
+                                if let value = otherInformation[key] {
+                                    VStack(alignment: .leading) {
+                                        Text(key)
+                                            .bold()
+                                        
+                                        Text(value)
+                                            .italic()
+                                    }
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .padding(8)
+                        .background(.thinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                     
                     if !data.relatedMedia.isEmpty {

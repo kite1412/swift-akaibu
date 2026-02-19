@@ -26,6 +26,7 @@ struct AnimeDetailView: View {
             onUserMediaProgressUpdate: viewModel.updateUserAnimeProgress,
             onDeleteFromList: viewModel.deleteUserAnimeProgress,
             onMediaClick: appRouter.goToAnimeDetail,
+            otherInformation: otherInformation,
             heroAccessory: { broadcastDate }
         )
     }
@@ -97,6 +98,32 @@ struct AnimeDetailView: View {
         } else {
             return []
         }
+    }
+    
+    private var otherInformation: [String: String] {
+        if let anime = viewModel.anime {
+            var information: [String: String] = [
+                "Rating": anime.rating.rawValue
+            ]
+            
+            if let avgDuration = anime.averageEpisodeDuration {
+                information["Average Episode Duration"] = "\(secondsToMinutes(avgDuration)) minutes"
+            }
+            
+            if !anime.studios.isEmpty {
+                let studios = anime.studios
+                
+                information[studios.count == 1 ? "Studio" : "Studios"] = studios.joined(separator: ", ")
+            }
+            
+            return information
+        } else {
+            return [:]
+        }
+    }
+    
+    private func secondsToMinutes(_ second: Int) -> Int {
+        return Int((Double(second) / 60).rounded(.toNearestOrAwayFromZero))
     }
 }
 
