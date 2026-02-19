@@ -204,7 +204,8 @@ struct MediaDetailView: View {
                             sectionName: "Characters",
                             media: data.characters.map { character in
                                 character.toSmallMediaCardData()
-                            }
+                            },
+                            onClick: { _ in }
                         )
                     }
                     
@@ -240,7 +241,8 @@ struct MediaDetailView: View {
                             sectionName: "Related",
                             media: data.relatedMedia.map { media in
                                 media.toSmallMediaCardData(description: media.relationType)
-                            }
+                            },
+                            onClick: onMediaClick
                         )
                     }
                     
@@ -249,7 +251,8 @@ struct MediaDetailView: View {
                             sectionName: "Recommendations",
                             media: data.recommendations.map { media in
                                 media.toSmallMediaCardData(description: "Vote: \(media.totalVotes)")
-                            }
+                            },
+                            onClick: onMediaClick
                         )
                     }
                 }
@@ -444,7 +447,11 @@ struct MediaDetailView: View {
     }
     
     @ViewBuilder
-    private func otherMedia(sectionName: String, media: [SmallMediaCardData]) -> some View {
+    private func otherMedia(
+        sectionName: String,
+        media: [SmallMediaCardData],
+        onClick: @escaping (Int) -> Void
+    ) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(sectionName)
                 .font(.headline)
@@ -454,7 +461,7 @@ struct MediaDetailView: View {
                     ForEach(media) { media in
                         SmallMediaCard(
                             data: media,
-                            onClick: onMediaClick
+                            onClick: onClick
                         )
                     }
                 }
