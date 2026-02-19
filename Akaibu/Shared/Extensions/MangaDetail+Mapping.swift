@@ -23,7 +23,7 @@ extension MangaDetail {
             userProgress: userProgress?.toUserMediaProgress(),
             relatedMedia: relatedManga,
             recommendations: recommendations,
-            characters: []
+            characters: characters
         )
     }
 }

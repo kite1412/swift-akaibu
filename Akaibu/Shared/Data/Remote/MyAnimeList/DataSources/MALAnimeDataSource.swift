@@ -5,7 +5,7 @@
 //  Created by kite1412 on 30/12/25.
 //
 
-class MALAnimeDataSource: AnimeRemoteDataSource {
+struct MALAnimeDataSource: AnimeRemoteDataSource {
     private let client: MALHTTPClient = .shared
     private let paginator: MALPaginator = .shared
     private let jikanAnimeDataSource: JikanAnimeDataSource = .shared
@@ -88,7 +88,7 @@ class MALAnimeDataSource: AnimeRemoteDataSource {
         )
         let res: MALAnimeDetail = try await client.perform(req)
         
-        return res.toDomain(characters: try await jikanAnimeDataSource.getAnimeCharacters(byId: animeId))
+        return res.toDomain(characters: try await jikanAnimeDataSource.fetchAnimeCharacters(byId: animeId))
     }
     
     func updateUserAnimeProgress(animeId: Int, with progress: UserAnimeProgress) async throws -> UserAnimeProgress {

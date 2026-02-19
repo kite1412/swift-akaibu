@@ -6,7 +6,7 @@
 //
 
 extension MALMangaDetail {
-    func toDomain() -> MangaDetail {
+    func toDomain(characters: [Character]) -> MangaDetail {
         let startDate = startDate != nil ? DateFormatter.format(dateString: startDate!, with: .yearMonthDay) : nil
         let endDate = endDate != nil ? DateFormatter.format(dateString: endDate!, with: .yearMonthDay) : nil
         
@@ -30,7 +30,8 @@ extension MALMangaDetail {
             authors: authors.toDomain(),
             userProgress: myListStatus?.toDomain(),
             relatedManga: relatedManga.toDomain(),
-            recommendations: recommendations.toDomain()
+            recommendations: recommendations.toDomain(),
+            characters: characters
         )
     }
 }

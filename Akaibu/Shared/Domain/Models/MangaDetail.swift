@@ -28,4 +28,5 @@ struct MangaDetail: Applying {
     var userProgress: UserMangaProgress?
     let relatedManga: [RelatedMedia]
     let recommendations: [MediaRecommendation]
+    let characters: [Character]
 }

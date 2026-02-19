@@ -5,9 +5,10 @@
 //  Created by kite1412 on 31/12/25.
 //
 
-class MALMangaDataSource: MangaRemoteDataSource {
+struct MALMangaDataSource: MangaRemoteDataSource {
     private let client: MALHTTPClient = .shared
     private let paginator: MALPaginator = .shared
+    private let jikanMangaDataSource: JikanMangaDataSource = .shared
     
     func fetchMangaBases(title: String, params: [String: String]?) async throws -> PaginatedResult<[MangaBase]> {
         let res: PaginatedResult<MALMangaList> = try await paginator.getPaginated(
@@ -71,7 +72,7 @@ class MALMangaDataSource: MangaRemoteDataSource {
         )
         let res: MALMangaDetail = try await client.perform(req)
         
-        return res.toDomain()
+        return res.toDomain(characters: try await jikanMangaDataSource.fetchMangaCharacters(byId: mangaId))
     }
     
     func updateUserMangaProgress(mangaId: Int, with progress: UserMangaProgress) async throws -> UserMangaProgress {
