@@ -91,6 +91,10 @@ struct MALAnimeDataSource: AnimeRemoteDataSource {
         return res.toDomain(characters: try await jikanAnimeDataSource.fetchAnimeCharacters(byId: animeId))
     }
     
+    func fetchAnimeSchedules(day: Day) async throws -> [AnimeBase] {
+        try await jikanAnimeDataSource.fetchAnimeSchedules(day: day)
+    }
+    
     func updateUserAnimeProgress(animeId: Int, with progress: UserAnimeProgress) async throws -> UserAnimeProgress {
         let res: MALUserAnimeListStatus = try await client.performFormURLEncodedRequest(
             path: MALPaths.updateAnimeListStatus(id: animeId),

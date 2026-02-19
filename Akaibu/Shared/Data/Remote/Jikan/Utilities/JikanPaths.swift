@@ -17,6 +17,16 @@ struct JikanPaths {
         "\(anime)/\(animeId)/characters"
     }
     
+    static func animeSchedules(_ day: Day? = nil) -> String {
+        let filter = if let day {
+            "?filter=\(day.rawValue)"
+        } else {
+            ""
+        }
+        
+        return "schedules\(filter)"
+    }
+    
     static func mangaCharacters(mangaId: Int) -> String {
         "\(manga)/\(mangaId)/characters"
     }

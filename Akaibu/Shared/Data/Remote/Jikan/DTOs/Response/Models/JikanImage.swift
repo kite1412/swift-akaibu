@@ -8,5 +8,7 @@
 struct JikanImage: Codable {
     let imageUrl: String
     let smallImageUrl: String?
+    let mediumImageUrl: String?
     let largeImageUrl: String?
+    let maximumImageUrl: String?
 }
