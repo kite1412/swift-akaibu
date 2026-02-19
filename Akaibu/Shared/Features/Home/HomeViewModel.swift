@@ -19,6 +19,7 @@ class HomeViewModel: ObservableObject {
     @Published var animeRanks: FetchResult<[MediaRank]> = .loading
     @Published var mangaRanks: FetchResult<[MediaRank]> = .loading
     @Published var animeSuggestions: FetchResult<[MediaSliderData]> = .loading
+    @Published var animeSchedules: FetchResult<[AnimeSchedule]> = .loading
     @Published var searchHistories: [String] = []
     @Published var searchTitle: String = ""
     @Published var showClearHistoryConfirmation: Bool = false
@@ -29,9 +30,10 @@ class HomeViewModel: ObservableObject {
     
     init() {
         Task {
-            await fetchAnimeSuggestions()
-            await fetchAnimeRanks()
-            await fetchMangaRanks()
+            await getAnimeSuggestions()
+            await getAnimeRanks()
+            await getMangaRanks()
+            await getAnimeSchedules()
             searchHistories = SearchHistory.get
         }
     }
@@ -49,7 +51,7 @@ class HomeViewModel: ObservableObject {
         searchHistories = []
     }
     
-    private func fetchAnimeRanks() async {
+    private func getAnimeRanks() async {
         updateMediaRanks(
             for: &animeRanks,
             with: await FetchHelpers.tryFetch {
@@ -58,7 +60,7 @@ class HomeViewModel: ObservableObject {
         )
     }
     
-    private func fetchMangaRanks() async {
+    private func getMangaRanks() async {
         updateMediaRanks(
             for: &mangaRanks,
             with: await FetchHelpers.tryFetch {
@@ -67,7 +69,7 @@ class HomeViewModel: ObservableObject {
         )
     }
     
-    private func fetchAnimeSuggestions() async {
+    private func getAnimeSuggestions() async {
         let res = await FetchHelpers.tryFetch {
             try await animeRepository.getAnimeSuggestions()
         }
@@ -81,6 +83,23 @@ class HomeViewModel: ObservableObject {
                     anime.toMediaSliderData()
                 }
             )
+        }
+    }
+    
+    private func getAnimeSchedules() async {
+        let res = await FetchHelpers.tryFetch {
+            let formatter = Foundation.DateFormatter()
+            formatter.dateFormat = "EEEE"
+            let today = formatter.string(from: Date()).lowercased()
+            
+            return try await animeRepository.getAnimeSchedules(for: Day(rawValue: today)!)
+        }
+        
+        switch res {
+        case .loading: animeSchedules = .loading
+        case .failure(let error): animeSchedules = .failure(error)
+        case .success(let data):
+            animeSchedules = .success(data: data)
         }
     }
     

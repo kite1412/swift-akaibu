@@ -8,7 +8,11 @@
 import Foundation
 
 extension JikanImages {
-    func jpgURL() -> URL {
-        URL(string: jpg.imageUrl)!
+    func jpgURL() -> URL? {
+        if let imageURL = jpg.imageUrl {
+            return URL(string: imageURL)
+        } else {
+            return nil
+        }
     }
 }

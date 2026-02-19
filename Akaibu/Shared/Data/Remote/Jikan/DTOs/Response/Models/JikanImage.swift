@@ -6,7 +6,7 @@
 //
 
 struct JikanImage: Codable {
-    let imageUrl: String
+    let imageUrl: String?
     let smallImageUrl: String?
     let mediumImageUrl: String?
     let largeImageUrl: String?

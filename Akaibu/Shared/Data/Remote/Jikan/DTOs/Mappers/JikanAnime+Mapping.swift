@@ -6,18 +6,14 @@
 //
 
 extension JikanAnime {
-    func toDomain() -> AnimeBase {
-        AnimeBase(
+    // TODO localized .day and .time
+    func toAnimeSchedule() -> AnimeSchedule {
+        AnimeSchedule(
             id: malId,
             title: title,
-            synopsis: synopsis,
-            type: type ?? "Unknown",
             coverImageURL: images.jpgURL(),
-            rating: .safe, // ignored
-            airingStatus: .airing,
-            genres: genres.map(\.name),
-            score: score,
-            scoringUsers: scoredBy
+            day: Day(rawValue: String(broadcast.day!.lowercased().dropLast()))!,
+            time: broadcast.time!
         )
     }
 }

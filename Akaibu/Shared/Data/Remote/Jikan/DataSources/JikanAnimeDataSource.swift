@@ -18,9 +18,9 @@ struct JikanAnimeDataSource {
         return res.toDomain()
     }
     
-    func fetchAnimeSchedules(day: Day) async throws -> [AnimeBase] {
+    func fetchAnimeSchedules(day: Day) async throws -> [AnimeSchedule] {
         let res: JikanAnimeList = try await client.get(JikanPaths.animeSchedules(day))
         
-        return res.toAnimeBases()
+        return res.toAnimeSchedules()
     }
 }

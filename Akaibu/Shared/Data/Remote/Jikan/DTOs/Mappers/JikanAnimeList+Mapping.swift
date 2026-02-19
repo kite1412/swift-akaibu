@@ -6,9 +6,9 @@
 //
 
 extension JikanAnimeList {
-    func toAnimeBases() -> [AnimeBase] {
+    func toAnimeSchedules() -> [AnimeSchedule] {
         data.map { anime in
-            anime.toDomain()
+            anime.toAnimeSchedule()
         }
     }
 }

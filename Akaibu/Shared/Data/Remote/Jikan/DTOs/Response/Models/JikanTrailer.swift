@@ -6,8 +6,8 @@
 //
 
 struct JikanTrailer: Codable {
-    let youtubeId: String
-    let url: String
-    let embedUrl: String
+    let youtubeId: String?
+    let url: String?
+    let embedUrl: String?
     let images: JikanImage
 }

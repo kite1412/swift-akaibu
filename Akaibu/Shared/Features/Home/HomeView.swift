@@ -12,38 +12,93 @@ struct HomeView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @EnvironmentObject private var appRouter: AppRouter
     @StateObject private var viewModel = HomeViewModel()
+    @State private var shake: Bool = false
     
     var body: some View {
         ScrollView {
-            FetchStateView(
-                fetchResult: viewModel.animeSuggestions,
-                loadingText: "Loading anime suggestions...",
-                errorText: "Failure to get anime suggestions"
-            ) { suggestions in
-                VStack(alignment: .leading, spacing: 0) {
-                    HStack {
-                        Image(systemName: "sparkles.2")
-                            .foregroundStyle(.blue)
-                        Text("Anime Suggestions")
-                    }
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .italic()
-                    .padding(.leading, 8) // from MediaSlider frame to outer padding
-                    
-                    MediaSlider(
-                        data: suggestions,
-                        onClick: { animeId in
-                            appRouter.goToAnimeDetail(withId: animeId)
+            VStack(spacing: 8) {
+                FetchStateView(
+                    fetchResult: viewModel.animeSuggestions,
+                    loadingText: "Loading anime suggestions...",
+                    errorText: "Failed to get anime suggestions"
+                ) { suggestions in
+                    VStack(alignment: .leading, spacing: 0) {
+                        HStack {
+                            Image(systemName: "sparkles.2")
+                                .foregroundStyle(.blue)
+                            Text("Anime Suggestions")
                         }
-                    )
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .italic()
+                        .padding(.leading, 8) // from MediaSlider frame to outer padding
+                        
+                        MediaSlider(
+                            data: suggestions,
+                            onClick: { animeId in
+                                appRouter.goToAnimeDetail(withId: animeId)
+                            }
+                        )
+                    }
                 }
-            }
-            if horizontalSizeClass == .compact {
-                mediaRanking
-            } else {
-                HStack(spacing: 16) {
+                FetchStateView(
+                    fetchResult: viewModel.animeSchedules,
+                    loadingText: "Loading anime schedules...",
+                    errorText: "Failed to get anime schedules"
+                ) { schedules in
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack {
+                            HStack(spacing: 8) {
+                                Image(systemName: "antenna.radiowaves.left.and.right")
+                                    .rotationEffect(.degrees(shake ? 8 : -8))
+                                    .animation(
+                                        .easeInOut(duration: 0.2)
+                                        .repeatForever(autoreverses: true),
+                                        value: shake
+                                    )
+                                    .onAppear {
+                                        shake = true
+                                    }
+                                
+                                Text("Airing Today")
+                                    .italic()
+                                    .bold()
+                            }
+                            .font(.title2)
+                            .foregroundStyle(.green)
+                            
+                            Spacer()
+                            Button {
+                                // navigate to schedules page
+                            } label: {
+                                Label("Schedule", systemImage: "calendar")
+                            }
+                        }
+                        
+                        ScrollView(.horizontal) {
+                            LazyHStack {
+                                ForEach(
+                                    schedules.map { anime in
+                                        anime.toSmallMediaCardData()
+                                    }
+                                ) { data in
+                                    SmallMediaCard(
+                                        data: data,
+                                        onClick: appRouter.goToAnimeDetail
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                
+                if horizontalSizeClass == .compact {
                     mediaRanking
+                } else {
+                    HStack(spacing: 16) {
+                        mediaRanking
+                    }
                 }
             }
         }

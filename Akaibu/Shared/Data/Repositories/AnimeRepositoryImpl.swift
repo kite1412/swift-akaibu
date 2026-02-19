@@ -32,7 +32,7 @@ class AnimeRepositoryImpl: AnimeRepository {
         try await remoteDataSource.fetchAnimeDetail(animeId: animeId)
     }
     
-    func getAnimeSchedules(for day: Day) async throws -> [AnimeBase] {
+    func getAnimeSchedules(for day: Day) async throws -> [AnimeSchedule] {
         try await remoteDataSource.fetchAnimeSchedules(day: day)
     }
     

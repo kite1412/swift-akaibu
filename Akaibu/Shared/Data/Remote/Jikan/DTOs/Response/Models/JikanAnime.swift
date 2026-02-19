@@ -11,11 +11,11 @@ struct JikanAnime: Codable {
     let images: JikanImages
     let trailer: JikanTrailer
     let approved: Bool
-    let titles: [String]
+    let titles: [JikanTitle]
     let title: String
     let titleEnglish: String?
     let titleJapanese: String
-    let titleSynonyms: Array<String>
+    let titleSynonyms: [String]
     let type: String?
     let source: String?
     let episodes: Int?
