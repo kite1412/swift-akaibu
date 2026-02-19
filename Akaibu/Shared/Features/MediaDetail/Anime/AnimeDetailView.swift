@@ -10,6 +10,7 @@ import SwiftUI
 struct AnimeDetailView: View {
     @EnvironmentObject private var appRouter: AppRouter
     @StateObject private var viewModel: AnimeDetailViewModel
+    @State private var shake: Bool = false
     
     init(animeId: Int) {
         _viewModel = StateObject(wrappedValue:  AnimeDetailViewModel(animeId: animeId))
@@ -24,8 +25,31 @@ struct AnimeDetailView: View {
             additionalDetails: additionalDetails,
             onUserMediaProgressUpdate: viewModel.updateUserAnimeProgress,
             onDeleteFromList: viewModel.deleteUserAnimeProgress,
-            onMediaClick: appRouter.goToAnimeDetail
+            onMediaClick: appRouter.goToAnimeDetail,
+            heroAccessory: { broadcastDate }
         )
+    }
+    
+    @ViewBuilder
+    private var broadcastDate: some View {
+        if let broadcastDate = viewModel.anime?.broadcastDate, viewModel.anime?.airingStatus == .airing {
+            HStack(spacing: 4) {
+                Image(systemName: "antenna.radiowaves.left.and.right")
+                    .rotationEffect(.degrees(shake ? 8 : -8))
+                    .animation(
+                        .easeInOut(duration: 0.2)
+                        .repeatForever(autoreverses: true),
+                        value: shake
+                    )
+                    .onAppear {
+                        shake = true
+                    }
+                
+                Text(broadcastDate)
+                    .font(.subheadline)
+            }
+            .foregroundStyle(.green)
+        }
     }
     
     private var additionalDetails: [AdditionalDetail] {

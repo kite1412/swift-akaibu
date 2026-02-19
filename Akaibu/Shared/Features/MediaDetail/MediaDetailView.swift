@@ -17,6 +17,7 @@ struct MediaDetailView: View {
     let onUserMediaProgressUpdate: (UserMediaProgress) -> Void
     let onDeleteFromList: () -> Void
     let onMediaClick: (_ id: Int) -> Void
+    var heroAccessory: (() -> AnyView)? = nil
     
     @State private var isSynopsisExpanded: Bool = false
     @State private var showAddToListForm: Bool = false
@@ -56,6 +57,30 @@ struct MediaDetailView: View {
         )
     }
     
+    init(
+        data: MediaDetailData?,
+        availableStatuses: [String],
+        onGoingStatus: String,
+        completedStatus: String,
+        additionalDetails: [AdditionalDetail],
+        onUserMediaProgressUpdate: @escaping (UserMediaProgress) -> Void,
+        onDeleteFromList: @escaping () -> Void,
+        onMediaClick: @escaping (_ id: Int) -> Void,
+        heroAccessory: @escaping () -> some View
+    ) {
+        self.init(
+            data: data,
+            availableStatuses: availableStatuses,
+            onGoingStatus: onGoingStatus,
+            completedStatus: completedStatus,
+            additionalDetails: additionalDetails,
+            onUserMediaProgressUpdate: onUserMediaProgressUpdate,
+            onDeleteFromList: onDeleteFromList,
+            onMediaClick: onMediaClick
+        )
+        self.heroAccessory = { AnyView(heroAccessory()) }
+    }
+    
     var body: some View {
         if let data {
             ScrollView {
@@ -88,6 +113,8 @@ struct MediaDetailView: View {
                                     }
                                 }
                                 .font(.caption)
+                                
+                                heroAccessory?()
                             }
                             .padding(4)
                         }

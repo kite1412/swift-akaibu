@@ -89,8 +89,6 @@ extension Optional where Wrapped == MALBroadcast {
         guard let date = formatter.date(from: "\(dayOfTheWeek) \(startTime)") else { return nil }
         
         formatter.timeZone = .current
-        formatter.timeStyle = .short
-        formatter.dateStyle = .none
         
         return formatter.string(from: date)
     }
