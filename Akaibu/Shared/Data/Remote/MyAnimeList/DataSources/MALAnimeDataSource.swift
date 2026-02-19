@@ -14,10 +14,12 @@ class MALAnimeDataSource: AnimeRemoteDataSource {
             path: MALPaths.anime,
             headers: nil,
             params: client.mergeParams(
-                [
-                    "q": title,
-                    "fields": MALAnimeFields.base
-                ],
+                client.withDefaultGetMediaParams(
+                    [
+                        "q": title,
+                        "fields": MALAnimeFields.base
+                    ]
+                ),
                 params
             )
         )
@@ -30,11 +32,13 @@ class MALAnimeDataSource: AnimeRemoteDataSource {
             path: MALPaths.animeRanking,
             headers: nil,
             params: client.mergeParams(
-                [
-                    "ranking_type": "all",
-                    "fields": MALAnimeFields.rank,
-                    "limit": String(limit)
-                ],
+                client.withDefaultGetMediaParams(
+                    [
+                        "ranking_type": "all",
+                        "fields": MALAnimeFields.rank,
+                        "limit": String(limit)
+                    ]
+                ),
                 params
             )
         )
@@ -47,7 +51,9 @@ class MALAnimeDataSource: AnimeRemoteDataSource {
             path: MALPaths.animeSuggestions,
             headers: nil,
             params: client.mergeParams(
-                ["fields": MALAnimeFields.base],
+                client.withDefaultGetMediaParams(
+                    ["fields": MALAnimeFields.base]
+                ),
                 params
             )
         )
@@ -60,10 +66,12 @@ class MALAnimeDataSource: AnimeRemoteDataSource {
             path: MALPaths.userAnimeList,
             headers: nil,
             params: client.mergeParams(
-                [
-                    "fields": MALAnimeFields.userAnime,
-                    "status": status?.toMALUserAnimeStatus().rawValue ?? ""
-                ],
+                client.withDefaultGetMediaParams(
+                    [
+                        "fields": MALAnimeFields.userAnime,
+                        "status": status?.toMALUserAnimeStatus().rawValue ?? ""
+                    ]
+                ),
                 params
             )
         )

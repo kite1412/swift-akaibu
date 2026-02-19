@@ -14,10 +14,12 @@ class MALMangaDataSource: MangaRemoteDataSource {
             path: MALPaths.manga,
             headers: nil,
             params: client.mergeParams(
-                [
-                    "fields": MALMangaFields.base,
-                    "q": title
-                ],
+                client.withDefaultGetMediaParams(
+                    [
+                        "fields": MALMangaFields.base,
+                        "q": title
+                    ]
+                ),
                 params
             )
         )
@@ -30,10 +32,12 @@ class MALMangaDataSource: MangaRemoteDataSource {
             path: MALPaths.mangaRanking,
             headers: nil,
             params: client.mergeParams(
-                [
-                    "fields": MALMangaFields.rank,
-                    "limit": String(limit)
-                ],
+                client.withDefaultGetMediaParams(
+                    [
+                        "fields": MALMangaFields.rank,
+                        "limit": String(limit)
+                    ]
+                ),
                 params
             )
         )
@@ -46,10 +50,12 @@ class MALMangaDataSource: MangaRemoteDataSource {
             path: MALPaths.userMangaList,
             headers: nil,
             params: client.mergeParams(
-                [
-                    "fields": MALMangaFields.userManga,
-                    "status": status?.toMALUserMangaStatus().rawValue ?? ""
-                ],
+                client.withDefaultGetMediaParams(
+                    [
+                        "fields": MALMangaFields.userManga,
+                        "status": status?.toMALUserMangaStatus().rawValue ?? ""
+                    ]
+                ),
                 params
             )
         )
