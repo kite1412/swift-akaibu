@@ -6,7 +6,7 @@
 //
 
 extension MALAnimeDetail {
-    func toDomain() -> AnimeDetail {
+    func toDomain(characters: [Character]) -> AnimeDetail {
         let startDate = startDate != nil ? DateFormatter.format(dateString: startDate!, with: .yearMonthDay) : nil
         let endDate = endDate != nil ? DateFormatter.format(dateString: endDate!, with: .yearMonthDay) : nil
         
@@ -32,7 +32,8 @@ extension MALAnimeDetail {
             averageEpisodeDuration: averageEpisodeDuration,
             studios: studios.toStrings(),
             relatedAnime: relatedAnime.toDomain(),
-            recommendations: recommendations.toDomain()
+            recommendations: recommendations.toDomain(),
+            characters: characters
         )
     }
 }

@@ -6,8 +6,9 @@
 //
 
 class MALAnimeDataSource: AnimeRemoteDataSource {
-    private let client: MALHttpClient = .shared
+    private let client: MALHTTPClient = .shared
     private let paginator: MALPaginator = .shared
+    private let jikanAnimeDataSource: JikanAnimeDataSource = .shared
     
     func fetchAnimeBases(title: String, params: [String: String]?) async throws -> PaginatedResult<[AnimeBase]> {
         let res: PaginatedResult<MALAnimeList> = try await paginator.getPaginated(
@@ -87,7 +88,7 @@ class MALAnimeDataSource: AnimeRemoteDataSource {
         )
         let res: MALAnimeDetail = try await client.perform(req)
         
-        return res.toDomain()
+        return res.toDomain(characters: try await jikanAnimeDataSource.getAnimeCharacters(byId: animeId))
     }
     
     func updateUserAnimeProgress(animeId: Int, with progress: UserAnimeProgress) async throws -> UserAnimeProgress {

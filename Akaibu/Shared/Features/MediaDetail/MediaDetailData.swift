@@ -23,4 +23,5 @@ struct MediaDetailData {
     let userProgress: UserMediaProgress?
     let relatedMedia: [RelatedMedia]
     let recommendations: [MediaRecommendation]
+    let characters: [Character]
 }

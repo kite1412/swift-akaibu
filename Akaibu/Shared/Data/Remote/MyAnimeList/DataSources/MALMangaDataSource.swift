@@ -6,7 +6,7 @@
 //
 
 class MALMangaDataSource: MangaRemoteDataSource {
-    private let client: MALHttpClient = .shared
+    private let client: MALHTTPClient = .shared
     private let paginator: MALPaginator = .shared
     
     func fetchMangaBases(title: String, params: [String: String]?) async throws -> PaginatedResult<[MangaBase]> {

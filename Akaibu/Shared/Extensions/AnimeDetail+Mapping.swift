@@ -22,7 +22,8 @@ extension AnimeDetail {
             totalUnits: totalEpisodes,
             userProgress: userProgress?.toUserMediaProgress(),
             relatedMedia: relatedAnime,
-            recommendations: recommendations
+            recommendations: recommendations,
+            characters: characters
         )
     }
 }

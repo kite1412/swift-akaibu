@@ -22,7 +22,8 @@ extension MangaDetail {
             totalUnits: totalChapters,
             userProgress: userProgress?.toUserMediaProgress(),
             relatedMedia: relatedManga,
-            recommendations: recommendations
+            recommendations: recommendations,
+            characters: []
         )
     }
 }

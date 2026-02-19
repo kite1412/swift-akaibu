@@ -199,6 +199,15 @@ struct MediaDetailView: View {
                         }
                     }
                     
+                    if !data.characters.isEmpty {
+                        otherMedia(
+                            sectionName: "Characters",
+                            media: data.characters.map { character in
+                                character.toSmallMediaCardData()
+                            }
+                        )
+                    }
+                    
                     if !otherInformation.isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Other Information")
@@ -478,7 +487,8 @@ private let data = MediaDetailData(
     ),
     relatedMedia: [],
 //    userProgress: nil
-    recommendations: []
+    recommendations: [],
+    characters: []
 )
 
 #Preview {

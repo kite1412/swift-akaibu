@@ -30,4 +30,5 @@ struct AnimeDetail: Applying {
     let studios: [String]
     let relatedAnime: [RelatedMedia]
     let recommendations: [MediaRecommendation]
+    let characters: [Character]
 }

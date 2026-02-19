@@ -10,7 +10,7 @@ import OSLog
 
 class MALPaginator {
     static let shared = MALPaginator()
-    private let client = MALHttpClient.shared
+    private let client = MALHTTPClient.shared
     
     private init() {}
     

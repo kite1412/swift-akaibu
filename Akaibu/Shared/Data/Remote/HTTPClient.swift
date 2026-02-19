@@ -132,6 +132,10 @@ class HTTPClient {
         return req
     }
     
+    func mergeParams(_ a: [String: String], _ b: [String: String]?) -> [String: String] {
+        a.merging(b ?? [:]) { (_, new) in new }
+    }
+    
     private func sendWithBody<T: Decodable, Body: Encodable>(
         path: String,
         httpMethod: String,
