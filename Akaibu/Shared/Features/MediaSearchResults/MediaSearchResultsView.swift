@@ -52,7 +52,7 @@ struct MediaSearchResultsView: View {
                                 viewModel.loadMoreMangaResults()
                             },
                             onClick: { mangaId in
-                                
+                                appRouter.goToMangaDetail(withId: mangaId)
                             }
                         )
                     }

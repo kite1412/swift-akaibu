@@ -24,7 +24,8 @@ struct MangaDetailView: View {
             additionalDetails: additionalDetails,
             onUserMediaProgressUpdate: viewModel.updateUserMangaProgress,
             onDeleteFromList: viewModel.deleteUserMangaProgress,
-            onMediaClick: appRouter.goToMangaDetail
+            onMediaClick: appRouter.goToMangaDetail,
+            otherInformation: otherInformation
         )
     }
     
@@ -73,6 +74,25 @@ struct MangaDetailView: View {
             return details
         } else {
             return []
+        }
+    }
+    
+    private var otherInformation: [String: String] {
+        if let manga = viewModel.manga {
+            var information: [String: String] = [:]
+            
+            if !manga.authors.isEmpty {
+                let authors = manga.authors
+                
+                information[authors.count == 1 ? "Author" : "Authors"] = authors.map { author in
+                    "\(author.firstName) \(author.lastName) (\(author.role))"
+                }
+                .joined(separator: ", ")
+            }
+            
+            return information
+        } else {
+            return [:]
         }
     }
 }
