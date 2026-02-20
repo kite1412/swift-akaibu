@@ -76,16 +76,19 @@ struct HomeView: View {
                         }
                         
                         ScrollView(.horizontal) {
-                            LazyHStack {
-                                ForEach(
-                                    schedules.map { anime in
-                                        anime.toSmallMediaCardData()
-                                    }
-                                ) { data in
+                            LazyHStack(alignment: .top) {
+                                ForEach(schedules) { data in
+                                    let result = compareToday(with: data.day)
+                                    
                                     SmallMediaCard(
-                                        data: data,
+                                        data: data.toSmallMediaCardData(),
                                         onClick: appRouter.goToAnimeDetail
                                     )
+                                    .applyIf(result == 1 || result == -1) { view in
+                                        view.foregroundStyle(
+                                            result == 1 ? .green : .red
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -220,6 +223,21 @@ struct HomeView: View {
                 MediaRankCard(mediaRank: media, onClick: onClick)
             }
         }
+    }
+    
+    /// 0 equal, 1 later (`day`), -1 earlier (`day`), -2 invalid input
+    private func compareToday(with day: Day) -> Int {
+        let formatter = Foundation.DateFormatter()
+        formatter.dateFormat = "EEEE"
+        let todayName = formatter.string(from: Date())
+        
+        guard let today = Day(rawValue: todayName.lowercased()) else { return -2 }
+        guard let todayIndex = Day.allCases.firstIndex(of: today) else { return -2 }
+        guard let dayIndex = Day.allCases.firstIndex(of: day) else { return -2 }
+        
+        if dayIndex > todayIndex { return 1 }
+        if dayIndex < todayIndex { return -1 }
+        return 0
     }
 }
 

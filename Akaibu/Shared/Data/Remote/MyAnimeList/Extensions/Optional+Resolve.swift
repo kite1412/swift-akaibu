@@ -79,18 +79,21 @@ extension Optional where Wrapped == MALStartSeason {
 
 extension Optional where Wrapped == MALBroadcast {
     var localizedDateString: String? {
-        guard let startTime = self?.startTime else { return nil }
-        guard let dayOfTheWeek = self?.dayOfTheWeek else { return nil }
-        
-        let formatter = Foundation.DateFormatter()
-        formatter.dateFormat = "EEEE HH:mm"
-        formatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
-        
-        guard let date = formatter.date(from: "\(dayOfTheWeek) \(startTime)") else { return nil }
-        
-        formatter.timeZone = .current
-        
-        return formatter.string(from: date)
+        if
+            let day = Day(rawValue: self?.dayOfTheWeek ?? ""),
+            let startTime = self?.startTime,
+            let timeZone = TimeZone(identifier: "Asia/Tokyo")
+        {
+            let (day, time) = dayTimeLocalized(
+                day: day,
+                time: startTime,
+                from: timeZone
+            )
+            
+            return "\(day.rawValue.capitalized) \(time)"
+        }  else {
+            return nil
+        }
     }
 }
 

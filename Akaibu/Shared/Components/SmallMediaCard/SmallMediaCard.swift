@@ -23,11 +23,12 @@ struct SmallMediaCard: View {
             Text(data.title)
                 .font(.caption)
                 .lineLimit(2)
-                .truncationMode(.middle)
+                .truncationMode(.tail)
                 .padding(.leading, 2)
             
             if let description = data.description {
                 Text(description)
+                    .frame(maxWidth: maxWidth, maxHeight: .infinity, alignment: .topLeading)
                     .font(.caption2)
                     .foregroundStyle(.secondary)
                     .padding(.leading, 2)

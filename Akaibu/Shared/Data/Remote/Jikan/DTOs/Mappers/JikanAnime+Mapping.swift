@@ -5,15 +5,22 @@
 //  Created by kite1412 on 20/02/26.
 //
 
+import Foundation
+
 extension JikanAnime {
-    // TODO localized .day and .time
     func toAnimeSchedule() -> AnimeSchedule {
-        AnimeSchedule(
+        let (day, time) = dayTimeLocalized(
+            day: Day(rawValue: String(broadcast.day!.lowercased().dropLast()))!,
+            time: broadcast.time!,
+            from: TimeZone(identifier: "Asia/Tokyo")!
+        )
+        
+        return AnimeSchedule(
             id: malId,
             title: title,
             coverImageURL: images.jpgURL(),
-            day: Day(rawValue: String(broadcast.day!.lowercased().dropLast()))!,
-            time: broadcast.time!
+            day: day,
+            time: time
         )
     }
 }
