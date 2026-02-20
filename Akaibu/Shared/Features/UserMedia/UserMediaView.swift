@@ -33,49 +33,13 @@ struct UserMediaView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            ScrollView(.horizontal) {
-                HStack(spacing: 0) {
-                    ForEach(statuses, id: \.self) { status in
-                        let selected = viewModel.selectedStatus == status
-                        
-                        Text(status)
-                            .tag(status)
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 16)
-                            .background(
-                                RoundedRectangle(cornerRadius: 50)
-                                    .fill(selected ? .accent : .clear)
-                            )
-                            .animation(.easeInOut(duration: 0.3), value: selected)
-                            .foregroundStyle(
-                                selected ? .white : .primary
-                            )
-                            .onTapGesture {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    viewModel.selectedStatus = status
-                                }
-                            }
-                    }
-                }
-                .onChange(of: viewModel.selectedStatus) { _, newStatus in
-                    viewModel.changeSelectedStatus(newStatus)
-                }
-                .padding(4)
-                .background(
-                    RoundedRectangle(cornerRadius: 50)
-                        .fill(.thinMaterial)
-                )
-                .padding(.leading)
-                .padding(.vertical, 8)
-            }
-            .scrollTargetBehavior(.viewAligned)
-            .scrollPosition(
-                id: Binding<String?>(
-                    get: { viewModel.selectedStatus },
-                    set: { viewModel.selectedStatus = $0 ?? viewModel.selectedStatus }
-                )
+            ItemPicker(
+                selected: $viewModel.selectedStatus,
+                selections: statuses,
+                onSelectedChange: viewModel.changeSelectedStatus,
+                horizontalPadding: 16
             )
-            .scrollIndicators(.hidden)
+            .padding(.vertical, 8)
             
             ZStack {
                 switch viewModel.uiState {
