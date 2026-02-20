@@ -16,4 +16,19 @@ extension AnimeSchedule {
             description: "\(day.rawValue.capitalized) \(time)"
         )
     }
+    
+    func toMediaCardData() -> MediaCardData {
+        MediaCardData(
+            id: id,
+            title: title,
+            synopsis: synopsis,
+            coverImageURL: coverImageURL,
+            isAdult: rating.isAdult,
+            genres: genres,
+            score: score,
+            type: type,
+            status: airingStatus.rawValue,
+            scoringUsers: scoringUsers
+        )
+    }
 }

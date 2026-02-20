@@ -10,5 +10,6 @@ extension JikanAnimeList {
         data.map { anime in
             anime.toAnimeSchedule()
         }
+        .compactMap(\.self)
     }
 }
