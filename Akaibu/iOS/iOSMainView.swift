@@ -31,6 +31,8 @@ struct iOSMainView: View {
                                     AnimeDetailView(animeId: animeId)
                                 case .mangaDetail(let mangaId):
                                     MangaDetailView(mangaId: mangaId)
+                                case .animeSchedules:
+                                    AnimeSchedulesView()
                                 }
                             }
                     }

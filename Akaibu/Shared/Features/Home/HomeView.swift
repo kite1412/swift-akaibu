@@ -68,9 +68,7 @@ struct HomeView: View {
                             .foregroundStyle(.green)
                             
                             Spacer()
-                            Button {
-                                // navigate to schedules page
-                            } label: {
+                            Button(action: appRouter.goToAnimeSchedules) {
                                 Label("Schedule", systemImage: "calendar")
                             }
                         }
@@ -174,9 +172,7 @@ struct HomeView: View {
             ranking(
                 for: "Anime",
                 mediaRanks: animeRanks,
-                onClick: { animeId in
-                    appRouter.goToAnimeDetail(withId: animeId)
-                }
+                onClick: appRouter.goToAnimeDetail
             )
         }
         FetchStateView(
@@ -187,9 +183,7 @@ struct HomeView: View {
             ranking(
                 for: "Manga",
                 mediaRanks: mangaRanks,
-                onClick: { mangaId in
-                    appRouter.goToMangaDetail(withId: mangaId)
-                },
+                onClick: appRouter.goToMangaDetail,
                 trophyImage: "trophy"
             )
         }

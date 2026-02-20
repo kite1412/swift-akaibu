@@ -24,6 +24,14 @@ final class AppRouter: ObservableObject {
         path.append(StackDestination.mangaDetail(mangaId: mangaId))
     }
     
+    func goToAnimeSchedules() {
+        path.append(StackDestination.animeSchedules)
+    }
+    
+    func pop() {
+        path.removeLast()
+    }
+    
     private func navigate(to destination: StackDestination) {
         path.append(destination)
     }

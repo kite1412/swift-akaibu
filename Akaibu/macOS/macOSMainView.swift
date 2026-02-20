@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct macOSMainView: View {
-    @EnvironmentObject private var router: AppRouter
+    @EnvironmentObject private var appRouter: AppRouter
     private let animation: Animation = .easeInOut(duration: 0.3)
     
     @Binding var currentDestination: RootDestination
@@ -58,7 +58,7 @@ struct macOSMainView: View {
                 .foregroundStyle(.red)
             }
         } detail: {
-            NavigationStack(path: $router.path) {
+            NavigationStack(path: $appRouter.path) {
                 currentDestination.content
                     .navigationDestination(for: StackDestination.self) { destination in
                         switch destination {
@@ -68,6 +68,12 @@ struct macOSMainView: View {
                             AnimeDetailView(animeId: animeId)
                         case .mangaDetail(let mangaId):
                             MangaDetailView(mangaId: mangaId)
+                        case .animeSchedules:
+                            VStack {}
+                                .onAppear {
+                                    currentDestination = .animeSchedules
+                                    appRouter.pop()
+                                }
                         }
                     }
             }
