@@ -17,4 +17,6 @@ struct MediaRank: Identifiable {
     let coverImageURL: URL?
     let isAdult: Bool
     let score: Double
+    let genres: [String]
+    let scoringUsers: Int
 }

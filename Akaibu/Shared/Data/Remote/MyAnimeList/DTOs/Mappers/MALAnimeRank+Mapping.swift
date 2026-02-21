@@ -18,7 +18,9 @@ extension MALAnimeRank {
             status: node.status.toDomain().rawValue,
             coverImageURL: node.mainPicture.mediumURL(),
             isAdult: node.rating.map(\.isAdult) ?? false,
-            score: node.mean.map(Double.init) ?? 0
+            score: node.mean.map(Double.init) ?? 0,
+            genres: node.genres.toStrings(),
+            scoringUsers: node.numScoringUsers ?? 0
         )
     }
 }

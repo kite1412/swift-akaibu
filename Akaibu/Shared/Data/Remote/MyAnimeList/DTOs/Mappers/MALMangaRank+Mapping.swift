@@ -16,7 +16,9 @@ extension MALMangaRank {
             status: node.status.toDomain().rawValue,
             coverImageURL: node.mainPicture.mediumURL(),
             isAdult: node.nsfw?.isDangerous ?? false,
-            score: node.mean.map(Double.init) ?? 0
+            score: node.mean.map(Double.init) ?? 0,
+            genres: node.genres.toStrings(),
+            scoringUsers: node.numScoringUsers ?? 0
         )
     }
 }

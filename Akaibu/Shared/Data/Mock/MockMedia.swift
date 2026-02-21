@@ -19,7 +19,9 @@ struct MockMedia {
         status: "Completed",
         coverImageURL: URL.init(string: "https://picsum.photos/300/200"),
         isAdult: true,
-        score: 9.62
+        score: 9.62,
+        genres: ["Genre A", "Genre B"],
+        scoringUsers: 100
     )
     
     static let mediaRankMinimum = MediaRank(
@@ -31,6 +33,8 @@ struct MockMedia {
         status: "Airing",
         coverImageURL: nil,
         isAdult: false,
-        score: 9.210
+        score: 9.210,
+        genres: ["Genre A", "Genre B"],
+        scoringUsers: 100
     )
 }
