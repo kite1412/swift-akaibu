@@ -40,7 +40,7 @@ struct JikanAnimeDataSource {
                     String(genre.id)
                 }.joined(separator: ","),
                 "sort": "desc",
-                "order_by": "score"
+                "order_by": "members"
             ]
         )
         

@@ -48,7 +48,7 @@ enum RootDestination: CaseIterable {
             completedStatus: UserMangaStatus.completed.rawValue,
             service: MangaUserMediaService()
         )
-        case .genres: Text("Genres")
+        case .genres: MediaGenresView()
         case .animeSchedules: AnimeSchedulesView()
         }
     }

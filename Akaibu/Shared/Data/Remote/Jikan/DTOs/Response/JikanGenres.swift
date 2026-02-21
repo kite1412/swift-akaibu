@@ -6,5 +6,5 @@
 //
 
 struct JikanGenres: Codable {
-    let data: [JikanMALURL]
+    let data: [JikanGenre]
 }

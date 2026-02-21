@@ -63,9 +63,9 @@ class JikanPaginator {
                 
                 return try await self.getNext(
                     path: path,
-                    pagination: pagination,
+                    pagination: res.pagination,
                     headers: headers,
-                    params: params,
+                    params: params
                 )
             }
         }
@@ -80,7 +80,7 @@ class JikanPaginator {
         params: [String: String]? = nil
     ) -> URLRequest {
         var params = params ?? [:]
-        params["page"] = "\(pagination.currentPage + 1)"
+        params["page"] = "\((pagination.currentPage + 1))"
         
         return client.createRequest(
             path: path,
