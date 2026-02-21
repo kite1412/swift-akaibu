@@ -8,7 +8,6 @@
 enum PublishingStatus: String {
     case publishing = "Publishing"
     case finished = "Finished"
-    case completed = "Completed"
     case hiatus = "Hiatus"
     case notYetPublished = "Not Yet Published"
 }

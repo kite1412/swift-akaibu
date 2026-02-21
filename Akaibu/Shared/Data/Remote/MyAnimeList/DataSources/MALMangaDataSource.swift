@@ -64,6 +64,10 @@ struct MALMangaDataSource: MangaRemoteDataSource {
         return res.toDomain()
     }
     
+    func fetchMangaByGenres(_ genres: [Genre]) async throws -> PaginatedResult<[MangaBase]> {
+        try await jikanMangaDataSource.fetchMangaByGenres(genres)
+    }
+    
     func fetchMangaDetail(mangaId: Int) async throws -> MangaDetail {
         let req = client.createAuthenticatedRequest(
             path: MALPaths.mangaDetail(id: mangaId),

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MediaGenresView: View {
+    @EnvironmentObject private var appRouter: AppRouter
     @StateObject private var viewModel = MediaGenresViewModel()
     @State private var showGenres: Bool = true
     
@@ -91,11 +92,13 @@ struct MediaGenresView: View {
                 ) { mediaList in
                     InfiniteScrollView(
                         items: mediaList,
-                        loadMore: viewModel.loadMoreMediaResults
+                        loadMore: viewModel.nextResult != nil ? {
+                            viewModel.loadMoreMediaResults()
+                        } : nil
                     ) { media in
                         MediaCard(
                             media: media,
-                            onClick: {_ in }
+                            onClick: viewModel.showingAnimeResults ? appRouter.goToAnimeDetail : appRouter.goToMangaDetail
                         )
                         .padding(.horizontal)
                     }

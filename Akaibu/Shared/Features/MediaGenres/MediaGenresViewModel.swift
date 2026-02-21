@@ -11,7 +11,7 @@ import Combine
 class MediaGenresViewModel: ObservableObject {
     private let animeRepository = DIContainer.shared.animeRepository
     private let mangaRepository = DIContainer.shared.mangaRepository
-    private var nextResult: NextResultClosure<[MediaCardData]> = nil
+    var nextResult: NextResultClosure<[MediaCardData]> = nil
     
     @Published var showingAnimeResults: Bool = true
     @Published var animeGenres: FetchResult<[Genre]> = .loading

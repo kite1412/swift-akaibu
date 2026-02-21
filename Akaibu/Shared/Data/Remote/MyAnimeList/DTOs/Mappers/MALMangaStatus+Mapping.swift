@@ -9,7 +9,7 @@ extension MALMangaStatus {
     func toDomain() -> PublishingStatus {
         switch self {
         case .currentlyPublishing: return .publishing
-        case .finished: return .completed
+        case .finished: return .finished
         case .notYetPublished: return .notYetPublished
         case .onHiatus: return .hiatus
         }

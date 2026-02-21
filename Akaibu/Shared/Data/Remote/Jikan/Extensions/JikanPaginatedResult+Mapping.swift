@@ -32,3 +32,15 @@ extension PaginatedResult where Item == JikanAnimeList {
         )
     }
 }
+
+extension PaginatedResult where Item == JikanMangaList {
+    func toMangaBases() -> PaginatedResult<[MangaBase]> {
+        mapTo(
+            mapper: { mangaList in
+                mangaList.data.map { manga in
+                    manga.toMangaBase()
+                }
+            }
+        )
+    }
+}
