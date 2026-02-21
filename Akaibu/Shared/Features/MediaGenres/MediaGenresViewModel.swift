@@ -35,7 +35,12 @@ class MediaGenresViewModel: ObservableObject {
                     mapper: animeToMediaCardData
                 )
             } else {
-                
+                await updateMediaFetchResults(
+                    with: {
+                        try await mangaRepository.getMangaByGenres(selectedGenres)
+                    },
+                    mapper: mangaToMediaCardData
+                )
             }
         }
     }

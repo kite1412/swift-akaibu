@@ -9,7 +9,6 @@ struct JikanManga: Codable {
     let malId: Int
     let url: String
     let images: JikanImages
-    let trailer: JikanTrailer
     let approved: Bool
     let titles: [JikanTitle]
     let title: String
