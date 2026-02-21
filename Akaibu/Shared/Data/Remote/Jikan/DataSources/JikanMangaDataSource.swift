@@ -17,4 +17,10 @@ struct JikanMangaDataSource {
         
         return res.toDomain()
     }
+    
+    func fetchMangaGenres() async throws -> [String] {
+        let res: JikanGenres = try await client.get(JikanPaths.mangaGenres)
+        
+        return res.toStrings()
+    }
 }

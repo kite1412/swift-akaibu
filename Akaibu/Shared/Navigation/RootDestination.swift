@@ -11,7 +11,7 @@ enum RootDestination: CaseIterable {
     case home
     case myAnime
     case myManga
-    case categories
+    case genres
     case animeSchedules
     
     var systemImage: String {
@@ -19,7 +19,7 @@ enum RootDestination: CaseIterable {
         case .home: return "house"
         case .myAnime: return "tv"
         case .myManga: return "book.pages"
-        case .categories: return "rectangle.grid.2x2"
+        case .genres: return "rectangle.grid.2x2"
         case .animeSchedules: return "calendar"
         }
     }
@@ -29,7 +29,7 @@ enum RootDestination: CaseIterable {
         case .home: return "Home"
         case .myAnime: return "My Anime"
         case .myManga: return "My Manga"
-        case .categories: return "Categories"
+        case .genres: return "Genres"
         case .animeSchedules: return "Anime Schedules"
         }
     }
@@ -48,7 +48,7 @@ enum RootDestination: CaseIterable {
             completedStatus: UserMangaStatus.completed.rawValue,
             service: MangaUserMediaService()
         )
-        case .categories: Text("Categories")
+        case .genres: Text("Genres")
         case .animeSchedules: AnimeSchedulesView()
         }
     }

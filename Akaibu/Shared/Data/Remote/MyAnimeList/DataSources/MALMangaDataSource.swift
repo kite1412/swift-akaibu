@@ -75,6 +75,10 @@ struct MALMangaDataSource: MangaRemoteDataSource {
         return res.toDomain(characters: try await jikanMangaDataSource.fetchMangaCharacters(byId: mangaId))
     }
     
+    func fetchMangaGenres() async throws -> [String] {
+        try await jikanMangaDataSource.fetchMangaGenres()
+    }
+    
     func updateUserMangaProgress(mangaId: Int, with progress: UserMangaProgress) async throws -> UserMangaProgress {
         let res: MALUserMangaListStatus = try await client.performFormURLEncodedRequest(
             path: MALPaths.updateMangaListStatus(id: mangaId),
