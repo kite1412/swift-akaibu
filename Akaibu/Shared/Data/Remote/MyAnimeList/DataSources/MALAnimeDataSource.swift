@@ -62,6 +62,10 @@ struct MALAnimeDataSource: AnimeRemoteDataSource {
         return res.toDomain()
     }
     
+    func fetchAnimeByGenres(_ genres: [Genre]) async throws -> PaginatedResult<[AnimeBase]> {
+        try await jikanAnimeDataSource.fetchAnimeByGenres(genres)
+    }
+    
     func fetchUserAnimeList(status: UserAnimeStatus?, params: [String: String]?) async throws -> PaginatedResult<[UserAnime]> {
         let res: PaginatedResult<MALUserAnimeList> = try await paginator.getPaginated(
             path: MALPaths.userAnimeList,

@@ -24,6 +24,10 @@ class AnimeRepositoryImpl: AnimeRepository {
         try await remoteDataSource.fetchAnimeSuggestions(params: params)
     }
     
+    func getAnimeByGenres(_ genres: [Genre]) async throws -> PaginatedResult<[AnimeBase]> {
+        try await remoteDataSource.fetchAnimeByGenres(genres)
+    }
+    
     func getUserAnimeList(status: UserAnimeStatus?, params: [String: String]?) async throws -> PaginatedResult<[UserAnime]> {
         try await remoteDataSource.fetchUserAnimeList(status: status, params: params)
     }

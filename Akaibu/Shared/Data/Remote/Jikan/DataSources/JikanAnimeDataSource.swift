@@ -30,4 +30,20 @@ struct JikanAnimeDataSource {
         
         return res.toDomain()
     }
+    
+    func fetchAnimeByGenres(_ genres: [Genre]) async throws -> PaginatedResult<[AnimeBase]> {
+        let res: PaginatedResult<JikanAnimeList> = try await paginator.getPaginated(
+            path: JikanPaths.anime,
+            headers: nil,
+            params: [
+                "genres": genres.map { genre in
+                    String(genre.id)
+                }.joined(separator: ","),
+                "sort": "desc",
+                "order_by": "score"
+            ]
+        )
+        
+        return res.toAnimeBases()
+    }
 }

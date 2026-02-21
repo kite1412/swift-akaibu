@@ -9,6 +9,7 @@ protocol AnimeRemoteDataSource {
     func fetchAnimeBases(title: String, params: [String: String]?) async throws -> PaginatedResult<[AnimeBase]>
     func fetchAnimeRanks(limit: Int, params: [String: String]?) async throws -> PaginatedResult<[MediaRank]>
     func fetchAnimeSuggestions(params: [String: String]?) async throws -> PaginatedResult<[AnimeBase]>
+    func fetchAnimeByGenres(_ genres: [Genre]) async throws -> PaginatedResult<[AnimeBase]>
     func fetchUserAnimeList(status: UserAnimeStatus?, params: [String: String]?) async throws -> PaginatedResult<[UserAnime]>
     func fetchAnimeDetail(animeId: Int) async throws -> AnimeDetail
     func fetchAnimeSchedules(day: Day) async throws -> PaginatedResult<[AnimeSchedule]>

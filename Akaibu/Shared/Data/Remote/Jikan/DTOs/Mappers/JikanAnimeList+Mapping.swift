@@ -12,4 +12,10 @@ extension JikanAnimeList {
         }
         .compactMap(\.self)
     }
+    
+    func toAnimeBases() -> [AnimeBase] {
+        data.map { anime in
+            anime.toAnimeBase()
+        }
+    }
 }

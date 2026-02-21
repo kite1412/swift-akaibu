@@ -8,13 +8,27 @@
 extension PaginatedResult where Item == JikanAnimeList {
     func toAnimeSchedules() -> PaginatedResult<[AnimeSchedule]> {
         let schedules = self.data.toAnimeSchedules()
+        let next = next != nil ? {
+            let res = try await self.next?()
+            return res?.toAnimeSchedules()
+        } : nil
         
         return PaginatedResult<[AnimeSchedule]>(
             data: schedules,
-            next: {
-                let res = try await self.next?()
-                return res?.toAnimeSchedules()
-            }
+            next: next
+        )
+    }
+    
+    func toAnimeBases() -> PaginatedResult<[AnimeBase]> {
+        let bases = self.data.toAnimeBases()
+        let next = next != nil ? {
+            let res = try await self.next?()
+            return res?.toAnimeBases()
+        } : nil
+        
+        return PaginatedResult<[AnimeBase]>(
+            data: bases,
+            next: next
         )
     }
 }

@@ -36,4 +36,19 @@ extension JikanAnime {
         
         return nil
     }
+    
+    func toAnimeBase() -> AnimeBase {
+        AnimeBase(
+            id: malId,
+            title: title,
+            synopsis: synopsis,
+            type: type ?? "Unknown",
+            coverImageURL: images.jpgURL(),
+            rating: explicitGenres.isEmpty ? .safe : .adult,
+            airingStatus: airing ? .airing : aired.to != nil ? .completed : aired.from == nil ? .notYetAired : .completed,
+            genres: genres.map(\.name),
+            score: score,
+            scoringUsers: scoredBy
+        )
+    }
 }
