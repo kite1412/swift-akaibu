@@ -12,6 +12,7 @@ protocol AnimeRepository {
     func getUserAnimeList(status: UserAnimeStatus?, params: [String: String]?) async throws -> PaginatedResult<[UserAnime]>
     func getAnimeDetail(withId animeId: Int) async throws -> AnimeDetail
     func getAnimeSchedules(for day: Day) async throws -> PaginatedResult<[AnimeSchedule]>
+    func getAnimeGenres() async throws -> [String]
     func updateUserAnimeProgress(animeId: Int, with progress: UserAnimeProgress) async throws -> UserAnimeProgress
     func deleteUserAnimeProgress(withId animeId: Int) async throws -> Bool
 }

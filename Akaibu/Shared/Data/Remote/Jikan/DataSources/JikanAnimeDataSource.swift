@@ -24,4 +24,10 @@ struct JikanAnimeDataSource {
         
         return res.toAnimeSchedules()
     }
+    
+    func fetchAnimeGenres() async throws -> [String] {
+        let res: JikanGenres = try await client.get(JikanPaths.animeGenres)
+        
+        return res.toStrings()
+    }
 }

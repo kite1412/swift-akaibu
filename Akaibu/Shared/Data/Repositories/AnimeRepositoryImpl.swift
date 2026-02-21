@@ -36,6 +36,10 @@ class AnimeRepositoryImpl: AnimeRepository {
         try await remoteDataSource.fetchAnimeSchedules(day: day)
     }
     
+    func getAnimeGenres() async throws -> [String] {
+        try await remoteDataSource.fetchAnimeGenres()
+    }
+    
     func updateUserAnimeProgress(animeId: Int, with progress: UserAnimeProgress) async throws -> UserAnimeProgress {
         try await remoteDataSource.updateUserAnimeProgress(animeId: animeId, with: progress)
     }

@@ -11,7 +11,10 @@ struct JikanPaths {
     static let baseURLString = "https://api.jikan.moe/v4/"
     
     static let anime = "anime"
+    static let animeGenres = "anime/genres"
+    
     static let manga = "manga"
+    static let mangaGenres = "manga/genres"
     
     static func animeCharacters(animeId: Int) -> String {
         "\(anime)/\(animeId)/characters"
