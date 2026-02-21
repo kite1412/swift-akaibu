@@ -1,5 +1,5 @@
 //
-//  PaginatedResult+Mapping.swift
+//  MALPaginatedResult+Mapping.swift
 //  Akaibu
 //
 //  Created by kite1412 on 01/01/26.

@@ -43,9 +43,10 @@ class AnimeSchedulesViewModel: ObservableObject {
                 try await animeRepository.getAnimeSchedules(for: selectedDay)
             }
             
-            if case .success = res {
-                storedResults[self.selectedDayString] = res
-                fetchResult = res
+            if case .success(let data) = res {
+                let fetchResult: FetchResult = .success(data: data.data)
+                storedResults[self.selectedDayString] = fetchResult
+                self.fetchResult = fetchResult
             }
         }
     }

@@ -14,7 +14,7 @@ class MALPaginator {
     
     private init() {}
     
-    func getPaginated<Item: Decodable & Pagable>(
+    func getPaginated<Item: Decodable & MALPagable>(
         path: String,
         headers: [String: String]? = nil,
         params: [String: String]? = nil
@@ -27,7 +27,6 @@ class MALPaginator {
         )
         let res: Item = try await client.perform(req)
         var next: NextResultClosure<Item> = nil
-        
         
         if let nextURL = res.paging.next {
             next = { [weak self] in
@@ -44,7 +43,7 @@ class MALPaginator {
         return PaginatedResult(data: res, next: next)
     }
     
-    private func getNext<Item: Decodable & Pagable>(url: String) async throws -> PaginatedResult<Item>? {
+    private func getNext<Item: Decodable & MALPagable>(url: String) async throws -> PaginatedResult<Item>? {
         guard let nextURL = URL(string: url) else { return nil }
         
         var req = URLRequest(url: nextURL)

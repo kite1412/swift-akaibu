@@ -91,7 +91,7 @@ struct MALAnimeDataSource: AnimeRemoteDataSource {
         return res.toDomain(characters: try await jikanAnimeDataSource.fetchAnimeCharacters(byId: animeId))
     }
     
-    func fetchAnimeSchedules(day: Day) async throws -> [AnimeSchedule] {
+    func fetchAnimeSchedules(day: Day) async throws -> PaginatedResult<[AnimeSchedule]> {
         try await jikanAnimeDataSource.fetchAnimeSchedules(day: day)
     }
     

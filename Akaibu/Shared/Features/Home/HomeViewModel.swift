@@ -99,7 +99,7 @@ class HomeViewModel: ObservableObject {
         case .loading: animeSchedules = .loading
         case .failure(let error): animeSchedules = .failure(error)
         case .success(let data):
-            animeSchedules = .success(data: data)
+            animeSchedules = .success(data: data.data)
         }
     }
     

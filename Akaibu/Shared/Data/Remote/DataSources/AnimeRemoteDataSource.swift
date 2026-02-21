@@ -11,7 +11,7 @@ protocol AnimeRemoteDataSource {
     func fetchAnimeSuggestions(params: [String: String]?) async throws -> PaginatedResult<[AnimeBase]>
     func fetchUserAnimeList(status: UserAnimeStatus?, params: [String: String]?) async throws -> PaginatedResult<[UserAnime]>
     func fetchAnimeDetail(animeId: Int) async throws -> AnimeDetail
-    func fetchAnimeSchedules(day: Day) async throws -> [AnimeSchedule]
+    func fetchAnimeSchedules(day: Day) async throws -> PaginatedResult<[AnimeSchedule]>
     func updateUserAnimeProgress(animeId: Int, with progress: UserAnimeProgress) async throws -> UserAnimeProgress
     func deleteUserAnimeProgress(animeId: Int) async throws -> Bool
 }

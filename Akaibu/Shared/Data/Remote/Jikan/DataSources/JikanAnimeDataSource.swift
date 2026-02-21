@@ -7,6 +7,7 @@
 
 struct JikanAnimeDataSource {
     private let client: JikanHTTPClient = .shared
+    private let paginator: JikanPaginator = .shared
     
     static let shared = JikanAnimeDataSource()
     
@@ -18,8 +19,8 @@ struct JikanAnimeDataSource {
         return res.toDomain()
     }
     
-    func fetchAnimeSchedules(day: Day) async throws -> [AnimeSchedule] {
-        let res: JikanAnimeList = try await client.get(JikanPaths.animeSchedules(day))
+    func fetchAnimeSchedules(day: Day) async throws -> PaginatedResult<[AnimeSchedule]> {
+        let res: PaginatedResult<JikanAnimeList> = try await paginator.getPaginated(path: JikanPaths.animeSchedules(day))
         
         return res.toAnimeSchedules()
     }
