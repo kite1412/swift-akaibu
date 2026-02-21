@@ -75,7 +75,7 @@ struct MALMangaDataSource: MangaRemoteDataSource {
         return res.toDomain(characters: try await jikanMangaDataSource.fetchMangaCharacters(byId: mangaId))
     }
     
-    func fetchMangaGenres() async throws -> [String] {
+    func fetchMangaGenres() async throws -> [Genre] {
         try await jikanMangaDataSource.fetchMangaGenres()
     }
     

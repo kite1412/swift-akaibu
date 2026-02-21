@@ -6,7 +6,9 @@
 //
 
 extension JikanGenres {
-    func toStrings() -> [String] {
-        self.data.map(\.name)
+    func toDomain() -> [Genre] {
+        self.data.map { genre in
+            Genre(id: genre.malId, name: genre.name)
+        }
     }
 }

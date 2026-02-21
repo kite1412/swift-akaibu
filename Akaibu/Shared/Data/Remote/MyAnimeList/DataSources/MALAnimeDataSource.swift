@@ -95,7 +95,7 @@ struct MALAnimeDataSource: AnimeRemoteDataSource {
         try await jikanAnimeDataSource.fetchAnimeSchedules(day: day)
     }
     
-    func fetchAnimeGenres() async throws -> [String] {
+    func fetchAnimeGenres() async throws -> [Genre] {
         try await jikanAnimeDataSource.fetchAnimeGenres()
     }
     

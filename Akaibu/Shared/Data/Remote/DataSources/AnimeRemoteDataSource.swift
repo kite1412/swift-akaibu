@@ -12,7 +12,7 @@ protocol AnimeRemoteDataSource {
     func fetchUserAnimeList(status: UserAnimeStatus?, params: [String: String]?) async throws -> PaginatedResult<[UserAnime]>
     func fetchAnimeDetail(animeId: Int) async throws -> AnimeDetail
     func fetchAnimeSchedules(day: Day) async throws -> PaginatedResult<[AnimeSchedule]>
-    func fetchAnimeGenres() async throws -> [String]
+    func fetchAnimeGenres() async throws -> [Genre]
     func updateUserAnimeProgress(animeId: Int, with progress: UserAnimeProgress) async throws -> UserAnimeProgress
     func deleteUserAnimeProgress(animeId: Int) async throws -> Bool
 }

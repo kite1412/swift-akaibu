@@ -28,7 +28,7 @@ class MangaRepositoryImpl: MangaRepository {
         try await remoteDataSource.fetchMangaDetail(mangaId: mangaId)
     }
     
-    func getMangaGenres() async throws -> [String] {
+    func getMangaGenres() async throws -> [Genre] {
         try await remoteDataSource.fetchMangaGenres()
     }
     

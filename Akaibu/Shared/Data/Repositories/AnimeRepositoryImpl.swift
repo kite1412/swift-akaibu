@@ -36,7 +36,7 @@ class AnimeRepositoryImpl: AnimeRepository {
         try await remoteDataSource.fetchAnimeSchedules(day: day)
     }
     
-    func getAnimeGenres() async throws -> [String] {
+    func getAnimeGenres() async throws -> [Genre] {
         try await remoteDataSource.fetchAnimeGenres()
     }
     
