@@ -111,6 +111,8 @@ class MediaGenresViewModel: ObservableObject {
         with operation: () async throws -> PaginatedResult<[Media]>,
         mapper: @escaping ([Media]) -> [MediaCardData]
     ) async {
+        nextResult = nil
+        
         let res = await FetchHelpers.tryFetch {
             try await operation()
         }

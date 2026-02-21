@@ -14,7 +14,7 @@ struct JikanAnime: Codable {
     let titles: [JikanTitle]
     let title: String
     let titleEnglish: String?
-    let titleJapanese: String
+    let titleJapanese: String?
     let titleSynonyms: [String]
     let type: String?
     let source: String?

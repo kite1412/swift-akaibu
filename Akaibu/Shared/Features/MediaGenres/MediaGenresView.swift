@@ -24,16 +24,26 @@ struct MediaGenresView: View {
                     }
                     Spacer()
                     
-                    Text("Search")
-                        .opacity(isAnyGenreSelected ? 1 : 0)
-                        .animation(.easeInOut(duration: 0.2), value: isAnyGenreSelected)
-                        .foregroundStyle(.accent)
-                        .onTapGesture {
-                            if isAnyGenreSelected {
-                                viewModel.updateMediaFetchResults()
-                                showGenres = false
-                            }
+                    HStack(spacing: 16) {
+                        if case .success = viewModel.mediaFetchResults {
+                            Text("Cancel")
+                                .foregroundStyle(.red)
+                                .onTapGesture {
+                                    showGenres = false
+                                }
                         }
+                        
+                        Text("Search")
+                            .opacity(isAnyGenreSelected ? 1 : 0)
+                            .animation(.easeInOut(duration: 0.2), value: isAnyGenreSelected)
+                            .foregroundStyle(.accent)
+                            .onTapGesture {
+                                if isAnyGenreSelected {
+                                    viewModel.updateMediaFetchResults()
+                                    showGenres = false
+                                }
+                            }
+                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
@@ -90,17 +100,21 @@ struct MediaGenresView: View {
                     loadingText: "Loading \(mediaType)...",
                     errorText: "Failed to get \(mediaType)."
                 ) { mediaList in
-                    InfiniteScrollView(
-                        items: mediaList,
-                        loadMore: viewModel.nextResult != nil ? {
-                            viewModel.loadMoreMediaResults()
-                        } : nil
-                    ) { media in
-                        MediaCard(
-                            media: media,
-                            onClick: viewModel.showingAnimeResults ? appRouter.goToAnimeDetail : appRouter.goToMangaDetail
-                        )
-                        .padding(.horizontal)
+                    if !mediaList.isEmpty {
+                        InfiniteScrollView(
+                            items: mediaList,
+                            loadMore: viewModel.nextResult != nil ? {
+                                viewModel.loadMoreMediaResults()
+                            } : nil
+                        ) { media in
+                            MediaCard(
+                                media: media,
+                                onClick: viewModel.showingAnimeResults ? appRouter.goToAnimeDetail : appRouter.goToMangaDetail
+                            )
+                            .padding(.horizontal)
+                        }
+                    } else {
+                        Text("No \(mediaType) found.")
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
