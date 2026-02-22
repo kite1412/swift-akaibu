@@ -40,20 +40,11 @@ class MangaUserMediaService: UserMediaService {
     
     private class PaginatedResultMapper: PaginatedResultUserMediaMapper {
         func mapResult(_ result: PaginatedResult<[UserManga]>) -> PaginatedResult<[UserMediaData]> {
-            let next = result.next != nil ? { [weak self] in
-                if let res = try await result.next?() {
-                    return self?.mapResult(res)
-                } else {
-                    return nil
-                }
-            } : nil
-            
-            return PaginatedResult(
-                data: result.data.map { manga in
+            return result.mapTo { data in
+                data.map { manga in
                     manga.toUserMediaData()
-                },
-                next: next
-            )
+                }
+            }
         }
     }
 }

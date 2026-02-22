@@ -7,82 +7,48 @@
 
 extension PaginatedResult where Item == MALAnimeList {
     func toDomain() -> PaginatedResult<[AnimeBase]> {
-        let animeBases = self.data.toAnimeBases()
-        return PaginatedResult<[AnimeBase]>(
-            data: animeBases,
-            next: {
-                let res = try await self.next?()
-                return res?.toDomain()
-            }
-        )
+        mapTo { model in
+            model.toAnimeBases()
+        }
     }
 }
 
 extension PaginatedResult where Item == MALAnimeRanking {
     func toDomain() -> PaginatedResult<[MediaRank]> {
-        let mediaRanks = self.data.toMediaRanks()
-        return PaginatedResult<[MediaRank]>(
-            data: mediaRanks,
-            next: {
-                let res = try await self.next?()
-                return res?.toDomain()
-            }
-        )
+        mapTo { model in
+            model.toMediaRanks()
+        }
     }
 }
 
 extension PaginatedResult where Item == MALMangaRanking {
     func toDomain() -> PaginatedResult<[MediaRank]> {
-        let mediaRanks = self.data.toMediaRanks()
-        return PaginatedResult<[MediaRank]>(
-            data: mediaRanks,
-            next: {
-                let res = try await self.next?()
-                return res?.toDomain()
-            }
-        )
+        mapTo { model in
+            model.toMediaRanks()
+        }
     }
 }
 
 extension PaginatedResult where Item == MALMangaList {
     func toDomain() -> PaginatedResult<[MangaBase]> {
-        let mangaBases = self.data.toMangaBases()
-        return PaginatedResult<[MangaBase]>(
-            data: mangaBases,
-            next: {
-                let res = try await self.next?()
-                return res?.toDomain()
-            }
-        )
+        mapTo { model in
+            model.toMangaBases()
+        }
     }
 }
 
 extension PaginatedResult where Item == MALUserAnimeList {
     func toDomain() -> PaginatedResult<[UserAnime]> {
-        let userAnimeList = self.data.toUserAnimeList()
-        let next = next != nil ? {
-            let res = try await self.next?()
-            return res?.toDomain()
-        } : nil
-        
-        return PaginatedResult<[UserAnime]>(
-            data: userAnimeList,
-            next: next
-        )
+        mapTo { model in
+            model.toUserAnimeList()
+        }
     }
 }
 
 extension PaginatedResult where Item == MALUserMangaList {
     func toDomain() -> PaginatedResult<[UserManga]> {
-        let userMangaList = self.data.toUserMangaList()
-        let next = next != nil ? {
-            let res = try await self.next?()
-            return res?.toDomain()
-        } : nil
-        
-        return PaginatedResult<[UserManga]>(
-            data: userMangaList,
-            next: next
-        )
+        mapTo { model in
+            model.toUserMangaList()
+        }
     }
 }
