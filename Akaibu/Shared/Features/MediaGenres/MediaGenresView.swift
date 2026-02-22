@@ -13,67 +13,7 @@ struct MediaGenresView: View {
     @State private var showGenres: Bool = true
     
     var body: some View {
-        if showGenres {
-            VStack(alignment: .leading, spacing: 16) {
-                HStack(spacing: 8) {
-                    textSelect(name: "Anime", selected: viewModel.showingAnimeResults) {
-                        viewModel.showingAnimeResults = true
-                    }
-                    textSelect(name: "Manga", selected: !viewModel.showingAnimeResults) {
-                        viewModel.showingAnimeResults = false
-                    }
-                    Spacer()
-                    
-                    HStack(spacing: 16) {
-                        if case .success = viewModel.mediaFetchResults {
-                            Text("Cancel")
-                                .foregroundStyle(.red)
-                                .onTapGesture {
-                                    showGenres = false
-                                }
-                        }
-                        
-                        Text("Search")
-                            .opacity(isAnyGenreSelected ? 1 : 0)
-                            .animation(.easeInOut(duration: 0.2), value: isAnyGenreSelected)
-                            .foregroundStyle(.accent)
-                            .onTapGesture {
-                                if isAnyGenreSelected {
-                                    viewModel.updateMediaFetchResults()
-                                    showGenres = false
-                                }
-                            }
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                
-                FetchStateView(
-                    fetchResult: viewModel.showingAnimeResults ? viewModel.animeGenres : viewModel.mangaGenres,
-                    loadingText: "Loading \(mediaType) genres...",
-                    errorText: "Failed to get \(mediaType) genres."
-                ) { genres in
-                    ScrollView {
-                        LazyVGrid(
-                            columns: [GridItem(), GridItem(), GridItem()],
-                            alignment: .listRowSeparatorLeading
-                        ) {
-                            ForEach(genres) { genre in
-                                textSelect(name: genre.name, selected: viewModel.isGenreSelected(genre)) {
-                                    viewModel.toggleGenre(genre)
-                                }
-                            }
-                            .font(.caption)
-                        }
-                    }
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .padding()
-            .onChange(of: viewModel.showingAnimeResults) {
-                viewModel.updateMediaGenres()
-            }
-        } else {
+        ZStack {
             VStack(alignment: .leading) {
                 VStack(alignment: .leading) {
                     HStack {
@@ -84,7 +24,9 @@ struct MediaGenresView: View {
                         Text("Genres")
                             .foregroundStyle(.accent)
                             .onTapGesture {
-                                showGenres = true
+                                withAnimation {
+                                    showGenres = true
+                                }
                             }
                     }
                     
@@ -120,6 +62,73 @@ struct MediaGenresView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            
+            if showGenres {
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack(spacing: 8) {
+                        textSelect(name: "Anime", selected: viewModel.showingAnimeResults) {
+                            viewModel.showingAnimeResults = true
+                        }
+                        textSelect(name: "Manga", selected: !viewModel.showingAnimeResults) {
+                            viewModel.showingAnimeResults = false
+                        }
+                        Spacer()
+                        
+                        HStack(spacing: 16) {
+                            if case .success = viewModel.mediaFetchResults {
+                                Text("Cancel")
+                                    .foregroundStyle(.red)
+                                    .onTapGesture {
+                                        withAnimation {
+                                            showGenres = false
+                                        }
+                                    }
+                            }
+                            
+                            Text("Search")
+                                .opacity(isAnyGenreSelected ? 1 : 0)
+                                .animation(.easeInOut(duration: 0.2), value: isAnyGenreSelected)
+                                .foregroundStyle(.accent)
+                                .onTapGesture {
+                                    if isAnyGenreSelected {
+                                        viewModel.updateMediaFetchResults()
+                                        withAnimation {
+                                            showGenres = false
+                                        }
+                                    }
+                                }
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    FetchStateView(
+                        fetchResult: viewModel.showingAnimeResults ? viewModel.animeGenres : viewModel.mangaGenres,
+                        loadingText: "Loading \(mediaType) genres...",
+                        errorText: "Failed to get \(mediaType) genres."
+                    ) { genres in
+                        ScrollView {
+                            LazyVGrid(
+                                columns: [GridItem(), GridItem(), GridItem()],
+                                alignment: .listRowSeparatorLeading
+                            ) {
+                                ForEach(genres) { genre in
+                                    textSelect(name: genre.name, selected: viewModel.isGenreSelected(genre)) {
+                                        viewModel.toggleGenre(genre)
+                                    }
+                                }
+                                .font(.caption)
+                            }
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                .padding()
+                .background(.background)
+                .onChange(of: viewModel.showingAnimeResults) {
+                    viewModel.updateMediaGenres()
+                }
+            }
         }
     }
     
