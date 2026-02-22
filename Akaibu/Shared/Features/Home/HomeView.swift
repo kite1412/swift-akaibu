@@ -75,7 +75,7 @@ struct HomeView: View {
                         
                         ScrollView(.horizontal) {
                             LazyHStack(alignment: .top) {
-                                ForEach(schedules) { data in
+                                ForEach(schedules.uniqueByID()) { data in
                                     let compareResult = data.day.compare(to: Day.today())
                                     
                                     SmallMediaCard(
