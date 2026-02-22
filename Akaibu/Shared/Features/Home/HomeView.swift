@@ -93,6 +93,7 @@ struct HomeView: View {
                     }
                     .frame(maxWidth: .infinity)
                 }
+                .padding(.horizontal)
                 
                 if horizontalSizeClass == .compact {
                     mediaRanking
@@ -150,10 +151,37 @@ struct HomeView: View {
                     Text("No Search History")
                 }
             } else {
-                Text("Suggestions here")
+                ZStack {
+                    if viewModel.searchTitle.count > 2 {
+                        LazyVStack(alignment: .leading, pinnedViews: [.sectionHeaders]) {
+                            Section(
+                                header: Text("Result for \"\(self.viewModel.searchTitle)\"")
+                                    .lineLimit(1)
+                                    .truncationMode(.middle)
+                            ) {
+                                FetchStateView(
+                                    fetchResult: viewModel.animeSearchResult
+                                ) { data in
+                                    ForEach(data) { anime in
+                                        MediaCard(media: anime.toMediaCardData(), onClick: appRouter.goToAnimeDetail)
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
+                        }
+                    } else {
+                        Text("Type at least 3 characters.")
+                    }
+                }
+                .task(id: viewModel.searchTitle) {
+                    if viewModel.searchTitle.count > 2 {
+                        try? await Task.sleep(nanoseconds: 300_000_000)
+                        try? await viewModel.updateAnimeSearchResult()
+                    }
+                }
             }
         }
-        .padding()
         .onSubmit(of: .search) {
             if !viewModel.showClearHistoryConfirmation && viewModel.searchTitle.count > 2 {
                 viewModel.addToHistory()
@@ -218,6 +246,7 @@ struct HomeView: View {
                 MediaRankCard(mediaRank: media, onClick: onMediaClick)
             }
         }
+        .padding(.horizontal)
     }
 }
 

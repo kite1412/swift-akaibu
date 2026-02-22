@@ -13,8 +13,6 @@ class HomeViewModel: ObservableObject {
     private let animeRepository = DIContainer.shared.animeRepository
     private let mangaRepository = DIContainer.shared.mangaRepository
     private let mediaRanksLimit = 5
-    private var nextAnimeSearchResults: NextResultClosure<[AnimeBase]>? = nil
-    private var nextMangaSearchResults: NextResultClosure<[MangaBase]>? = nil
     
     @Published var animeRanks: FetchResult<[MediaRank]> = .loading
     @Published var mangaRanks: FetchResult<[MediaRank]> = .loading
@@ -23,10 +21,7 @@ class HomeViewModel: ObservableObject {
     @Published var searchHistories: [String] = []
     @Published var searchTitle: String = ""
     @Published var showClearHistoryConfirmation: Bool = false
-    @Published var showSearchResults: Bool = false
-    @Published var showAnimeSearchResults: Bool = false
-    @Published var animeSearchResults: FetchResult<[AnimeBase]> = .loading
-    @Published var mangaSearchResults: FetchResult<[MangaBase]> = .loading
+    @Published var animeSearchResult: FetchResult<[AnimeBase]> = .loading
     
     init() {
         Task {
@@ -49,6 +44,23 @@ class HomeViewModel: ObservableObject {
     func clearHistories() {
         SearchHistory.clearAll()
         searchHistories = []
+    }
+    
+    func updateAnimeSearchResult() async throws {
+        animeSearchResult = .loading
+        
+        let res = await FetchHelpers.tryFetch {
+            try await animeRepository.getAnimeBases(title: searchTitle, params: ["limit": "30"])
+        }
+        
+        switch res {
+        case .success(let data):
+            animeSearchResult = .success(data: data.data.uniqueByID())
+        case .loading:
+            animeSearchResult = .loading
+        case .failure(let error):
+            animeSearchResult = .failure(error)
+        }
     }
     
     private func getAnimeRanks() async {
