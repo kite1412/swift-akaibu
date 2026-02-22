@@ -10,4 +10,6 @@ enum StackDestination: Hashable {
     case animeDetail(animeId: Int)
     case mangaDetail(mangaId: Int)
     case animeSchedules
+    case animeRanking
+    case mangaRanking
 }

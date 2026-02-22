@@ -172,7 +172,8 @@ struct HomeView: View {
             ranking(
                 for: "Anime",
                 mediaRanks: animeRanks,
-                onClick: appRouter.goToAnimeDetail
+                onMediaClick: appRouter.goToAnimeDetail,
+                onMoreClick: appRouter.goToAnimeRanking
             )
         }
         FetchStateView(
@@ -183,7 +184,8 @@ struct HomeView: View {
             ranking(
                 for: "Manga",
                 mediaRanks: mangaRanks,
-                onClick: appRouter.goToMangaDetail,
+                onMediaClick: appRouter.goToMangaDetail,
+                onMoreClick: appRouter.goToMangaRanking,
                 trophyImage: "trophy"
             )
         }
@@ -192,7 +194,8 @@ struct HomeView: View {
     private func ranking(
         for mediaType: String,
         mediaRanks: [MediaRank],
-        onClick: @escaping (_ id: Int) -> Void,
+        onMediaClick: @escaping (_ id: Int) -> Void,
+        onMoreClick: @escaping () -> Void,
         trophyImage: String = "trophy.fill"
     ) -> some View {
         VStack {
@@ -207,14 +210,12 @@ struct HomeView: View {
                         .fontWeight(.bold)
                 }
                 Spacer()
-                Button {
-                    // navigate to ranking page
-                } label: {
+                Button(action: onMoreClick) {
                     Image(systemName: "arrow.right")
                 }
             }
             ForEach(mediaRanks) { media in
-                MediaRankCard(mediaRank: media, onClick: onClick)
+                MediaRankCard(mediaRank: media, onClick: onMediaClick)
             }
         }
     }

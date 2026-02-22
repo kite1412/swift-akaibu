@@ -28,6 +28,14 @@ final class AppRouter: ObservableObject {
         path.append(StackDestination.animeSchedules)
     }
     
+    func goToAnimeRanking() {
+        path.append(StackDestination.animeRanking)
+    }
+    
+    func goToMangaRanking() {
+        path.append(StackDestination.mangaRanking)
+    }
+    
     func pop() {
         path.removeLast()
     }

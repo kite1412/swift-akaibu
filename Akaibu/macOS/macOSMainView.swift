@@ -74,6 +74,18 @@ struct macOSMainView: View {
                                     currentDestination = .animeSchedules
                                     appRouter.pop()
                                 }
+                        case .animeRanking:
+                            MediaRankingView(
+                                mediaType: "Anime",
+                                service: AnimeRankingService(),
+                                onMediaClick: appRouter.goToAnimeDetail
+                            )
+                        case .mangaRanking:
+                            MediaRankingView(
+                                mediaType: "Manga",
+                                service: MangaRankingService(),
+                                onMediaClick: appRouter.goToMangaDetail
+                            )
                         }
                     }
             }

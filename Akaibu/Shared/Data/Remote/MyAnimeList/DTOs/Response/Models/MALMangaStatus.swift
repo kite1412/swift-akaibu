@@ -6,5 +6,9 @@
 //
 
 enum MALMangaStatus: String, Codable {
-    case finished, currentlyPublishing = "currently_publishing", notYetPublished = "not_yet_published", onHiatus = "on_hiatus"
+    case finished,
+         currentlyPublishing = "currently_publishing",
+         notYetPublished = "not_yet_published",
+         onHiatus = "on_hiatus",
+         discontinued
 }

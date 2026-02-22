@@ -12,6 +12,7 @@ extension MALMangaStatus {
         case .finished: return .finished
         case .notYetPublished: return .notYetPublished
         case .onHiatus: return .hiatus
+        case .discontinued: return .discontinued
         }
     }
 }

@@ -10,4 +10,5 @@ enum PublishingStatus: String {
     case finished = "Finished"
     case hiatus = "Hiatus"
     case notYetPublished = "Not Yet Published"
+    case discontinued = "Discontinued"
 }

@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct iOSMainView: View {
-    @EnvironmentObject private var router: AppRouter
+    @EnvironmentObject private var appRouter: AppRouter
     
     // Tweak one or more tabs to access unlisted root destinations here.
     var body: some View {
         TabView {
             ForEach(RootDestination.allCases.prefix(4), id: \.self) { des in
                 Tab(des.title, systemImage: des.systemImage) {
-                    NavigationStack(path: $router.path) {
+                    NavigationStack(path: $appRouter.path) {
                         des.content
                             .navigationTitle(des.title)
                             .toolbar {
@@ -33,6 +33,18 @@ struct iOSMainView: View {
                                     MangaDetailView(mangaId: mangaId)
                                 case .animeSchedules:
                                     AnimeSchedulesView()
+                                case .animeRanking:
+                                    MediaRankingView(
+                                        mediaType: "Anime",
+                                        service: AnimeRankingService(),
+                                        onMediaClick: appRouter.goToAnimeDetail
+                                    )
+                                case .mangaRanking:
+                                    MediaRankingView(
+                                        mediaType: "Manga",
+                                        service: MangaRankingService(),
+                                        onMediaClick: appRouter.goToMangaDetail
+                                    )
                                 }
                             }
                     }
