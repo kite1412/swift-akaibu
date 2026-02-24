@@ -18,6 +18,8 @@ struct MediaSlider: View {
     }
     @State private var autoSlideEnabled: Bool = true
     @State private var currentSlideID: Int = -1
+    @State private var manualClickCount: Int = 0
+    @State private var resumeTask: Task<Void, Never>? = nil
     
     private var height: CGFloat {
         isCompact ? 150 : 250
@@ -28,14 +30,21 @@ struct MediaSlider: View {
         self.data = data
         self.onClick = onClick
         self.currentSlideID = data.first?.id ?? -1
-        self.timer = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
+        self.timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     }
     
     // TODO use TabView
     var body: some View {
-        GeometryReader { geo in
-            VStack(alignment: .leading) {
-                ScrollViewReader { proxy in
+        ScrollViewReader { proxy in
+            HStack(spacing: 2) {
+                Button {
+                    manualSlide(toNext: false, proxy: proxy)
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .foregroundStyle(.accent)
+                }
+                
+                GeometryReader { geo in
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 0) {
                             ForEach(data) { media in
@@ -120,20 +129,39 @@ struct MediaSlider: View {
                             }
                         }
                     }
+                    .scrollDisabled(true)
                     .scrollTargetBehavior(.paging)
                     .onReceive(timer) { _ in
                         if autoSlideEnabled {
-                            slide { id in
-                                withAnimation {
-                                    proxy.scrollTo(id, anchor: .trailing)
+                            slide(proxy: proxy)
+                        }
+                    }
+                    .onChange(of: manualClickCount) {
+                        autoSlideEnabled = false
+                        
+                        resumeTask?.cancel()
+                        
+                        resumeTask = Task {
+                            try? await Task.sleep(nanoseconds: 10_000_000_000)
+                            
+                            if !Task.isCancelled {
+                                await MainActor.run {
+                                    autoSlideEnabled = true
                                 }
                             }
                         }
                     }
                 }
+                
+                Button {
+                    manualSlide(proxy: proxy)
+                } label: {
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.accent)
+                }
             }
+            .frame(height: height)
         }
-        .frame(height: height, alignment: .leading)
     }
     
     private func scoreView(_ score: Double) -> some View {
@@ -144,20 +172,35 @@ struct MediaSlider: View {
         }
     }
     
-    private func slide(_ slider: (Int) -> Void) {
+    private func manualSlide(toNext: Bool = true, proxy: ScrollViewProxy) {
+        autoSlideEnabled = false
+        manualClickCount += 1
+        slide(toNext: toNext, proxy: proxy)
+    }
+    
+    private func slide(toNext: Bool = true, proxy: ScrollViewProxy) {
         guard let index: Int = data.firstIndex(where: { $0.id == currentSlideID }) else { return }
-        var next: Int
+        var nextID: Int
         
-        if index == data.count - 1 {
-            next = data.first?.id ?? -1
-            currentSlideID = next
+        if toNext {
+            if index == data.count - 1 {
+                nextID = data.first?.id ?? -1
+            } else {
+                nextID = data[index + 1].id
+            }
         } else {
-            next = data[index + 1].id
-            currentSlideID = next
+            if index == 0 {
+                nextID = data.last?.id ?? -1
+            } else {
+                nextID = data[index - 1].id
+            }
         }
+        currentSlideID = nextID
         
-        if next != -1 {
-            slider(next)
+        if nextID != -1 {
+            withAnimation {
+                proxy.scrollTo(nextID, anchor: .trailing)
+            }
         }
     }
 }
