@@ -12,22 +12,13 @@ struct JikanPaths {
     
     static let anime = "anime"
     static let animeGenres = "genres/anime"
+    static let animeSchedules = "schedules"
     
     static let manga = "manga"
     static let mangaGenres = "genres/manga"
     
     static func animeCharacters(animeId: Int) -> String {
         "\(anime)/\(animeId)/characters"
-    }
-    
-    static func animeSchedules(_ day: Day? = nil) -> String {
-        let filter = if let day {
-            "?filter=\(day.rawValue)"
-        } else {
-            ""
-        }
-        
-        return "schedules\(filter)"
     }
     
     static func mangaCharacters(mangaId: Int) -> String {

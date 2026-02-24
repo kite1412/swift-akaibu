@@ -33,7 +33,6 @@ struct MediaSlider: View {
         self.timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     }
     
-    // TODO use TabView
     var body: some View {
         ScrollViewReader { proxy in
             HStack(spacing: 2) {

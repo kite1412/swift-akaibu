@@ -27,26 +27,29 @@ struct AnimeSchedulesView: View {
                 errorText: "Failed to get anime schedules"
             ) { data in
                 ScrollViewReader { proxy in
-                    ScrollView {
-                        ForEach(data.uniqueByID()) { anime in
-                            MediaCard(
-                                media: anime.toMediaCardData(),
-                                onClick: appRouter.goToAnimeDetail
-                            ) {
-                                let compareResult = anime.day.compare(to: viewModel.selectedDay)
-                                
-                                HStack(spacing: 4) {
-                                    Image(systemName: "calendar.badge.clock")
-                                    Text("\(anime.day.rawValue.capitalized) \(anime.time)")
-                                }
-                                .applyIf(compareResult == 1 || compareResult == -1) { view in
-                                    view.foregroundStyle(compareResult == 1 ? .green : .red)
-                                }
+                    InfiniteScrollView(
+                        items: data.uniqueByID(),
+                        loadMore: viewModel.isNextResultAvailable ? {
+                            viewModel.loadMore()
+                        } : nil
+                    ) { anime in
+                        MediaCard(
+                            media: anime.toMediaCardData(),
+                            onClick: appRouter.goToAnimeDetail
+                        ) {
+                            let compareResult = anime.day.compare(to: viewModel.selectedDay)
+                            
+                            HStack(spacing: 4) {
+                                Image(systemName: "calendar.badge.clock")
+                                Text("\(anime.day.rawValue.capitalized) \(anime.time)")
                             }
-                            .id(anime.id)
-                            .padding(.horizontal)
-                            .padding(.vertical, 4)
+                            .applyIf(compareResult == 1 || compareResult == -1) { view in
+                                view.foregroundStyle(compareResult == 1 ? .green : .red)
+                            }
                         }
+                        .id(anime.id)
+                        .padding(.horizontal)
+                        .padding(.vertical, 4)
                     }
                     .onChange(of: viewModel.selectedDayString) {
                         DispatchQueue.main.async {
@@ -59,6 +62,7 @@ struct AnimeSchedulesView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .navigationTitle("Anime Schedules")
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 }

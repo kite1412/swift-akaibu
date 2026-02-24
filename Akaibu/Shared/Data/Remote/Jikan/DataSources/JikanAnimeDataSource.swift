@@ -20,7 +20,12 @@ struct JikanAnimeDataSource {
     }
     
     func fetchAnimeSchedules(day: Day) async throws -> PaginatedResult<[AnimeSchedule]> {
-        let res: PaginatedResult<JikanAnimeList> = try await paginator.getPaginated(path: JikanPaths.animeSchedules(day))
+        let res: PaginatedResult<JikanAnimeList> = try await paginator.getPaginated(
+            path: JikanPaths.animeSchedules,
+            params: [
+                "filter": day.rawValue
+            ]
+        )
         
         return res.toAnimeSchedules()
     }
