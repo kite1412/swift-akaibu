@@ -43,7 +43,7 @@ struct macOSMainView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(currentDestination == des ? Colors.accent : .clear)
+                            .fill(currentDestination == des ? .accent : .clear)
                             .animation(animation, value: currentDestination)
                     )
                 }
