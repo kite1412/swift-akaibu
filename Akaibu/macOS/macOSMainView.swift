@@ -5,6 +5,7 @@
 //  Created by kite1412 on 25/12/25.
 //
 
+#if os(macOS)
 import SwiftUI
 
 struct macOSMainView: View {
@@ -91,16 +92,8 @@ struct macOSMainView: View {
             }
         }
         .navigationTitle(currentDestination.title)
-        .alert("Are you sure you want to logout?", isPresented: $showLogoutConfirmation) {
-            Button("Cancel", role: .cancel) {
-                showLogoutConfirmation = false
-            }
-            Button("Logout", role: .destructive) {
-                session.logout()
-                showLogoutConfirmation = false
-            }
-        } message: {
-            Text("You need to log in again to access the app.")
+        .logoutAlert(showAlert: $showLogoutConfirmation) {
+            session.logout()
         }
     }
 }
@@ -110,3 +103,4 @@ struct macOSMainView: View {
     
     macOSMainView(currentDestination: $des, session: SessionManager())
 }
+#endif

@@ -16,7 +16,7 @@ struct MainView: View {
             if let loggedIn = session.isLoggedIn {
                 if loggedIn {
                     #if os(iOS)
-                    iOSMainView()
+                    iOSMainView(session: session)
                     #elseif os(macOS)
                     macOSMainView(currentDestination: $currentDestination, session: session)
                     #endif

@@ -5,10 +5,14 @@
 //  Created by kite1412 on 25/12/25.
 //
 
+#if os(iOS)
 import SwiftUI
 
 struct iOSMainView: View {
     @EnvironmentObject private var appRouter: AppRouter
+    
+    @ObservedObject var session: SessionManager
+    @State private var showLogoutConfirmation: Bool = false
     
     // Tweak one or more tabs to access unlisted root destinations here.
     var body: some View {
@@ -22,6 +26,17 @@ struct iOSMainView: View {
                                 ToolbarItem(placement: .principal) {
                                     TopBar()
                                 }
+                                ToolbarItem(placement: .topBarTrailing) {
+                                    Button {
+                                        showLogoutConfirmation = true
+                                    } label: {
+                                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                                            .foregroundStyle(.red)
+                                    }
+                                }
+                            }
+                            .logoutAlert(showAlert: $showLogoutConfirmation) {
+                                session.logout()
                             }
                             .navigationDestination(for: StackDestination.self) { destination in
                                 switch destination {
@@ -55,5 +70,6 @@ struct iOSMainView: View {
 }
 
 #Preview {
-    iOSMainView()
+    iOSMainView(session: SessionManager())
 }
+#endif

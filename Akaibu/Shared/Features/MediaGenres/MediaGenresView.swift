@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MediaGenresView: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @EnvironmentObject private var appRouter: AppRouter
     @StateObject private var viewModel = MediaGenresViewModel()
     @State private var showGenres: Bool = true
@@ -108,7 +109,12 @@ struct MediaGenresView: View {
                     ) { genres in
                         ScrollView {
                             LazyVGrid(
-                                columns: [GridItem(), GridItem(), GridItem()],
+                                columns: [
+                                    GridItem(),
+                                    GridItem(),
+                                    GridItem(),
+                                    horizontalSizeClass != .compact ? GridItem() : nil
+                                ].compactMap(\.self),
                                 alignment: .listRowSeparatorLeading
                             ) {
                                 ForEach(genres) { genre in

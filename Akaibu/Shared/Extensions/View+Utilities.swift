@@ -16,4 +16,19 @@ extension View {
             self
         }
     }
+    
+    @ViewBuilder
+    func logoutAlert(showAlert: Binding<Bool>, onConfirm: @escaping () -> Void) -> some View {
+        alert("Are you sure you want to logout?", isPresented: showAlert) {
+            Button("Cancel", role: .cancel) {
+                showAlert.wrappedValue = false
+            }
+            Button("Logout", role: .destructive) {
+                onConfirm()
+                showAlert.wrappedValue = false
+            }
+        } message: {
+            Text("You need to log in again to access the app.")
+        }
+    }
 }
