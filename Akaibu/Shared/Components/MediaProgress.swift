@@ -114,7 +114,7 @@ struct MediaProgress: View {
                             self.consumedUnits = String(
                                 intThreshold(
                                     actualValue: consumedUnits,
-                                    maxValue: totalUnits ?? Int.max
+                                    maxValue: totalUnits != nil && totalUnits != 0 ? totalUnits! : Int.max
                                 )
                             )
                         }
